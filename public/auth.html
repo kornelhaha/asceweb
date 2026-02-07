@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>asce. - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px);
+        }
+
+        .auth-container {
+            background: #111;
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 0.9em;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .tabs {
+            display: flex;
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 32px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: #666;
+            font-size: 0.9em;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .tab.active {
+            background: #fff;
+            color: #000;
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #ccc;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.95em;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #fff;
+            background: #222;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background: #ddd;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message, .success-message {
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #51cf66;
+        }
+
+        .error-message.show, .success-message.show {
+            display: block;
+        }
+
+        .footer-text {
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>asce.</h1>
+            <p>CLIENT AUTHENTICATION</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('login')">LOGIN</button>
+            <button class="tab" onclick="switchTab('register')">REGISTER</button>
+        </div>
+
+        <div id="error-message" class="error-message"></div>
+        <div id="success-message" class="success-message"></div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn" id="login-btn">LOGIN</button>
+            </form>
+        </div>
+
+        <!-- Register Form -->
+        <div id="register-form" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required minlength="3" autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required minlength="6" autocomplete="new-password">
+                </div>
+
+                <button type="submit" class="btn" id="register-btn">CREATE ACCOUNT</button>
+            </form>
+        </div>
+
+        <div class="footer-text">
+            <p>Need help? Contact support</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + '-form').classList.add('active');
+
+            hideError();
+            hideSuccess();
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('error-message');
+            errorEl.textContent = message;
+            errorEl.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('error-message').classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            const successEl = document.getElementById('success-message');
+            successEl.textContent = message;
+            successEl.classList.add('show');
+        }
+
+        function hideSuccess() {
+            document.getElementById('success-message').classList.remove('show');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideError();
+            hideSuccess();
+
+            const btn = document.getElementById('login-btn');
+            btn.textContent = 'LOGGING IN...';
+            btn.disabled = true;
+
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    // Redirect based on role
+                    if (data.user.role === 'admin') {
+                        window.location.href = 'admin-dash.html';
+                    } else {
+                        window.location.href = 'dash.html';
+                    }
+                } else {
+                    showError(data.error || 'Login failed');
+                    btn.textContent = 'LOGIN';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Network error. Please check your connection.');
+                btn.textContent = 'LOGIN';
+                btn.disabled = false;
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideError();
+            hideSuccess();
+
+            const btn = document.getElementById('register-btn');
+            btn.textContent = 'CREATING ACCOUNT...';
+            btn.disabled = true;
+
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dash.html';
+                } else {
+                    showError(data.error || 'Registration failed');
+                    btn.textContent = 'CREATE ACCOUNT';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('Network error. Please check your connection.');
+                btn.textContent = 'CREATE ACCOUNT';
+                btn.disabled = false;
+            }
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (token && user) {
+                const userData = JSON.parse(user);
+                
+                // Redirect to appropriate dashboard
+                if (userData.role === 'admin') {
+                    window.location.href = 'admin-dash.html';
+                } else {
+                    window.location.href = 'dash.html';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
