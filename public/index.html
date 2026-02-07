@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>asce. - Professional Auto Clicker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo i {
+            color: #fff;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .btn-primary {
+            padding: 10px 24px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .btn-primary:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            padding: 10px 24px;
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .btn-secondary:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 40px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 4em;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: #999;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 40px;
+            background: #000;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            background: #0d0d0d;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: #fff;
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #999;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 120px 40px;
+            background: #0a0a0a;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            padding: 40px;
+            background: #0d0d0d;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .pricing-card.featured {
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            border-color: #fff;
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #fff;
+            color: #000;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.5em;
+            margin-bottom: 16px;
+        }
+
+        .pricing-price {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .pricing-period {
+            color: #999;
+            margin-bottom: 32px;
+            font-size: 0.9em;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9em;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features i {
+            color: #0f0;
+            font-size: 0.8em;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 120px 40px;
+            background: #000;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2.5em;
+            margin-bottom: 24px;
+        }
+
+        .cta p {
+            font-size: 1.1em;
+            color: #999;
+            margin-bottom: 40px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px;
+            background: #000;
+            border-top: 1px solid #1a1a1a;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: #999;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            width: 36px;
+            height: 36px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1em;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-buttons a,
+            .hero-buttons button {
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .feature-card,
+        .pricing-card {
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+        .pricing-card:nth-child(1) { animation-delay: 0.1s; }
+        .pricing-card:nth-child(2) { animation-delay: 0.2s; }
+        .pricing-card:nth-child(3) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <i class="fas fa-bolt"></i>
+            <span>asce.</span>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#pricing">Pricing</a>
+            <a href="auth.html" class="btn-secondary">Login</a>
+            <a href="auth.html" class="btn-primary">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Professional<br>Auto Clicker</h1>
+            <p>Experience the most advanced auto clicking solution with customizable settings, macro support, and an intuitive overlay system.</p>
+            <div class="hero-buttons">
+                <a href="auth.html" class="btn-primary">Get Started</a>
+                <a href="#features" class="btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <h2 class="section-title">Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>Auto Clicker</h3>
+                    <p>Customizable CPS, mouse button selection, and hotkey support with blatant and exhaust modes for optimal performance.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Macro System</h3>
+                    <p>Create and save custom macros with interval-based clicking patterns for complex automation tasks.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Overlay Display</h3>
+                    <p>Real-time on-screen display with customizable colors, scale, and effects including rainbow mode and shadows.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3>Web Dashboard</h3>
+                    <p>Manage settings, view statistics, and configure modules through an intuitive web-based control panel.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>Cloud Sync</h3>
+                    <p>Save and sync your configurations across devices with automatic backup and restore functionality.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure & Safe</h3>
+                    <p>Built with security in mind, featuring encrypted connections and license-based access control.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="pricing-container">
+            <h2 class="section-title">Simple Pricing</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Week</h3>
+                    <div class="pricing-price">$5</div>
+                    <div class="pricing-period">per week</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Auto Clicker</li>
+                        <li><i class="fas fa-check"></i> Macro Support</li>
+                        <li><i class="fas fa-check"></i> Overlay Display</li>
+                        <li><i class="fas fa-check"></i> Web Dashboard</li>
+                        <li><i class="fas fa-check"></i> Cloud Sync</li>
+                    </ul>
+                    <a href="auth.html" class="btn-secondary" style="display: block; text-align: center;">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Popular</div>
+                    <h3>Month</h3>
+                    <div class="pricing-price">$15</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Auto Clicker</li>
+                        <li><i class="fas fa-check"></i> Macro Support</li>
+                        <li><i class="fas fa-check"></i> Overlay Display</li>
+                        <li><i class="fas fa-check"></i> Web Dashboard</li>
+                        <li><i class="fas fa-check"></i> Cloud Sync</li>
+                        <li><i class="fas fa-check"></i> Priority Support</li>
+                    </ul>
+                    <a href="auth.html" class="btn-primary" style="display: block; text-align: center;">Get Started</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Lifetime</h3>
+                    <div class="pricing-price">$40</div>
+                    <div class="pricing-period">one-time payment</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Auto Clicker</li>
+                        <li><i class="fas fa-check"></i> Macro Support</li>
+                        <li><i class="fas fa-check"></i> Overlay Display</li>
+                        <li><i class="fas fa-check"></i> Web Dashboard</li>
+                        <li><i class="fas fa-check"></i> Cloud Sync</li>
+                        <li><i class="fas fa-check"></i> Priority Support</li>
+                        <li><i class="fas fa-check"></i> Lifetime Updates</li>
+                    </ul>
+                    <a href="auth.html" class="btn-secondary" style="display: block; text-align: center;">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>Ready to get started?</h2>
+        <p>Join thousands of users who trust asce for their automation needs.</p>
+        <a href="auth.html" class="btn-primary">Create Account</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">asce.</div>
+            <div class="footer-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="auth.html">Login</a>
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+            </div>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-discord"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
