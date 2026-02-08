@@ -1882,9 +1882,9 @@ async function downloadClient(useRandomName) {
                 // Update currentConfig with new values
                 currentConfig = { ...currentConfig, ...config };
                 
-                // IMPORTANT: Left Clicker starts DISABLED by default
+                // IMPORTANT: Only update toggle UI if this is coming from server
                 const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-                if (leftClickerToggle && config.hasOwnProperty('enabled')) {
+                if (leftClickerToggle && config.hasOwnProperty('enabled') && isUpdatingFromServer) {
                     if (config.enabled) {
                         leftClickerToggle.classList.add('leftclicker-active');
                     } else {
@@ -1932,13 +1932,13 @@ async function downloadClient(useRandomName) {
                     if (config.exhaustMode) {
                         exhaustModeCheck.classList.add('leftclicker-checked');
                     } else {
-                        exhaustModeCheck.classList.remove('exhaustModeCheck-checked');
+                        exhaustModeCheck.classList.remove('leftclicker-checked');
                     }
                 }
 
-                // IMPORTANT: Macro starts DISABLED by default
+                // IMPORTANT: Only update toggle UI if this is coming from server
                 const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-                if (macroToggle && config.hasOwnProperty('useMacro')) {
+                if (macroToggle && config.hasOwnProperty('useMacro') && isUpdatingFromServer) {
                     if (config.useMacro) {
                         macroToggle.classList.add('macro-active');
                     } else {
@@ -1951,8 +1951,10 @@ async function downloadClient(useRandomName) {
                     macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
                 }
 
-                // Save lastSavedConfig after applying
-                lastSavedConfig = { ...currentConfig };
+                // Only save lastSavedConfig when loading from server
+                if (isUpdatingFromServer) {
+                    lastSavedConfig = { ...currentConfig };
+                }
             } catch (error) {
                 console.error('Apply settings error:', error);
             }
@@ -2016,8 +2018,14 @@ async function downloadClient(useRandomName) {
             }
         }
 
+        let toggleDebounce = false;
+        
         function toggleLeftClicker() {
-            if (isUpdatingFromServer) return;
+            if (isUpdatingFromServer || toggleDebounce) return;
+            
+            toggleDebounce = true;
+            setTimeout(() => toggleDebounce = false, 300); // Prevent double-clicks within 300ms
+            
             const toggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
             if (!toggle) return;
             toggle.classList.toggle('leftclicker-active');
@@ -2027,6 +2035,7 @@ async function downloadClient(useRandomName) {
             currentConfig.enabled = isActive;
             
             // Save to server
+            console.log('[TOGGLE] Left Clicker:', isActive ? 'ON' : 'OFF');
             saveSettings({ enabled: isActive });
         }
 
@@ -2132,7 +2141,11 @@ async function downloadClient(useRandomName) {
         }
 
         function toggleMacro() {
-            if (isUpdatingFromServer) return;
+            if (isUpdatingFromServer || toggleDebounce) return;
+            
+            toggleDebounce = true;
+            setTimeout(() => toggleDebounce = false, 300);
+            
             const toggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
             if (!toggle) return;
             toggle.classList.toggle('macro-active');
@@ -2142,6 +2155,7 @@ async function downloadClient(useRandomName) {
             currentConfig.useMacro = isActive;
             
             // Save to server
+            console.log('[TOGGLE] Macro:', isActive ? 'ON' : 'OFF');
             saveSettings({ useMacro: isActive });
         }
 
@@ -2305,9 +2319,22 @@ async function downloadClient(useRandomName) {
                         }
                         
                         if (data.type === 'settings_updated') {
-                            isUpdatingFromServer = true;
-                            applySettings(data.settings);
-                            isUpdatingFromServer = false;
+                            // Check if this update is different from current config
+                            let hasChanges = false;
+                            for (const key in data.settings) {
+                                if (currentConfig[key] !== data.settings[key]) {
+                                    hasChanges = true;
+                                    break;
+                                }
+                            }
+                            
+                            // Only apply if something actually changed
+                            if (hasChanges) {
+                                console.log('[WS] Settings updated from server:', data.settings);
+                                isUpdatingFromServer = true;
+                                applySettings(data.settings);
+                                isUpdatingFromServer = false;
+                            }
                         }
                     } catch (error) {
                         console.error('[WS] Message parse error:', error);
