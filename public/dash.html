@@ -1879,9 +1879,12 @@ async function downloadClient(useRandomName) {
 
         function applySettings(config) {
             try {
+                // Update currentConfig with new values
+                currentConfig = { ...currentConfig, ...config };
+                
                 // IMPORTANT: Left Clicker starts DISABLED by default
                 const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-                if (leftClickerToggle) {
+                if (leftClickerToggle && config.hasOwnProperty('enabled')) {
                     if (config.enabled) {
                         leftClickerToggle.classList.add('leftclicker-active');
                     } else {
@@ -1891,19 +1894,23 @@ async function downloadClient(useRandomName) {
 
                 const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
                 const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
-                if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
-                if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
+                if (config.hasOwnProperty('cps')) {
+                    if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
+                    if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
+                }
 
                 // Apply hotkey from server config
-                const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
-                if (leftclickerHotkeyInput && config.hotkeyCode) {
-                    // Convert keycode to key name
-                    const keyName = getKeyName(config.hotkeyCode);
-                    leftclickerHotkeyInput.value = keyName;
+                if (config.hasOwnProperty('hotkeyCode')) {
+                    const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
+                    if (leftclickerHotkeyInput && config.hotkeyCode) {
+                        // Convert keycode to key name
+                        const keyName = getKeyName(config.hotkeyCode);
+                        leftclickerHotkeyInput.value = keyName;
+                    }
                 }
 
                 const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-                if (holdToClickCheck) {
+                if (holdToClickCheck && config.hasOwnProperty('holdToClick')) {
                     if (config.holdToClick) {
                         holdToClickCheck.classList.add('leftclicker-checked');
                     } else {
@@ -1912,7 +1919,7 @@ async function downloadClient(useRandomName) {
                 }
 
                 const blatantModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-                if (blatantModeCheck) {
+                if (blatantModeCheck && config.hasOwnProperty('blatantMode')) {
                     if (config.blatantMode) {
                         blatantModeCheck.classList.add('leftclicker-checked');
                     } else {
@@ -1921,17 +1928,17 @@ async function downloadClient(useRandomName) {
                 }
 
                 const exhaustModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-                if (exhaustModeCheck) {
+                if (exhaustModeCheck && config.hasOwnProperty('exhaustMode')) {
                     if (config.exhaustMode) {
                         exhaustModeCheck.classList.add('leftclicker-checked');
                     } else {
-                        exhaustModeCheck.classList.remove('leftclicker-checked');
+                        exhaustModeCheck.classList.remove('exhaustModeCheck-checked');
                     }
                 }
 
                 // IMPORTANT: Macro starts DISABLED by default
                 const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-                if (macroToggle) {
+                if (macroToggle && config.hasOwnProperty('useMacro')) {
                     if (config.useMacro) {
                         macroToggle.classList.add('macro-active');
                     } else {
@@ -1940,12 +1947,12 @@ async function downloadClient(useRandomName) {
                 }
 
                 const macroIntervalCount = document.getElementById('macroIntervalCount');
-                if (macroIntervalCount) {
+                if (macroIntervalCount && config.hasOwnProperty('macroIntervals')) {
                     macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
                 }
 
                 // Save lastSavedConfig after applying
-                lastSavedConfig = { ...config };
+                lastSavedConfig = { ...currentConfig };
             } catch (error) {
                 console.error('Apply settings error:', error);
             }
@@ -1955,9 +1962,11 @@ async function downloadClient(useRandomName) {
             if (isUpdatingFromServer) return;
             
             const token = localStorage.getItem('token');
+            
+            // Merge updates into currentConfig
             currentConfig = { ...currentConfig, ...updates };
 
-            // Check if settings actually changed
+            // Check if settings actually changed from last saved
             let hasRealChanges = false;
             for (const key in updates) {
                 if (lastSavedConfig[key] !== updates[key]) {
@@ -1984,6 +1993,7 @@ async function downloadClient(useRandomName) {
 
                     if (response.ok) {
                         lastSavedConfig = { ...currentConfig };
+                        console.log('[SETTINGS] Saved successfully:', currentConfig);
                     }
                 } catch (error) {
                     console.error('Save settings error:', error);
@@ -2012,6 +2022,11 @@ async function downloadClient(useRandomName) {
             if (!toggle) return;
             toggle.classList.toggle('leftclicker-active');
             const isActive = toggle.classList.contains('leftclicker-active');
+            
+            // Update currentConfig
+            currentConfig.enabled = isActive;
+            
+            // Save to server
             saveSettings({ enabled: isActive });
         }
 
@@ -2019,6 +2034,11 @@ async function downloadClient(useRandomName) {
             if (isUpdatingFromServer) return;
             const valueEl = document.getElementById('leftclickerCpsValue');
             if (valueEl) valueEl.textContent = parseFloat(value).toFixed(1);
+            
+            // Update currentConfig
+            currentConfig.cps = parseFloat(value);
+            
+            // Save to server
             saveSettings({ cps: parseFloat(value) });
         }
 
@@ -2042,6 +2062,11 @@ async function downloadClient(useRandomName) {
                 const keyName = getKeyName(e.keyCode);
                 input.value = keyName;
                 input.classList.remove('leftclicker-recording');
+                
+                // Update currentConfig
+                currentConfig.hotkeyCode = e.keyCode;
+                
+                // Save to server
                 saveSettings({ hotkeyCode: e.keyCode });
                 document.removeEventListener('keydown', handler);
             };
@@ -2055,6 +2080,11 @@ async function downloadClient(useRandomName) {
             if (!checkbox) return;
             checkbox.classList.toggle('leftclicker-checked');
             const isChecked = checkbox.classList.contains('leftclicker-checked');
+            
+            // Update currentConfig
+            currentConfig.holdToClick = isChecked;
+            
+            // Save to server
             saveSettings({ holdToClick: isChecked });
         }
 
@@ -2064,6 +2094,11 @@ async function downloadClient(useRandomName) {
             if (!checkbox) return;
             checkbox.classList.toggle('leftclicker-checked');
             const isChecked = checkbox.classList.contains('leftclicker-checked');
+            
+            // Update currentConfig
+            currentConfig.blatantMode = isChecked;
+            
+            // Save to server
             saveSettings({ blatantMode: isChecked });
         }
 
@@ -2073,6 +2108,11 @@ async function downloadClient(useRandomName) {
             if (!checkbox) return;
             checkbox.classList.toggle('leftclicker-checked');
             const isChecked = checkbox.classList.contains('leftclicker-checked');
+            
+            // Update currentConfig
+            currentConfig.exhaustMode = isChecked;
+            
+            // Save to server
             saveSettings({ exhaustMode: isChecked });
         }
 
@@ -2097,6 +2137,11 @@ async function downloadClient(useRandomName) {
             if (!toggle) return;
             toggle.classList.toggle('macro-active');
             const isActive = toggle.classList.contains('macro-active');
+            
+            // Update currentConfig
+            currentConfig.useMacro = isActive;
+            
+            // Save to server
             saveSettings({ useMacro: isActive });
         }
 
