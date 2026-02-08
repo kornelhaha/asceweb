@@ -1379,66 +1379,128 @@
                                 </div>
                             </div>
 
-                            <!-- Overlay -->
-                            <div class="overlay-card" data-category="visual" data-module="overlay" data-name="overlay">
-                                <div class="overlay-header">
-                                    <div class="overlay-title">
-                                        <div class="overlay-icon"><i class="fas fa-eye"></i></div>
-                                        <span>Overlay</span>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <button class="overlay-expand-btn" onclick="toggleOverlaySettings()">
-                                            <i class="fas fa-chevron-down"></i>
-                                        </button>
-                                        <div class="overlay-toggle" data-setting="overlayEnabled" onclick="toggleOverlay()">
-                                            <div class="overlay-toggle-slider"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="overlay-settings" id="module-overlay-settings">
-                                    <div class="overlay-setting-row">
-                                        <span class="overlay-setting-label">Scale</span>
-                                        <span class="overlay-setting-value" id="overlayScaleValue">100%</span>
-                                    </div>
-                                    <div class="overlay-slider-container">
-                                        <input type="range" class="overlay-slider" min="50" max="200" step="10" value="100" oninput="updateOverlayScale(this.value)" id="overlayScaleSlider">
-                                    </div>
-                                    <div class="overlay-setting-row" style="margin-top: 16px;">
-                                        <span class="overlay-setting-label">Text Color</span>
-                                        <input type="color" class="overlay-color-picker" value="#ffffff" onchange="updateOverlayTextColor(this.value)" id="overlayColorPicker">
-                                    </div>
-                                    <div class="overlay-setting-row">
-                                        <span class="overlay-setting-label">Background</span>
-                                        <div class="overlay-checkbox" data-setting="overlayBackground" onclick="toggleOverlayBackground()">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    </div>
-                                    <div class="overlay-setting-row">
-                                        <span class="overlay-setting-label">Lowercase</span>
-                                        <div class="overlay-checkbox" data-setting="overlayLowercase" onclick="toggleOverlayLowercase()">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    </div>
-                                    <div class="overlay-setting-row">
-                                        <span class="overlay-setting-label">Shadow</span>
-                                        <div class="overlay-checkbox" data-setting="overlayShadow" onclick="toggleOverlayShadow()">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    </div>
-                                    <div class="overlay-setting-row">
-                                        <span class="overlay-setting-label">Rainbow</span>
-                                        <div class="overlay-checkbox" data-setting="overlayRainbow" onclick="toggleOverlayRainbow()">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    </div>
-                                    <div class="overlay-setting-row">
-                                        <span class="overlay-setting-label">Watermark</span>
-                                        <div class="overlay-checkbox" data-setting="overlayWatermark" onclick="toggleOverlayWatermark()">
-                                            <i class="fas fa-check"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Complete Overlay Module with all settings -->
+<div class="overlay-card" data-category="visual" data-module="overlay" data-name="overlay">
+    <div class="overlay-header">
+        <div class="overlay-title">
+            <div class="overlay-icon"><i class="fas fa-eye"></i></div>
+            <span>Overlay</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="overlay-expand-btn" onclick="toggleOverlaySettings()">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="overlay-toggle" data-setting="overlayEnabled" onclick="toggleOverlay()">
+                <div class="overlay-toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    <div class="overlay-settings" id="module-overlay-settings">
+        <!-- Scale -->
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Scale</span>
+            <span class="overlay-setting-value" id="overlayScaleValue">100%</span>
+        </div>
+        <div class="overlay-slider-container">
+            <input type="range" class="overlay-slider" min="50" max="200" step="10" value="100" 
+                   oninput="updateOverlayScale(this.value)" id="overlayScaleSlider">
+        </div>
+        
+        <!-- Text Color -->
+        <div class="overlay-setting-row" style="margin-top: 16px;">
+            <span class="overlay-setting-label">Text Color</span>
+            <input type="color" class="overlay-color-picker" value="#ffffff" 
+                   onchange="updateOverlayTextColor(this.value)" id="overlayTextColorPicker">
+        </div>
+        
+        <!-- Background Color -->
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Background Color</span>
+            <input type="color" class="overlay-color-picker" value="#0f0f0f" 
+                   onchange="updateOverlayBgColor(this.value)" id="overlayBgColorPicker">
+        </div>
+        
+        <!-- Background Opacity -->
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">BG Opacity</span>
+            <span class="overlay-setting-value" id="overlayOpacityValue">90%</span>
+        </div>
+        <div class="overlay-slider-container">
+            <input type="range" class="overlay-slider" min="0" max="100" step="5" value="90" 
+                   oninput="updateOverlayOpacity(this.value)" id="overlayOpacitySlider">
+        </div>
+        
+        <!-- Padding X -->
+        <div class="overlay-setting-row" style="margin-top: 16px;">
+            <span class="overlay-setting-label">Padding X</span>
+            <span class="overlay-setting-value" id="overlayPaddingXValue">20px</span>
+        </div>
+        <div class="overlay-slider-container">
+            <input type="range" class="overlay-slider" min="0" max="100" step="5" value="20" 
+                   oninput="updateOverlayPaddingX(this.value)" id="overlayPaddingXSlider">
+        </div>
+        
+        <!-- Padding Y -->
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Padding Y</span>
+            <span class="overlay-setting-value" id="overlayPaddingYValue">20px</span>
+        </div>
+        <div class="overlay-slider-container">
+            <input type="range" class="overlay-slider" min="0" max="100" step="5" value="20" 
+                   oninput="updateOverlayPaddingY(this.value)" id="overlayPaddingYSlider">
+        </div>
+        
+        <!-- Checkboxes -->
+        <div class="overlay-setting-row" style="margin-top: 16px;">
+            <span class="overlay-setting-label">Background</span>
+            <div class="overlay-checkbox" data-setting="overlayBackground" onclick="toggleOverlayBackground()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Text Glow</span>
+            <div class="overlay-checkbox" data-setting="overlayTextGlow" onclick="toggleOverlayTextGlow()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Rounded Corners</span>
+            <div class="overlay-checkbox" data-setting="overlayRoundedCorners" onclick="toggleOverlayRoundedCorners()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Lowercase</span>
+            <div class="overlay-checkbox" data-setting="overlayLowercase" onclick="toggleOverlayLowercase()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Show Suffix (CPS)</span>
+            <div class="overlay-checkbox" data-setting="overlaySuffix" onclick="toggleOverlaySuffix()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Rainbow</span>
+            <div class="overlay-checkbox" data-setting="overlayRainbow" onclick="toggleOverlayRainbow()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        
+        <div class="overlay-setting-row">
+            <span class="overlay-setting-label">Watermark</span>
+            <div class="overlay-checkbox" data-setting="overlayWatermark" onclick="toggleOverlayWatermark()">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+    </div>
+</div>
                         </div>
                     </div>
                     
@@ -2127,6 +2189,66 @@ async function downloadClient(useRandomName) {
                     macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
                 }
 
+                function updateOverlayOpacity(value) {
+    if (isUpdatingFromServer) return;
+    const valueEl = document.getElementById('overlayOpacityValue');
+    if (valueEl) valueEl.textContent = value + '%';
+    saveSettings({ overlayBgOpacity: parseFloat(value) });
+}
+
+function updateOverlayBgColor(color) {
+    if (isUpdatingFromServer) return;
+    const r = parseInt(color.substr(1, 2), 16);
+    const g = parseInt(color.substr(3, 2), 16);
+    const b = parseInt(color.substr(5, 2), 16);
+    saveSettings({
+        overlayBgColorR: r,
+        overlayBgColorG: g,
+        overlayBgColorB: b
+    });
+}
+
+function updateOverlayPaddingX(value) {
+    if (isUpdatingFromServer) return;
+    const valueEl = document.getElementById('overlayPaddingXValue');
+    if (valueEl) valueEl.textContent = value + 'px';
+    saveSettings({ overlayPaddingX: parseFloat(value) });
+}
+
+function updateOverlayPaddingY(value) {
+    if (isUpdatingFromServer) return;
+    const valueEl = document.getElementById('overlayPaddingYValue');
+    if (valueEl) valueEl.textContent = value + 'px';
+    saveSettings({ overlayPaddingY: parseFloat(value) });
+}
+
+function toggleOverlayTextGlow() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayTextGlow"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('overlay-checked');
+    const isChecked = checkbox.classList.contains('overlay-checked');
+    saveSettings({ overlayTextGlow: isChecked });
+}
+
+function toggleOverlayRoundedCorners() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayRoundedCorners"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('overlay-checked');
+    const isChecked = checkbox.classList.contains('overlay-checked');
+    saveSettings({ overlayRoundedCorners: isChecked });
+}
+
+function toggleOverlaySuffix() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlaySuffix"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('overlay-checked');
+    const isChecked = checkbox.classList.contains('overlay-checked');
+    saveSettings({ overlaySuffix: isChecked });
+}
+
                 const overlayToggle = document.querySelector('.overlay-toggle[data-setting="overlayEnabled"]');
                 if (overlayToggle) {
                     if (config.overlayEnabled) {
@@ -2616,4 +2738,3 @@ async function downloadClient(useRandomName) {
     </script>
 </body>
 </html>
-
