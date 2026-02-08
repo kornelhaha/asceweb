@@ -2399,7 +2399,7 @@
             if (text) text.textContent = 'not connected';
             
             try {
-                ws = new WebSocket(`ws://asce-0hoi.onrender.com?token=${token}`);
+                ws = new WebSocket(`wss://asce-0hoi.onrender.com?token=${token}`);
                 ws.onopen = () => {
                     const dot = document.getElementById('connectionDot');
                     const text = document.getElementById('connectionText');
@@ -2452,6 +2452,7 @@
 </body>
 
 </html>
+
 
 
 
