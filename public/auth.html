@@ -272,6 +272,31 @@
             document.getElementById('success-message').classList.remove('show');
         }
 
+        // Check if session is valid (1 hour max)
+        function isSessionValid() {
+            const token = localStorage.getItem('token');
+            const loginTime = localStorage.getItem('loginTime');
+            
+            if (!token || !loginTime) {
+                return false;
+            }
+
+            const now = Date.now();
+            const elapsed = now - parseInt(loginTime);
+            const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+
+            // Session expired after 1 hour
+            if (elapsed > oneHour) {
+                // Clear expired session
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('loginTime');
+                return false;
+            }
+
+            return true;
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
             hideError();
@@ -294,8 +319,10 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Store token and login time
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('loginTime', Date.now().toString());
 
                     // Redirect based on role
                     if (data.user.role === 'admin') {
@@ -339,8 +366,10 @@
                 const data = await response.json();
 
                 if (response.ok) {
+                    // Store token and login time
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
+                    localStorage.setItem('loginTime', Date.now().toString());
                     
                     // Redirect to dashboard
                     window.location.href = 'dash.html';
@@ -357,26 +386,24 @@
             }
         }
 
-        // Check if already logged in
+        // Check if already logged in with valid session
         window.addEventListener('load', () => {
-            const token = localStorage.getItem('token');
-            const user = localStorage.getItem('user');
-
-            if (token && user) {
-                const userData = JSON.parse(user);
+            if (isSessionValid()) {
+                const user = JSON.parse(localStorage.getItem('user'));
                 
                 // Redirect to appropriate dashboard
-                if (userData.role === 'admin') {
+                if (user.role === 'admin') {
                     window.location.href = 'admin-dash.html';
                 } else {
                     window.location.href = 'dash.html';
                 }
+            } else {
+                // Clear any expired session data
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('loginTime');
             }
         });
     </script>
 </body>
-
 </html>
-
-
-
