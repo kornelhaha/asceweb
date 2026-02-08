@@ -239,7 +239,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://asce-370n.onrender.com/api';
+        const API_URL = 'https://asce-0hoi.onrender.com/api';
 
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -386,23 +386,20 @@
             }
         }
 
-        // Check if already logged in with valid session
+        // FIXED: Only check session validity, don't redirect if not logged in
+        // (this is the login page, so users SHOULD be here if not logged in)
         window.addEventListener('load', () => {
             if (isSessionValid()) {
                 const user = JSON.parse(localStorage.getItem('user'));
                 
-                // Redirect to appropriate dashboard
+                // Redirect to appropriate dashboard if already logged in
                 if (user.role === 'admin') {
                     window.location.href = 'admin-dash.html';
                 } else {
                     window.location.href = 'dash.html';
                 }
-            } else {
-                // Clear any expired session data
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                localStorage.removeItem('loginTime');
             }
+            // If not logged in, stay on this page (don't clear anything)
         });
     </script>
 </body>
