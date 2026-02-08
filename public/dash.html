@@ -658,7 +658,7 @@
             border-color: #fff;
         }
 
-        /* Overlay Module Styles */
+        /* Overlay Module Styles - Coming Soon */
         .overlay-card {
             background: #0d0d0d;
             border: 1px solid #1a1a1a;
@@ -666,6 +666,7 @@
             padding: 20px;
             transition: all 0.2s ease;
             display: none;
+            text-align: center;
         }
 
         .overlay-card.overlay-visible {
@@ -679,184 +680,42 @@
 
         .overlay-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .overlay-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 1.05em;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .overlay-icon {
-            width: 32px;
-            height: 32px;
+            width: 64px;
+            height: 64px;
             background: #1a1a1a;
-            border-radius: 6px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-        }
-
-        .overlay-toggle {
-            position: relative;
-            width: 48px;
-            height: 26px;
-            background: #1a1a1a;
-            border-radius: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #2a2a2a;
-        }
-
-        .overlay-toggle.overlay-active {
-            background: #fff;
-            border-color: #fff;
-        }
-
-        .overlay-toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: #666;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .overlay-toggle.overlay-active .overlay-toggle-slider {
-            transform: translateX(22px);
-            background: #000;
-        }
-
-        .overlay-settings {
-            display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #1a1a1a;
-        }
-
-        .overlay-settings.overlay-show {
-            display: block;
-        }
-
-        .overlay-setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-        }
-
-        .overlay-setting-label {
-            font-size: 0.9em;
-            color: #ccc;
-        }
-
-        .overlay-setting-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.85em;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .overlay-slider-container {
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .overlay-slider {
-            width: 100%;
-            height: 4px;
-            background: #1a1a1a;
-            border-radius: 2px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .overlay-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .overlay-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-        }
-
-        .overlay-expand-btn {
-            background: none;
-            border: none;
             color: #666;
-            cursor: pointer;
-            padding: 4px 8px;
-            font-size: 0.9em;
-            transition: all 0.2s ease;
+            font-size: 2em;
         }
 
-        .overlay-expand-btn:hover {
+        .overlay-title {
+            font-weight: 600;
+            font-size: 1.3em;
             color: #fff;
         }
 
-        .overlay-expand-btn i {
-            transition: transform 0.3s ease;
-        }
-
-        .overlay-expand-btn.overlay-expanded i {
-            transform: rotate(180deg);
-        }
-
-        .overlay-color-picker {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            border: 2px solid #2a2a2a;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .overlay-color-picker:hover {
-            border-color: #fff;
-        }
-
-        .overlay-checkbox {
-            width: 20px;
-            height: 20px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .overlay-checkbox i {
-            display: none;
-        }
-
-        .overlay-checkbox.overlay-checked {
-            background: #fff;
-            border-color: #fff;
-        }
-
-        .overlay-checkbox.overlay-checked i {
-            color: #000;
-            display: block;
+        .coming-soon-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-top: 8px;
         }
 
         .empty-state {
@@ -1379,128 +1238,14 @@
                                 </div>
                             </div>
 
-                            <!-- Complete Overlay Module with all settings -->
-<div class="overlay-card" data-category="visual" data-module="overlay" data-name="overlay">
-    <div class="overlay-header">
-        <div class="overlay-title">
-            <div class="overlay-icon"><i class="fas fa-eye"></i></div>
-            <span>Overlay</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="overlay-expand-btn" onclick="toggleOverlaySettings()">
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="overlay-toggle" data-setting="overlayEnabled" onclick="toggleOverlay()">
-                <div class="overlay-toggle-slider"></div>
-            </div>
-        </div>
-    </div>
-    <div class="overlay-settings" id="module-overlay-settings">
-        <!-- Scale -->
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Scale</span>
-            <span class="overlay-setting-value" id="overlayScaleValue">100%</span>
-        </div>
-        <div class="overlay-slider-container">
-            <input type="range" class="overlay-slider" min="50" max="200" step="10" value="100" 
-                   oninput="updateOverlayScale(this.value)" id="overlayScaleSlider">
-        </div>
-        
-        <!-- Text Color -->
-        <div class="overlay-setting-row" style="margin-top: 16px;">
-            <span class="overlay-setting-label">Text Color</span>
-            <input type="color" class="overlay-color-picker" value="#ffffff" 
-                   onchange="updateOverlayTextColor(this.value)" id="overlayTextColorPicker">
-        </div>
-        
-        <!-- Background Color -->
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Background Color</span>
-            <input type="color" class="overlay-color-picker" value="#0f0f0f" 
-                   onchange="updateOverlayBgColor(this.value)" id="overlayBgColorPicker">
-        </div>
-        
-        <!-- Background Opacity -->
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">BG Opacity</span>
-            <span class="overlay-setting-value" id="overlayOpacityValue">90%</span>
-        </div>
-        <div class="overlay-slider-container">
-            <input type="range" class="overlay-slider" min="0" max="100" step="5" value="90" 
-                   oninput="updateOverlayOpacity(this.value)" id="overlayOpacitySlider">
-        </div>
-        
-        <!-- Padding X -->
-        <div class="overlay-setting-row" style="margin-top: 16px;">
-            <span class="overlay-setting-label">Padding X</span>
-            <span class="overlay-setting-value" id="overlayPaddingXValue">20px</span>
-        </div>
-        <div class="overlay-slider-container">
-            <input type="range" class="overlay-slider" min="0" max="100" step="5" value="20" 
-                   oninput="updateOverlayPaddingX(this.value)" id="overlayPaddingXSlider">
-        </div>
-        
-        <!-- Padding Y -->
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Padding Y</span>
-            <span class="overlay-setting-value" id="overlayPaddingYValue">20px</span>
-        </div>
-        <div class="overlay-slider-container">
-            <input type="range" class="overlay-slider" min="0" max="100" step="5" value="20" 
-                   oninput="updateOverlayPaddingY(this.value)" id="overlayPaddingYSlider">
-        </div>
-        
-        <!-- Checkboxes -->
-        <div class="overlay-setting-row" style="margin-top: 16px;">
-            <span class="overlay-setting-label">Background</span>
-            <div class="overlay-checkbox" data-setting="overlayBackground" onclick="toggleOverlayBackground()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Text Glow</span>
-            <div class="overlay-checkbox" data-setting="overlayTextGlow" onclick="toggleOverlayTextGlow()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Rounded Corners</span>
-            <div class="overlay-checkbox" data-setting="overlayRoundedCorners" onclick="toggleOverlayRoundedCorners()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Lowercase</span>
-            <div class="overlay-checkbox" data-setting="overlayLowercase" onclick="toggleOverlayLowercase()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Show Suffix (CPS)</span>
-            <div class="overlay-checkbox" data-setting="overlaySuffix" onclick="toggleOverlaySuffix()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Rainbow</span>
-            <div class="overlay-checkbox" data-setting="overlayRainbow" onclick="toggleOverlayRainbow()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-        
-        <div class="overlay-setting-row">
-            <span class="overlay-setting-label">Watermark</span>
-            <div class="overlay-checkbox" data-setting="overlayWatermark" onclick="toggleOverlayWatermark()">
-                <i class="fas fa-check"></i>
-            </div>
-        </div>
-    </div>
-</div>
+                            <!-- Overlay - Coming Soon -->
+                            <div class="overlay-card" data-category="visual" data-module="overlay" data-name="overlay">
+                                <div class="overlay-header">
+                                    <div class="overlay-icon"><i class="fas fa-eye"></i></div>
+                                    <div class="overlay-title">Overlay</div>
+                                    <div class="coming-soon-badge">Coming Soon</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1736,6 +1481,7 @@
 
         let lastSavedConfig = {};
         let saveTimeout = null;
+        let clientConnected = false; // Track if C++ client is connected
 
         const API_URL = 'https://asce-f5us.onrender.com/api';
         let currentConfig = {};
@@ -2133,6 +1879,7 @@ async function downloadClient(useRandomName) {
 
         function applySettings(config) {
             try {
+                // IMPORTANT: Left Clicker starts DISABLED by default
                 const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
                 if (leftClickerToggle) {
                     if (config.enabled) {
@@ -2140,13 +1887,20 @@ async function downloadClient(useRandomName) {
                     } else {
                         leftClickerToggle.classList.remove('leftclicker-active');
                     }
-                    lastSavedConfig = { ...config };
                 }
 
                 const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
                 const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
                 if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
                 if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
+
+                // Apply hotkey from server config
+                const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
+                if (leftclickerHotkeyInput && config.hotkeyCode) {
+                    // Convert keycode to key name
+                    const keyName = getKeyName(config.hotkeyCode);
+                    leftclickerHotkeyInput.value = keyName;
+                }
 
                 const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
                 if (holdToClickCheck) {
@@ -2175,6 +1929,7 @@ async function downloadClient(useRandomName) {
                     }
                 }
 
+                // IMPORTANT: Macro starts DISABLED by default
                 const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
                 if (macroToggle) {
                     if (config.useMacro) {
@@ -2189,142 +1944,20 @@ async function downloadClient(useRandomName) {
                     macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
                 }
 
-                function updateOverlayOpacity(value) {
-    if (isUpdatingFromServer) return;
-    const valueEl = document.getElementById('overlayOpacityValue');
-    if (valueEl) valueEl.textContent = value + '%';
-    saveSettings({ overlayBgOpacity: parseFloat(value) });
-}
-
-function updateOverlayBgColor(color) {
-    if (isUpdatingFromServer) return;
-    const r = parseInt(color.substr(1, 2), 16);
-    const g = parseInt(color.substr(3, 2), 16);
-    const b = parseInt(color.substr(5, 2), 16);
-    saveSettings({
-        overlayBgColorR: r,
-        overlayBgColorG: g,
-        overlayBgColorB: b
-    });
-}
-
-function updateOverlayPaddingX(value) {
-    if (isUpdatingFromServer) return;
-    const valueEl = document.getElementById('overlayPaddingXValue');
-    if (valueEl) valueEl.textContent = value + 'px';
-    saveSettings({ overlayPaddingX: parseFloat(value) });
-}
-
-function updateOverlayPaddingY(value) {
-    if (isUpdatingFromServer) return;
-    const valueEl = document.getElementById('overlayPaddingYValue');
-    if (valueEl) valueEl.textContent = value + 'px';
-    saveSettings({ overlayPaddingY: parseFloat(value) });
-}
-
-function toggleOverlayTextGlow() {
-    if (isUpdatingFromServer) return;
-    const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayTextGlow"]');
-    if (!checkbox) return;
-    checkbox.classList.toggle('overlay-checked');
-    const isChecked = checkbox.classList.contains('overlay-checked');
-    saveSettings({ overlayTextGlow: isChecked });
-}
-
-function toggleOverlayRoundedCorners() {
-    if (isUpdatingFromServer) return;
-    const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayRoundedCorners"]');
-    if (!checkbox) return;
-    checkbox.classList.toggle('overlay-checked');
-    const isChecked = checkbox.classList.contains('overlay-checked');
-    saveSettings({ overlayRoundedCorners: isChecked });
-}
-
-function toggleOverlaySuffix() {
-    if (isUpdatingFromServer) return;
-    const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlaySuffix"]');
-    if (!checkbox) return;
-    checkbox.classList.toggle('overlay-checked');
-    const isChecked = checkbox.classList.contains('overlay-checked');
-    saveSettings({ overlaySuffix: isChecked });
-}
-
-                const overlayToggle = document.querySelector('.overlay-toggle[data-setting="overlayEnabled"]');
-                if (overlayToggle) {
-                    if (config.overlayEnabled) {
-                        overlayToggle.classList.add('overlay-active');
-                    } else {
-                        overlayToggle.classList.remove('overlay-active');
-                    }
-                }
-
-                const overlayScaleValue = document.getElementById('overlayScaleValue');
-                const overlayScaleSlider = document.getElementById('overlayScaleSlider');
-                if (overlayScaleValue) overlayScaleValue.textContent = (config.overlayScale || 100) + '%';
-                if (overlayScaleSlider) overlayScaleSlider.value = config.overlayScale || 100;
-
-                const overlayBackgroundCheck = document.querySelector('.overlay-checkbox[data-setting="overlayBackground"]');
-                if (overlayBackgroundCheck) {
-                    if (config.overlayBackground) {
-                        overlayBackgroundCheck.classList.add('overlay-checked');
-                    } else {
-                        overlayBackgroundCheck.classList.remove('overlay-checked');
-                    }
-                }
-
-                const overlayLowercaseCheck = document.querySelector('.overlay-checkbox[data-setting="overlayLowercase"]');
-                if (overlayLowercaseCheck) {
-                    if (config.overlayLowercase) {
-                        overlayLowercaseCheck.classList.add('overlay-checked');
-                    } else {
-                        overlayLowercaseCheck.classList.remove('overlay-checked');
-                    }
-                }
-
-                const overlayShadowCheck = document.querySelector('.overlay-checkbox[data-setting="overlayShadow"]');
-                if (overlayShadowCheck) {
-                    if (config.overlayShadow) {
-                        overlayShadowCheck.classList.add('overlay-checked');
-                    } else {
-                        overlayShadowCheck.classList.remove('overlay-checked');
-                    }
-                }
-
-                const overlayRainbowCheck = document.querySelector('.overlay-checkbox[data-setting="overlayRainbow"]');
-                if (overlayRainbowCheck) {
-                    if (config.overlayRainbow) {
-                        overlayRainbowCheck.classList.add('overlay-checked');
-                    } else {
-                        overlayRainbowCheck.classList.remove('overlay-checked');
-                    }
-                }
-
-                const overlayWatermarkCheck = document.querySelector('.overlay-checkbox[data-setting="overlayWatermark"]');
-                if (overlayWatermarkCheck) {
-                    if (config.overlayWatermark) {
-                        overlayWatermarkCheck.classList.add('overlay-checked');
-                    } else {
-                        overlayWatermarkCheck.classList.remove('overlay-checked');
-                    }
-                }
-
-                if (config.overlayTextColorR !== undefined) {
-                    const colorPicker = document.getElementById('overlayColorPicker');
-                    if (colorPicker) {
-                        const r = config.overlayTextColorR || 255;
-                        const g = config.overlayTextColorG || 255;
-                        const b = config.overlayTextColorB || 255;
-                        const hex = '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-                        colorPicker.value = hex;
-                    }
-                }
-            } catch (error) {}
+                // Save lastSavedConfig after applying
+                lastSavedConfig = { ...config };
+            } catch (error) {
+                console.error('Apply settings error:', error);
+            }
         }
 
         async function saveSettings(updates) {
+            if (isUpdatingFromServer) return;
+            
             const token = localStorage.getItem('token');
             currentConfig = { ...currentConfig, ...updates };
 
+            // Check if settings actually changed
             let hasRealChanges = false;
             for (const key in updates) {
                 if (lastSavedConfig[key] !== updates[key]) {
@@ -2352,7 +1985,9 @@ function toggleOverlaySuffix() {
                     if (response.ok) {
                         lastSavedConfig = { ...currentConfig };
                     }
-                } catch (error) {}
+                } catch (error) {
+                    console.error('Save settings error:', error);
+                }
             }, 500);
         }
 
@@ -2387,17 +2022,30 @@ function toggleOverlaySuffix() {
             saveSettings({ cps: parseFloat(value) });
         }
 
+        function getKeyName(keyCode) {
+            const keyMap = {
+                112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
+                118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
+                16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
+                32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
+            };
+            return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
+        }
+
         function recordLeftClickerKeybind(input) {
             if (!input) return;
             input.classList.add('leftclicker-recording');
             input.value = 'Press any key...';
+            
             const handler = (e) => {
                 e.preventDefault();
-                input.value = e.key.toUpperCase();
+                const keyName = getKeyName(e.keyCode);
+                input.value = keyName;
                 input.classList.remove('leftclicker-recording');
                 saveSettings({ hotkeyCode: e.keyCode });
                 document.removeEventListener('keydown', handler);
             };
+            
             document.addEventListener('keydown', handler);
         }
 
@@ -2450,94 +2098,6 @@ function toggleOverlaySuffix() {
             toggle.classList.toggle('macro-active');
             const isActive = toggle.classList.contains('macro-active');
             saveSettings({ useMacro: isActive });
-        }
-
-        function toggleOverlaySettings() {
-            const settings = document.getElementById('module-overlay-settings');
-            const btn = document.querySelector('.overlay-expand-btn');
-            if (settings && btn) {
-                const isOpen = settings.classList.contains('overlay-show');
-                if (isOpen) {
-                    btn.classList.remove('overlay-expanded');
-                    settings.classList.remove('overlay-show');
-                } else {
-                    btn.classList.add('overlay-expanded');
-                    settings.classList.add('overlay-show');
-                }
-            }
-        }
-
-        function toggleOverlay() {
-            if (isUpdatingFromServer) return;
-            const toggle = document.querySelector('.overlay-toggle[data-setting="overlayEnabled"]');
-            if (!toggle) return;
-            toggle.classList.toggle('overlay-active');
-            const isActive = toggle.classList.contains('overlay-active');
-            saveSettings({ overlayEnabled: isActive });
-        }
-
-        function updateOverlayScale(value) {
-            if (isUpdatingFromServer) return;
-            const valueEl = document.getElementById('overlayScaleValue');
-            if (valueEl) valueEl.textContent = value + '%';
-            saveSettings({ overlayScale: parseFloat(value) });
-        }
-
-        function updateOverlayTextColor(color) {
-            if (isUpdatingFromServer) return;
-            const r = parseInt(color.substr(1, 2), 16);
-            const g = parseInt(color.substr(3, 2), 16);
-            const b = parseInt(color.substr(5, 2), 16);
-            saveSettings({
-                overlayTextColorR: r,
-                overlayTextColorG: g,
-                overlayTextColorB: b
-            });
-        }
-
-        function toggleOverlayBackground() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayBackground"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('overlay-checked');
-            const isChecked = checkbox.classList.contains('overlay-checked');
-            saveSettings({ overlayBackground: isChecked });
-        }
-
-        function toggleOverlayLowercase() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayLowercase"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('overlay-checked');
-            const isChecked = checkbox.classList.contains('overlay-checked');
-            saveSettings({ overlayLowercase: isChecked });
-        }
-
-        function toggleOverlayShadow() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayShadow"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('overlay-checked');
-            const isChecked = checkbox.classList.contains('overlay-checked');
-            saveSettings({ overlayShadow: isChecked });
-        }
-
-        function toggleOverlayRainbow() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayRainbow"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('overlay-checked');
-            const isChecked = checkbox.classList.contains('overlay-checked');
-            saveSettings({ overlayRainbow: isChecked });
-        }
-
-        function toggleOverlayWatermark() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.overlay-checkbox[data-setting="overlayWatermark"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('overlay-checked');
-            const isChecked = checkbox.classList.contains('overlay-checked');
-            saveSettings({ overlayWatermark: isChecked });
         }
 
         function filterCategory(event, category) {
@@ -2672,38 +2232,49 @@ function toggleOverlaySuffix() {
         }
 
         function connectWebSocket(token) {
-            const dot = document.getElementById('connectionDot');
-            const text = document.getElementById('connectionText');
-            if (dot) dot.classList.remove('connected');
-            if (text) text.textContent = 'not connected';
-            
             try {
-                ws = new WebSocket(`ws://localhost:3000?token=${token}`);
+                // Use wss:// for production HTTPS
+                ws = new WebSocket(`wss://asce-f5us.onrender.com?token=${token}`);
+                
                 ws.onopen = () => {
-                    const dot = document.getElementById('connectionDot');
-                    const text = document.getElementById('connectionText');
-                    if (dot) dot.classList.add('connected');
-                    if (text) text.textContent = 'connected';
+                    console.log('[WS] WebSocket connected');
                 };
+                
                 ws.onclose = () => {
-                    const dot = document.getElementById('connectionDot');
-                    const text = document.getElementById('connectionText');
-                    if (dot) dot.classList.remove('connected');
-                    if (text) text.textContent = 'not connected';
+                    console.log('[WS] WebSocket disconnected, reconnecting...');
+                    // Don't mark as disconnected immediately, client might still be connected
                     setTimeout(() => connectWebSocket(token), 3000);
                 };
+                
                 ws.onmessage = (event) => {
                     try {
                         const data = JSON.parse(event.data);
-                        if (data.type === 'settings_update') {
+                        
+                        if (data.type === 'agent_heartbeat') {
+                            // C++ CLIENT IS CONNECTED!
+                            clientConnected = true;
+                            const dot = document.getElementById('connectionDot');
+                            const text = document.getElementById('connectionText');
+                            if (dot) dot.classList.add('connected');
+                            if (text) text.textContent = 'connected';
+                        }
+                        
+                        if (data.type === 'settings_updated') {
                             isUpdatingFromServer = true;
                             applySettings(data.settings);
                             isUpdatingFromServer = false;
                         }
-                    } catch (error) {}
+                    } catch (error) {
+                        console.error('[WS] Message parse error:', error);
+                    }
                 };
-                ws.onerror = (error) => {};
-            } catch (error) {}
+                
+                ws.onerror = (error) => {
+                    console.error('[WS] WebSocket error:', error);
+                };
+            } catch (error) {
+                console.error('[WS] WebSocket connection error:', error);
+            }
         }
 
             async function logout() {
