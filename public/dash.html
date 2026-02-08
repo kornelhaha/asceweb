@@ -1702,27 +1702,30 @@
             return true;
         }
 
-        async function init() {
+async function init() {
+    // Check session validity first
+    if (!isSessionValid()) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('loginTime');
+        window.location.href = 'auth.html';
+        return;
+    }
 
-                if (!isSessionValid()) {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user');
-                    localStorage.removeItem('loginTime');
-                    window.location.href = 'auth.html';
-                return;
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'auth.html';
+        return;
+    }
 
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = 'auth.html';
-                return;
-            }
-
-            try {
-                await loadUserProfile();
-                await loadSettings();
-                connectWebSocket(token);
-            } catch (error) {}
-        }
+    try {
+        await loadUserProfile();
+        await loadSettings();
+        connectWebSocket(token);
+    } catch (error) {
+        console.error('Init error:', error);
+    }
+}
 
         async function loadUserProfile() {
             const token = localStorage.getItem('token');
