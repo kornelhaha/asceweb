@@ -15,31 +15,47 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
+            background: #000;
             color: #fff;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ==================== BREATHTAKING CANVAS BACKGROUND ==================== */
+        #canvas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: #000;
         }
 
         .dashboard-layout {
             display: flex;
             min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
 
         .sidebar {
             width: 240px;
-            background: #000;
-            border-right: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
             left: 0;
             top: 0;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .sidebar-header {
             padding: 24px 20px;
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logo {
@@ -50,10 +66,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
         .logo i {
             color: #fff;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
         }
 
         .sidebar-nav {
@@ -70,21 +88,40 @@
             color: #666;
             text-decoration: none;
             border-radius: 8px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             margin-bottom: 4px;
             font-size: 0.9em;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
         }
 
         .nav-item:hover {
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.05);
             color: #fff;
+            transform: translateX(4px);
         }
 
         .nav-item.active {
             background: #fff;
             color: #000;
             font-weight: 600;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .nav-item.locked {
@@ -95,6 +132,7 @@
         .nav-item.locked:hover {
             background: transparent;
             color: #666;
+            transform: none;
         }
 
         .nav-item i {
@@ -104,30 +142,7 @@
 
         .sidebar-footer {
             padding: 16px;
-            border-top: 1px solid #1a1a1a;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px;
-            background: #0d0d0d;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            font-size: 0.85em;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #f00;
-        }
-
-        .status-dot.connected {
-            background: #0f0;
-            box-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .logout-btn {
@@ -135,12 +150,12 @@
             align-items: center;
             gap: 12px;
             padding: 12px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
             border-radius: 8px;
             color: #ff4444;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             margin-bottom: 12px;
             font-size: 0.85em;
             width: 100%;
@@ -148,8 +163,9 @@
         }
 
         .logout-btn:hover {
-            background: #2a2a2a;
+            background: rgba(255, 68, 68, 0.2);
             border-color: #ff4444;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
         }
 
         .user-profile {
@@ -157,14 +173,16 @@
             align-items: center;
             gap: 12px;
             padding: 12px;
-            background: #0d0d0d;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .user-profile:hover {
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         .user-avatar {
@@ -178,6 +196,7 @@
             font-weight: 700;
             color: #000;
             font-family: 'Space Mono', monospace;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
         .user-info {
@@ -191,26 +210,29 @@
 
         .user-license {
             font-size: 0.75em;
-            color: #ffffff;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .user-license.premium {
-            color: #ffffff;
+            color: #fff;
         }
 
         .main-content {
             flex: 1;
             margin-left: 240px;
             padding: 0;
+            background: transparent;
         }
 
         .top-bar {
-            background: #000;
-            border-bottom: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             padding: 20px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .page-title {
@@ -219,33 +241,49 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
-        .search-bar {
-            position: relative;
-        }
-
-        .search-bar input {
-            padding: 10px 16px 10px 40px;
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+        .connection-status-topbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            color: #fff;
-            width: 300px;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .search-bar input:focus {
-            outline: none;
-            border-color: #fff;
+        .connection-status-topbar:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        .search-bar i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #f00;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+        }
+
+        .status-dot.connected {
+            background: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(0, 255, 0, 1);
+                transform: scale(1.2);
+            }
         }
 
         .content-area {
@@ -258,6 +296,18 @@
 
         .content-section.active {
             display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .category-tabs {
@@ -269,27 +319,47 @@
 
         .category-tab {
             padding: 10px 20px;
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             color: #666;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-family: 'Space Mono', monospace;
             font-size: 0.85em;
             font-weight: 600;
             text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .category-tab:hover::before {
+            left: 100%;
         }
 
         .category-tab:hover {
             border-color: #fff;
             color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .category-tab.active {
             background: #fff;
             border-color: #fff;
             color: #000;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         }
 
         .module-grid {
@@ -298,33 +368,76 @@
             gap: 16px;
         }  
 
-        /* Left Clicker Module Styles */
-        .leftclicker-card {
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+        .leftclicker-card,
+        .macro-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 20px;
-            transition: all 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leftclicker-card::before,
+        .macro-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .leftclicker-card:hover::before,
+        .macro-card:hover::before {
+            opacity: 1;
         }
 
         .leftclicker-card.leftclicker-visible {
             display: block;
+            animation: cardSlideIn 0.5s ease;
         }
 
-        .leftclicker-card:hover {
-            border-color: #fff;
-            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
+        .macro-card.macro-visible {
+            display: block;
+            animation: cardSlideIn 0.5s ease;
         }
 
-        .leftclicker-header {
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .leftclicker-card:hover,
+        .macro-card:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .leftclicker-header,
+        .macro-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
 
-        .leftclicker-title {
+        .leftclicker-title,
+        .macro-title {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -332,34 +445,40 @@
             font-size: 1.05em;
         }
 
-        .leftclicker-icon {
+        .leftclicker-icon,
+        .macro-icon {
             width: 32px;
             height: 32px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .leftclicker-toggle {
+        .leftclicker-toggle,
+        .macro-toggle {
             position: relative;
             width: 48px;
             height: 26px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 13px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: 1px solid #2a2a2a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .leftclicker-toggle.leftclicker-active {
+        .leftclicker-toggle.leftclicker-active,
+        .macro-toggle.macro-active {
             background: #fff;
             border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-        .leftclicker-toggle-slider {
+        .leftclicker-toggle-slider,
+        .macro-toggle-slider {
             position: absolute;
             top: 2px;
             left: 2px;
@@ -367,38 +486,57 @@
             height: 20px;
             background: #666;
             border-radius: 50%;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .leftclicker-toggle.leftclicker-active .leftclicker-toggle-slider {
+        .leftclicker-toggle.leftclicker-active .leftclicker-toggle-slider,
+        .macro-toggle.macro-active .macro-toggle-slider {
             transform: translateX(22px);
             background: #000;
         }
 
-        .leftclicker-settings {
+        .leftclicker-settings,
+        .macro-settings {
             display: none;
             margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid #1a1a1a;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .leftclicker-settings.leftclicker-show {
+        .leftclicker-settings.leftclicker-show,
+        .macro-settings.macro-show {
             display: block;
+            animation: slideDown 0.3s ease;
         }
 
-        .leftclicker-setting-row {
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        .leftclicker-setting-row,
+        .macro-setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
         }
 
-        .leftclicker-setting-label {
+        .leftclicker-setting-label,
+        .macro-setting-label {
             font-size: 0.9em;
             color: #ccc;
         }
 
-        .leftclicker-setting-value {
+        .leftclicker-setting-value,
+        .macro-setting-value {
             font-family: 'Space Mono', monospace;
             font-size: 0.85em;
             color: #fff;
@@ -412,75 +550,92 @@
 
         .leftclicker-slider {
             width: 100%;
-            height: 4px;
-            background: #1a1a1a;
-            border-radius: 2px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
             outline: none;
             -webkit-appearance: none;
         }
 
         .leftclicker-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             background: #fff;
             border-radius: 50%;
             cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .leftclicker-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
         }
 
         .leftclicker-slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             background: #fff;
             border-radius: 50%;
             cursor: pointer;
             border: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
-        .leftclicker-expand-btn {
+        .leftclicker-expand-btn,
+        .macro-expand-btn {
             background: none;
             border: none;
             color: #666;
             cursor: pointer;
             padding: 4px 8px;
             font-size: 0.9em;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        .leftclicker-expand-btn:hover {
+        .leftclicker-expand-btn:hover,
+        .macro-expand-btn:hover {
             color: #fff;
+            transform: scale(1.1);
         }
 
-        .leftclicker-expand-btn i {
-            transition: transform 0.3s ease;
+        .leftclicker-expand-btn i,
+        .macro-expand-btn i {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .leftclicker-expand-btn.leftclicker-expanded i {
+        .leftclicker-expand-btn.leftclicker-expanded i,
+        .macro-expand-btn.macro-expanded i {
             transform: rotate(180deg);
         }
 
-        .leftclicker-keybind-input {
+        .leftclicker-keybind-input,
+        .macro-keybind-input {
             padding: 8px 12px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             color: #fff;
             font-family: 'Space Mono', monospace;
             font-size: 0.85em;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        .leftclicker-keybind-input:hover {
+        .leftclicker-keybind-input:hover,
+        .macro-keybind-input:hover {
             border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
         .leftclicker-keybind-input.leftclicker-recording {
             border-color: #0f0;
-            animation: leftclicker-pulse 1s infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: recording-pulse 1s infinite;
         }
 
-        @keyframes leftclicker-pulse {
+        @keyframes recording-pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
@@ -488,14 +643,14 @@
         .leftclicker-checkbox {
             width: 20px;
             height: 20px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 4px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .leftclicker-checkbox i {
@@ -505,6 +660,7 @@
         .leftclicker-checkbox.leftclicker-checked {
             background: #fff;
             border-color: #fff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
         .leftclicker-checkbox.leftclicker-checked i {
@@ -512,210 +668,8 @@
             display: block;
         }
 
-        /* Macro Module Styles */
-        .macro-card {
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.2s ease;
-            display: none;
-        }
-
-        .macro-card.macro-visible {
-            display: block;
-        }
-
-        .macro-card:hover {
-            border-color: #fff;
-            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-        }
-
-        .macro-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .macro-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 1.05em;
-        }
-
-        .macro-icon {
-            width: 32px;
-            height: 32px;
-            background: #1a1a1a;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-        }
-
-        .macro-toggle {
-            position: relative;
-            width: 48px;
-            height: 26px;
-            background: #1a1a1a;
-            border-radius: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #2a2a2a;
-        }
-
-        .macro-toggle.macro-active {
-            background: #fff;
-            border-color: #fff;
-        }
-
-        .macro-toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
-            background: #666;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .macro-toggle.macro-active .macro-toggle-slider {
-            transform: translateX(22px);
-            background: #000;
-        }
-
-        .macro-settings {
-            display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #1a1a1a;
-        }
-
-        .macro-settings.macro-show {
-            display: block;
-        }
-
-        .macro-setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-        }
-
-        .macro-setting-label {
-            font-size: 0.9em;
-            color: #ccc;
-        }
-
-        .macro-setting-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.85em;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .macro-expand-btn {
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            padding: 4px 8px;
-            font-size: 0.9em;
-            transition: all 0.2s ease;
-        }
-
-        .macro-expand-btn:hover {
-            color: #fff;
-        }
-
-        .macro-expand-btn i {
-            transition: transform 0.3s ease;
-        }
-
-        .macro-expand-btn.macro-expanded i {
-            transform: rotate(180deg);
-        }
-
         .macro-keybind-input {
-            padding: 8px 12px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 6px;
-            color: #fff;
-            font-family: 'Space Mono', monospace;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: all 0.2s ease;
             width: 100%;
-        }
-
-        .macro-keybind-input:hover {
-            border-color: #fff;
-        }
-
-        /* Overlay Module Styles - Coming Soon */
-        .overlay-card {
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            transition: all 0.2s ease;
-            display: none;
-            text-align: center;
-        }
-
-        .overlay-card.overlay-visible {
-            display: block;
-        }
-
-        .overlay-card:hover {
-            border-color: #fff;
-            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.05);
-        }
-
-        .overlay-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .overlay-icon {
-            width: 64px;
-            height: 64px;
-            background: #1a1a1a;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 2em;
-        }
-
-        .overlay-title {
-            font-weight: 600;
-            font-size: 1.3em;
-            color: #fff;
-        }
-
-        .coming-soon-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #888;
-            margin-top: 8px;
         }
 
         .empty-state {
@@ -740,6 +694,7 @@
             font-size: 3em;
             margin-bottom: 16px;
             color: #ffffff;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
         }
 
         .license-required-message h3 {
@@ -761,28 +716,28 @@
             color: #000;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-size: 0.9em;
             font-family: 'Inter', sans-serif;
             text-decoration: none;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
         .license-required-message .btn:hover {
             background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
         }
 
-        /* ==================== COMPACT SETTINGS STYLES ==================== */
-        
         .settings-container {
             max-width: 1200px;
         }
 
-        /* Settings Tabs */
         .settings-tabs {
             display: flex;
             gap: 8px;
             margin-bottom: 24px;
-            border-bottom: 2px solid #1a1a1a;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 0;
         }
 
@@ -796,7 +751,7 @@
             border-bottom: 2px solid transparent;
             color: #666;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-size: 0.9em;
             font-weight: 500;
             margin-bottom: -2px;
@@ -804,7 +759,7 @@
 
         .settings-tab:hover {
             color: #fff;
-            background: #0d0d0d;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .settings-tab.active {
@@ -817,33 +772,33 @@
             font-size: 1.1em;
         }
 
-        /* Settings Tab Content */
         .settings-tab-content {
             display: none;
         }
 
         .settings-tab-content.active {
             display: block;
+            animation: fadeIn 0.5s ease;
         }
 
-        /* Settings Grid - 2 columns */
         .settings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 20px;
         }
 
-        /* Settings Card */
         .settings-card {
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 20px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .settings-card:hover {
-            border-color: #2a2a2a;
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
         }
 
         .settings-card-title {
@@ -861,7 +816,6 @@
             font-size: 1em;
         }
 
-        /* Danger Card */
         .danger-card {
             border-color: rgba(255, 68, 68, 0.3);
         }
@@ -870,7 +824,6 @@
             border-color: rgba(255, 68, 68, 0.5);
         }
 
-        /* Form Groups - More Compact */
         .form-group {
             margin-bottom: 16px;
         }
@@ -890,19 +843,20 @@
         .form-input {
             width: 100%;
             padding: 10px 12px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             color: #fff;
             font-size: 0.9em;
             font-family: 'Inter', sans-serif;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .form-input:focus {
             outline: none;
             border-color: #fff;
-            background: #111;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
         .form-input:disabled {
@@ -910,7 +864,6 @@
             cursor: not-allowed;
         }
 
-        /* Buttons */
         .btn {
             padding: 10px 20px;
             background: #fff;
@@ -919,17 +872,19 @@
             color: #000;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             font-size: 0.9em;
             font-family: 'Inter', sans-serif;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .btn:hover {
             background: #f0f0f0;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         }
 
         .btn:active {
@@ -947,10 +902,9 @@
             justify-content: center;
         }
 
-        /* Info Box - More Compact */
         .info-box {
-            background: #222222;
-            border: 1px solid #222222;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 16px;
@@ -961,13 +915,13 @@
         }
 
         .info-box.warning {
-            border-color: #474747;
+            border-color: rgba(255, 136, 0, 0.3);
             background: rgba(255, 136, 0, 0.05);
         }
 
         .info-box.success {
-            border-color: #222222;
-            background: #222222;
+            border-color: rgba(0, 255, 0, 0.3);
+            background: rgba(0, 255, 0, 0.05);
         }
 
         .info-row {
@@ -975,7 +929,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 8px 0;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .info-row:last-child {
@@ -999,7 +953,6 @@
             font-weight: 500;
         }
 
-        /* Messages - More Compact */
         .success-message,
         .error-message {
             padding: 10px 12px;
@@ -1012,14 +965,14 @@
         }
 
         .success-message {
-            background: rgba(0, 255, 0, 0.05);
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #0f0;
         }
 
         .error-message {
-            background: rgba(255, 68, 68, 0.05);
-            border: 1px solid #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid rgba(255, 68, 68, 0.3);
             color: #ff4444;
         }
 
@@ -1028,7 +981,6 @@
             display: flex;
         }
 
-        /* License Badge */
         .license-badge {
             display: inline-block;
             padding: 4px 10px;
@@ -1039,54 +991,29 @@
             text-transform: uppercase;
         }
 
-        .license-badge.lifetime {
-            background: #ffffff;
-            color: #000000;
-        }
-
-        .license-badge.month {
-            background: #ffffff;
-            color: #000000;
-        }
-
+        .license-badge.lifetime,
+        .license-badge.month,
         .license-badge.week {
             background: #ffffff;
             color: #000000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         .license-badge.expired {
-            background: #ffffff;
-            color: #000000;
+            background: rgba(255, 255, 255, 0.1);
+            color: #666;
         }
 
-        /* Responsive */
         @media (max-width: 900px) {
             .settings-grid {
                 grid-template-columns: 1fr;
             }
         }
-
-        @media (max-width: 600px) {
-            .settings-tabs {
-                flex-direction: column;
-                border-bottom: none;
-            }
-            
-            .settings-tab {
-                border-bottom: 1px solid #1a1a1a;
-                border-left: 2px solid transparent;
-                margin-bottom: 0;
-                margin-left: -2px;
-            }
-            
-            .settings-tab.active {
-                border-left-color: #fff;
-                border-bottom-color: #1a1a1a;
-            }
-        }
     </style>
 </head>
 <body>
+    <canvas id="canvas-background"></canvas>
+
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -1116,11 +1043,6 @@
             </nav>
 
             <div class="sidebar-footer">
-                <div class="connection-status">
-                    <div class="status-dot" id="connectionDot"></div>
-                    <span id="connectionText">not connected</span>
-                </div>
-
                 <button class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
@@ -1144,9 +1066,9 @@
                     <span id="pageTitle">Modules</span>
                 </div>
 
-                <div class="search-bar" id="searchBar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search modules..." onkeyup="filterModules()">
+                <div class="connection-status-topbar">
+                    <div class="status-dot" id="connectionDot"></div>
+                    <span id="connectionText">not connected</span>
                 </div>
             </div>
 
@@ -1155,12 +1077,10 @@
                     <div id="modulesContent">
                         <div class="category-tabs">
                             <div class="category-tab active" data-category="combat" onclick="filterCategory(event, 'combat')">COMBAT</div>
-                            <div class="category-tab" data-category="visual" onclick="filterCategory(event, 'visual')">VISUAL</div>
                             <div class="category-tab" data-category="utilities" onclick="filterCategory(event, 'utilities')">UTILITIES</div>
                         </div>
 
                         <div class="module-grid" id="moduleGrid">
-                            <!-- Left Clicker -->
                             <div class="leftclicker-card leftclicker-visible" data-category="combat" data-module="leftclicker" data-name="left clicker">
                                 <div class="leftclicker-header">
                                     <div class="leftclicker-title">
@@ -1209,7 +1129,6 @@
                                 </div>
                             </div>
 
-                            <!-- Macro -->
                             <div class="macro-card" data-category="utilities" data-module="macro" data-name="macro">
                                 <div class="macro-header">
                                     <div class="macro-title">
@@ -1237,15 +1156,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Overlay - Coming Soon -->
-                            <div class="overlay-card" data-category="visual" data-module="overlay" data-name="overlay">
-                                <div class="overlay-header">
-                                    <div class="overlay-icon"><i class="fas fa-eye"></i></div>
-                                    <div class="overlay-title">Overlay</div>
-                                    <div class="coming-soon-badge">Coming Soon</div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     
@@ -1259,10 +1169,8 @@
                     </div>
                 </div>
 
-                <!-- ==================== COMPACT SETTINGS SECTION ==================== -->
                 <div id="settings-section" class="content-section">
                     <div class="settings-container">
-                        <!-- Settings Tabs -->
                         <div class="settings-tabs">
                             <div class="settings-tab active" onclick="switchSettingsTab('account')">
                                 <i class="fas fa-user"></i>
@@ -1278,7 +1186,6 @@
                             </div>
                         </div>
 
-                        <!-- Account Tab -->
                         <div id="account-tab" class="settings-tab-content active">
                             <div class="settings-grid">
                                 <div class="settings-card">
@@ -1328,7 +1235,6 @@
                             </div>
                         </div>
 
-                        <!-- License Tab -->
                         <div id="license-tab" class="settings-tab-content">
                             <div class="settings-grid">
                                 <div class="settings-card">
@@ -1370,7 +1276,6 @@
                             </div>
                         </div>
 
-                        <!-- Security Tab -->
                         <div id="security-tab" class="settings-tab-content">
                             <div class="settings-grid">
                                 <div class="settings-card">
@@ -1400,72 +1305,69 @@
                                         <i class="fas fa-save"></i> Update Password
                                     </button>
                                 </div>
-
-                                
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- ==================== END COMPACT SETTINGS SECTION ==================== -->
 
-<div id="download-section" class="content-section">
-    <div id="downloadContent">
-        <div class="settings-container">
-            <div class="settings-card" style="max-width: 600px; margin: 0 auto;">
-                <div class="settings-card-title">
-                    <i class="fas fa-download"></i>
-                    Download asce. Client
-                </div>
-                
-                <div class="info-box" style="margin-bottom: 20px;">
-                    <p style="margin-bottom: 12px; color: #ccc;">Choose a custom filename or use a randomized name for added security.</p>
-                </div>
+                <div id="download-section" class="content-section">
+                    <div id="downloadContent">
+                        <div class="settings-container">
+                            <div class="settings-card" style="max-width: 600px; margin: 0 auto;">
+                                <div class="settings-card-title">
+                                    <i class="fas fa-download"></i>
+                                    Download asce. Client
+                                </div>
+                                
+                                <div class="info-box" style="margin-bottom: 20px;">
+                                    <p style="margin-bottom: 12px; color: #ccc;">Choose a custom filename or use a randomized name for added security.</p>
+                                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Filename</label>
-                    <input type="text" class="form-input" id="customFilename" placeholder="asce" value="asce">
-                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Filename</label>
+                                    <input type="text" class="form-input" id="customFilename" placeholder="asce" value="asce">
+                                </div>
 
-                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-                    <button class="btn" style="flex: 1;" onclick="downloadClient(false)">
-                        <i class="fas fa-download"></i> Download
-                    </button>
-                    <button class="btn" style="flex: 1; background: #1a1a1a; color: #fff;" onclick="downloadClient(true)">
-                        <i class="fas fa-random"></i> Random Name
-                    </button>
-                </div>
+                                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                                    <button class="btn" style="flex: 1;" onclick="downloadClient(false)">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                    <button class="btn" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff;" onclick="downloadClient(true)">
+                                        <i class="fas fa-random"></i> Random Name
+                                    </button>
+                                </div>
 
-                <div class="info-box" style="background: rgba(255, 136, 0, 0.05); border-color: #474747;">
-                    <div style="display: flex; align-items: start; gap: 12px;">
-                        <i class="fas fa-info-circle" style="color: #ff8800; margin-top: 2px;"></i>
-                        <div style="font-size: 0.85em; color: #ccc;">
-                            <p style="margin-bottom: 8px;"><strong>Important:</strong></p>
-                            <ul style="margin-left: 20px; line-height: 1.6;">
-                                <li>Windows Defender may flag the client as a false positive</li>
-                                <li>Add an exclusion for the client in Windows Security</li>
-                                <li>Keep your login credentials secure</li>
-                                <li>One PC per account (HWID locked)</li>
-                            </ul>
+                                <div class="info-box warning">
+                                    <div style="display: flex; align-items: start; gap: 12px;">
+                                        <i class="fas fa-info-circle" style="color: #ff8800; margin-top: 2px;"></i>
+                                        <div style="font-size: 0.85em; color: #ccc;">
+                                            <p style="margin-bottom: 8px;"><strong>Important:</strong></p>
+                                            <ul style="margin-left: 20px; line-height: 1.6;">
+                                                <li>Windows Defender may flag the client as a false positive</li>
+                                                <li>Add an exclusion for the client in Windows Security</li>
+                                                <li>Keep your login credentials secure</li>
+                                                <li>One PC per account (HWID locked)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="downloadStatus" class="success-message" style="margin-top: 16px;">
+                                    <i class="fas fa-check-circle"></i> <span id="downloadStatusText"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <div id="noLicenseMessageDownload" class="license-required-message" style="display: none;">
+                        <i class="fas fa-lock"></i>
+                        <h3>License Required</h3>
+                        <p>You need an active license to download the client.</p>
+                        <a href="#" class="btn" onclick="switchSection(event, 'settings'); return false;">
+                            <i class="fas fa-key"></i> Activate License
+                        </a>
+                    </div>
                 </div>
-
-                <div id="downloadStatus" class="success-message" style="margin-top: 16px;">
-                    <i class="fas fa-check-circle"></i> <span id="downloadStatusText"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="noLicenseMessageDownload" class="license-required-message" style="display: none;">
-        <i class="fas fa-lock"></i>
-        <h3>License Required</h3>
-        <p>You need an active license to download the client.</p>
-        <a href="#" class="btn" onclick="switchSection(event, 'settings'); return false;">
-            <i class="fas fa-key"></i> Activate License
-        </a>
-    </div>
-</div>
 
                 <div id="changelog-section" class="content-section">
                     <div class="empty-state">
@@ -1478,41 +1380,154 @@
     </div>
 
     <script>
+// ==================== BREATHTAKING CANVAS BACKGROUND (NO TRAILS) ====================
+const canvas = document.getElementById('canvas-background');
+const ctx = canvas.getContext('2d');
 
-        let lastSavedConfig = {};
-        let saveTimeout = null;
-        let clientConnected = false; // Track if C++ client is connected
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-        const API_URL = 'https://asce-f5us.onrender.com/api';
-        let currentConfig = {};
-        let currentUser = {};
-        let ws = null;
-        let isUpdatingFromServer = false;
-        let hasActiveLicense = false;
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 
+class Particle {
+    constructor() {
+        this.reset();
+    }
 
-        function isSessionValid() {
-            const token = localStorage.getItem('token');
-            const loginTime = localStorage.getItem('loginTime');
-    
-            if (!token || !loginTime) {
-                return false;
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1;
+        this.alpha = Math.random() * 0.5 + 0.2;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fill();
+    }
+}
+
+const particles = [];
+const particleCount = 100;
+for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+}
+
+let mouse = { x: null, y: null, radius: 150 };
+canvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+
+canvas.addEventListener('mouseleave', () => {
+    mouse.x = null;
+    mouse.y = null;
+});
+
+function animate() {
+    // FIXED: Clear with solid black instead of transparent black - removes trails
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+
+    particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach(p2 => {
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 120) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - distance / 120)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
             }
+        });
 
-            const now = Date.now();
-            const elapsed = now - parseInt(loginTime);
-            const oneHour = 60 * 60 * 1000;
+        if (mouse.x !== null && mouse.y !== null) {
+            const dx = p1.x - mouse.x;
+            const dy = p1.y - mouse.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (elapsed > oneHour) {
-            return false;
-         }
+            if (distance < mouse.radius) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - distance / mouse.radius)})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
 
-            return true;
+                const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
         }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+// ==================== DASHBOARD LOGIC (FROM SECOND FILE - FUNCTIONAL) ====================
+let lastSavedConfig = {};
+let saveTimeout = null;
+let clientConnected = false;
+
+const API_URL = 'https://asce-f5us.onrender.com/api';
+let currentConfig = {};
+let currentUser = {};
+let ws = null;
+let isUpdatingFromServer = false;
+let hasActiveLicense = false;
+
+function isSessionValid() {
+    const token = localStorage.getItem('token');
+    const loginTime = localStorage.getItem('loginTime');
+
+    if (!token || !loginTime) {
+        return false;
+    }
+
+    const now = Date.now();
+    const elapsed = now - parseInt(loginTime);
+    const oneHour = 60 * 60 * 1000;
+
+    if (elapsed > oneHour) {
+        return false;
+    }
+
+    return true;
+}
 
 async function init() {
-    // Check session validity first
+    console.log('[INIT] Starting initialization...');
+    
     if (!isSessionValid()) {
+        console.log('[INIT] Session invalid, redirecting to login');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         localStorage.removeItem('loginTime');
@@ -1522,277 +1537,294 @@ async function init() {
 
     const token = localStorage.getItem('token');
     if (!token) {
+        console.log('[INIT] No token found, redirecting to login');
         window.location.href = 'auth.html';
         return;
     }
 
     try {
+        console.log('[INIT] Loading user profile...');
         await loadUserProfile();
+        console.log('[INIT] Loading settings...');
         await loadSettings();
+        console.log('[INIT] Connecting WebSocket...');
         connectWebSocket(token);
+        console.log('[INIT] Initialization complete');
     } catch (error) {
-        console.error('Init error:', error);
+        console.error('[INIT] Init error:', error);
     }
 }
 
-        async function loadUserProfile() {
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch(`${API_URL}/user/profile`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    currentUser = await response.json();
-                    updateUserDisplay();
-                    checkLicenseStatus();
-                }
-            } catch (error) {}
+async function loadUserProfile() {
+    const token = localStorage.getItem('token');
+    try {
+        console.log('[PROFILE] Fetching user profile...');
+        const response = await fetch(`${API_URL}/user/profile`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            currentUser = await response.json();
+            console.log('[PROFILE] Profile loaded:', currentUser.username);
+            updateUserDisplay();
+            checkLicenseStatus();
+        } else {
+            console.error('[PROFILE] Failed to load profile:', response.status);
         }
+    } catch (error) {
+        console.error('[PROFILE] Error loading profile:', error);
+    }
+}
 
-        function checkLicenseStatus() {
-            if (currentUser.license && currentUser.license.status === 'active') {
-                hasActiveLicense = true;
-            } else {
-                hasActiveLicense = false;
-            }
-            updateLicenseRestrictions();
+function checkLicenseStatus() {
+    if (currentUser.license && currentUser.license.status === 'active') {
+        hasActiveLicense = true;
+        console.log('[LICENSE] Active license detected');
+    } else {
+        hasActiveLicense = false;
+        console.log('[LICENSE] No active license');
+    }
+    updateLicenseRestrictions();
+}
+
+function updateLicenseRestrictions() {
+    const navItems = document.querySelectorAll('.nav-item[data-requires-license="true"]');
+    navItems.forEach(item => {
+        if (hasActiveLicense) {
+            item.classList.remove('locked');
+        } else {
+            item.classList.add('locked');
         }
+    });
 
-        function updateLicenseRestrictions() {
-            const navItems = document.querySelectorAll('.nav-item[data-requires-license="true"]');
-            navItems.forEach(item => {
-                if (hasActiveLicense) {
-                    item.classList.remove('locked');
-                } else {
-                    item.classList.add('locked');
-                }
-            });
-
-            const modulesContent = document.getElementById('modulesContent');
-            const noLicenseMessage = document.getElementById('noLicenseMessage');
-            if (modulesContent && noLicenseMessage) {
-                if (hasActiveLicense) {
-                    modulesContent.style.display = 'block';
-                    noLicenseMessage.style.display = 'none';
-                } else {
-                    modulesContent.style.display = 'none';
-                    noLicenseMessage.style.display = 'block';
-                }
-            }
-
-            const downloadContent = document.getElementById('downloadContent');
-            const noLicenseMessageDownload = document.getElementById('noLicenseMessageDownload');
-            if (downloadContent && noLicenseMessageDownload) {
-                if (hasActiveLicense) {
-                    downloadContent.style.display = 'block';
-                    noLicenseMessageDownload.style.display = 'none';
-                } else {
-                    downloadContent.style.display = 'none';
-                    noLicenseMessageDownload.style.display = 'block';
-                }
-            }
+    const modulesContent = document.getElementById('modulesContent');
+    const noLicenseMessage = document.getElementById('noLicenseMessage');
+    if (modulesContent && noLicenseMessage) {
+        if (hasActiveLicense) {
+            modulesContent.style.display = 'block';
+            noLicenseMessage.style.display = 'none';
+        } else {
+            modulesContent.style.display = 'none';
+            noLicenseMessage.style.display = 'block';
         }
+    }
 
-        function updateUserDisplay() {
-            const userNameEl = document.getElementById('userName');
-            const userAvatarEl = document.getElementById('userAvatar');
-            const userLicenseEl = document.getElementById('userLicense');
-            
-            if (userNameEl) userNameEl.textContent = currentUser.username || 'User';
-            if (userAvatarEl) userAvatarEl.textContent = (currentUser.username || 'U').charAt(0).toUpperCase();
-            
-            if (userLicenseEl) {
-                if (currentUser.license) {
-                    const timeRemaining = currentUser.license.timeRemaining || 'Lifetime';
-                    userLicenseEl.textContent = `${currentUser.license.type} • ${timeRemaining}`;
-                    userLicenseEl.classList.add('premium');
-                } else {
-                    userLicenseEl.textContent = 'No License';
-                    userLicenseEl.classList.remove('premium');
-                }
-            }
-
-            const settingsUsername = document.getElementById('settingsUsername');
-            const settingsEmail = document.getElementById('settingsEmail');
-            const settingsRole = document.getElementById('settingsRole');
-            const settingsClicks = document.getElementById('settingsClicks');
-
-            if (settingsUsername) settingsUsername.textContent = currentUser.username;
-            if (settingsEmail) settingsEmail.textContent = currentUser.email;
-            if (settingsRole) settingsRole.textContent = currentUser.role;
-            if (settingsClicks) settingsClicks.textContent = (currentUser.totalClicks || 0).toLocaleString();
-
-            updateLicenseDisplay();
+    const downloadContent = document.getElementById('downloadContent');
+    const noLicenseMessageDownload = document.getElementById('noLicenseMessageDownload');
+    if (downloadContent && noLicenseMessageDownload) {
+        if (hasActiveLicense) {
+            downloadContent.style.display = 'block';
+            noLicenseMessageDownload.style.display = 'none';
+        } else {
+            downloadContent.style.display = 'none';
+            noLicenseMessageDownload.style.display = 'block';
         }
+    }
+}
 
-        function updateLicenseDisplay() {
-            const licenseBadge = document.getElementById('licenseBadge');
-            const licenseExpiry = document.getElementById('licenseExpiry');
-            const licenseStatus = document.getElementById('licenseStatus');
-            const licenseExpiryRow = document.getElementById('licenseExpiryRow');
-            const licenseStatusRow = document.getElementById('licenseStatusRow');
-            const activationSection = document.getElementById('activationSection');
-            const licenseInfoBox = document.getElementById('licenseInfoBox');
-
-            if (currentUser.license) {
-                const license = currentUser.license;
-                if (licenseBadge) {
-                    licenseBadge.textContent = license.type.charAt(0).toUpperCase() + license.type.slice(1);
-                    licenseBadge.className = 'license-badge ' + license.type;
-                }
-                if (licenseExpiryRow) licenseExpiryRow.style.display = 'flex';
-                if (licenseExpiry) licenseExpiry.textContent = license.timeRemaining;
-                if (licenseStatusRow) licenseStatusRow.style.display = 'flex';
-                if (licenseStatus) licenseStatus.textContent = license.status.charAt(0).toUpperCase() + license.status.slice(1);
-                if (activationSection) activationSection.style.display = 'none';
-                if (licenseInfoBox) licenseInfoBox.className = 'info-box success';
-            } else {
-                if (licenseBadge) {
-                    licenseBadge.textContent = 'No License';
-                    licenseBadge.className = 'license-badge expired';
-                }
-                if (licenseExpiryRow) licenseExpiryRow.style.display = 'none';
-                if (licenseStatusRow) licenseStatusRow.style.display = 'none';
-                if (activationSection) activationSection.style.display = 'block';
-                if (licenseInfoBox) licenseInfoBox.className = 'info-box warning';
-            }
+function updateUserDisplay() {
+    console.log('[UI] Updating user display...');
+    const userNameEl = document.getElementById('userName');
+    const userAvatarEl = document.getElementById('userAvatar');
+    const userLicenseEl = document.getElementById('userLicense');
+    
+    if (userNameEl) userNameEl.textContent = currentUser.username || 'User';
+    if (userAvatarEl) userAvatarEl.textContent = (currentUser.username || 'U').charAt(0).toUpperCase();
+    
+    if (userLicenseEl) {
+        if (currentUser.license) {
+            const timeRemaining = currentUser.license.timeRemaining || 'Lifetime';
+            userLicenseEl.textContent = `${currentUser.license.type} • ${timeRemaining}`;
+            userLicenseEl.classList.add('premium');
+        } else {
+            userLicenseEl.textContent = 'No License';
+            userLicenseEl.classList.remove('premium');
         }
+    }
 
-        async function activateLicense() {
-            const token = localStorage.getItem('token');
-            const licenseKeyInput = document.getElementById('licenseKeyInput');
-            if (!licenseKeyInput || !licenseKeyInput.value.trim()) {
-                alert('Please enter a license key');
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/auth/activate`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ licenseKey: licenseKeyInput.value.trim() })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    alert('License activated successfully!');
-                    licenseKeyInput.value = '';
-                    await loadUserProfile();
-                } else {
-                    alert(data.error || 'Failed to activate license');
-                }
-            } catch (error) {
-                alert('Failed to activate license');
-            }
+    const settingsUsername = document.getElementById('settingsUsername');
+    const settingsEmail = document.getElementById('settingsEmail');
+    const settingsRole = document.getElementById('settingsRole');
+    const settingsClicks = document.getElementById('settingsClicks');
+
+    if (settingsUsername) settingsUsername.textContent = currentUser.username;
+    if (settingsEmail) settingsEmail.textContent = currentUser.email;
+    if (settingsRole) settingsRole.textContent = currentUser.role;
+    if (settingsClicks) settingsClicks.textContent = (currentUser.totalClicks || 0).toLocaleString();
+
+    updateLicenseDisplay();
+}
+
+function updateLicenseDisplay() {
+    const licenseBadge = document.getElementById('licenseBadge');
+    const licenseExpiry = document.getElementById('licenseExpiry');
+    const licenseStatus = document.getElementById('licenseStatus');
+    const licenseExpiryRow = document.getElementById('licenseExpiryRow');
+    const licenseStatusRow = document.getElementById('licenseStatusRow');
+    const activationSection = document.getElementById('activationSection');
+    const licenseInfoBox = document.getElementById('licenseInfoBox');
+
+    if (currentUser.license) {
+        const license = currentUser.license;
+        if (licenseBadge) {
+            licenseBadge.textContent = license.type.charAt(0).toUpperCase() + license.type.slice(1);
+            licenseBadge.className = 'license-badge ' + license.type;
         }
-
-        async function changeEmail() {
-            const token = localStorage.getItem('token');
-            const newEmailInput = document.getElementById('newEmailInput');
-            const emailSuccess = document.getElementById('emailSuccess');
-            const emailError = document.getElementById('emailError');
-            const emailErrorText = document.getElementById('emailErrorText');
-            if (emailSuccess) emailSuccess.classList.remove('show');
-            if (emailError) emailError.classList.remove('show');
-            if (!newEmailInput || !newEmailInput.value.trim()) {
-                if (emailErrorText) emailErrorText.textContent = 'Please enter a new email';
-                if (emailError) emailError.classList.add('show');
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/user/profile`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email: newEmailInput.value.trim() })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    if (emailSuccess) emailSuccess.classList.add('show');
-                    newEmailInput.value = '';
-                    await loadUserProfile();
-                } else {
-                    if (emailErrorText) emailErrorText.textContent = data.error || 'Failed to update email';
-                    if (emailError) emailError.classList.add('show');
-                }
-            } catch (error) {
-                if (emailErrorText) emailErrorText.textContent = 'Failed to update email';
-                if (emailError) emailError.classList.add('show');
-            }
+        if (licenseExpiryRow) licenseExpiryRow.style.display = 'flex';
+        if (licenseExpiry) licenseExpiry.textContent = license.timeRemaining;
+        if (licenseStatusRow) licenseStatusRow.style.display = 'flex';
+        if (licenseStatus) licenseStatus.textContent = license.status.charAt(0).toUpperCase() + license.status.slice(1);
+        if (activationSection) activationSection.style.display = 'none';
+        if (licenseInfoBox) licenseInfoBox.className = 'info-box success';
+    } else {
+        if (licenseBadge) {
+            licenseBadge.textContent = 'No License';
+            licenseBadge.className = 'license-badge expired';
         }
+        if (licenseExpiryRow) licenseExpiryRow.style.display = 'none';
+        if (licenseStatusRow) licenseStatusRow.style.display = 'none';
+        if (activationSection) activationSection.style.display = 'block';
+        if (licenseInfoBox) licenseInfoBox.className = 'info-box warning';
+    }
+}
 
-        async function changePassword() {
-            const token = localStorage.getItem('token');
-            const currentPasswordInput = document.getElementById('currentPasswordInput');
-            const newPasswordInput = document.getElementById('newPasswordInput');
-            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-            const passwordSuccess = document.getElementById('passwordSuccess');
-            const passwordError = document.getElementById('passwordError');
-            const passwordErrorText = document.getElementById('passwordErrorText');
-            if (passwordSuccess) passwordSuccess.classList.remove('show');
-            if (passwordError) passwordError.classList.remove('show');
-            if (!currentPasswordInput || !currentPasswordInput.value) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Please enter your current password';
-                if (passwordError) passwordError.classList.add('show');
-                return;
-            }
-            if (!newPasswordInput || !newPasswordInput.value) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Please enter a new password';
-                if (passwordError) passwordError.classList.add('show');
-                return;
-            }
-            if (newPasswordInput.value !== confirmPasswordInput.value) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Passwords do not match';
-                if (passwordError) passwordError.classList.add('show');
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/user/profile`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        currentPassword: currentPasswordInput.value,
-                        newPassword: newPasswordInput.value
-                    })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    if (passwordSuccess) passwordSuccess.classList.add('show');
-                    currentPasswordInput.value = '';
-                    newPasswordInput.value = '';
-                    confirmPasswordInput.value = '';
-                } else {
-                    if (passwordErrorText) passwordErrorText.textContent = data.error || 'Failed to update password';
-                    if (passwordError) passwordError.classList.add('show');
-                }
-            } catch (error) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Failed to update password';
-                if (passwordError) passwordError.classList.add('show');
-            }
+async function activateLicense() {
+    const token = localStorage.getItem('token');
+    const licenseKeyInput = document.getElementById('licenseKeyInput');
+    if (!licenseKeyInput || !licenseKeyInput.value.trim()) {
+        alert('Please enter a license key');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/auth/activate`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ licenseKey: licenseKeyInput.value.trim() })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert('License activated successfully!');
+            licenseKeyInput.value = '';
+            await loadUserProfile();
+        } else {
+            alert(data.error || 'Failed to activate license');
         }
+    } catch (error) {
+        alert('Failed to activate license');
+    }
+}
 
-        async function loadSettings() {
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch(`${API_URL}/agent/settings`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    currentConfig = await response.json();
-                    isUpdatingFromServer = true;
-                    applySettings(currentConfig);
-                    isUpdatingFromServer = false;
-                }
-            } catch (error) {}
+async function changeEmail() {
+    const token = localStorage.getItem('token');
+    const newEmailInput = document.getElementById('newEmailInput');
+    const emailSuccess = document.getElementById('emailSuccess');
+    const emailError = document.getElementById('emailError');
+    const emailErrorText = document.getElementById('emailErrorText');
+    if (emailSuccess) emailSuccess.classList.remove('show');
+    if (emailError) emailError.classList.remove('show');
+    if (!newEmailInput || !newEmailInput.value.trim()) {
+        if (emailErrorText) emailErrorText.textContent = 'Please enter a new email';
+        if (emailError) emailError.classList.add('show');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/user/profile`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: newEmailInput.value.trim() })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            if (emailSuccess) emailSuccess.classList.add('show');
+            newEmailInput.value = '';
+            await loadUserProfile();
+        } else {
+            if (emailErrorText) emailErrorText.textContent = data.error || 'Failed to update email';
+            if (emailError) emailError.classList.add('show');
         }
+    } catch (error) {
+        if (emailErrorText) emailErrorText.textContent = 'Failed to update email';
+        if (emailError) emailError.classList.add('show');
+    }
+}
 
-        function generateRandomName() {
+async function changePassword() {
+    const token = localStorage.getItem('token');
+    const currentPasswordInput = document.getElementById('currentPasswordInput');
+    const newPasswordInput = document.getElementById('newPasswordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+    const passwordSuccess = document.getElementById('passwordSuccess');
+    const passwordError = document.getElementById('passwordError');
+    const passwordErrorText = document.getElementById('passwordErrorText');
+    if (passwordSuccess) passwordSuccess.classList.remove('show');
+    if (passwordError) passwordError.classList.remove('show');
+    if (!currentPasswordInput || !currentPasswordInput.value) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Please enter your current password';
+        if (passwordError) passwordError.classList.add('show');
+        return;
+    }
+    if (!newPasswordInput || !newPasswordInput.value) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Please enter a new password';
+        if (passwordError) passwordError.classList.add('show');
+        return;
+    }
+    if (newPasswordInput.value !== confirmPasswordInput.value) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Passwords do not match';
+        if (passwordError) passwordError.classList.add('show');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/user/profile`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentPassword: currentPasswordInput.value,
+                newPassword: newPasswordInput.value
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            if (passwordSuccess) passwordSuccess.classList.add('show');
+            currentPasswordInput.value = '';
+            newPasswordInput.value = '';
+            confirmPasswordInput.value = '';
+        } else {
+            if (passwordErrorText) passwordErrorText.textContent = data.error || 'Failed to update password';
+            if (passwordError) passwordError.classList.add('show');
+        }
+    } catch (error) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Failed to update password';
+        if (passwordError) passwordError.classList.add('show');
+    }
+}
+
+async function loadSettings() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/agent/settings`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            currentConfig = await response.json();
+            isUpdatingFromServer = true;
+            applySettings(currentConfig);
+            isUpdatingFromServer = false;
+        }
+    } catch (error) {
+        console.error('[SETTINGS] Error loading settings:', error);
+    }
+}
+
+function generateRandomName() {
     const adjectives = ['swift', 'shadow', 'silent', 'ghost', 'phantom', 'stealth', 'rapid', 'quick', 'flash', 'blaze'];
     const nouns = ['client', 'app', 'tool', 'utility', 'helper', 'agent', 'service', 'runner', 'launcher', 'handler'];
     const random = Math.floor(Math.random() * 10000);
@@ -1816,17 +1848,14 @@ async function downloadClient(useRandomName) {
         } else {
             const customInput = document.getElementById('customFilename');
             filename = customInput.value.trim() || 'asce';
-            // Remove any file extension user might have added
             filename = filename.replace(/\.exe$/i, '');
         }
         
-        // Show downloading status
         if (statusEl) {
             statusText.textContent = `Preparing ${filename}.exe for download...`;
             statusEl.classList.add('show');
         }
         
-        // Request download from server
         const response = await fetch(`${API_URL}/download/client?filename=${encodeURIComponent(filename)}`, {
             method: 'GET',
             headers: {
@@ -1838,25 +1867,19 @@ async function downloadClient(useRandomName) {
             throw new Error('Download failed');
         }
         
-        // Get the blob from response
         const blob = await response.blob();
-        
-        // Create download link
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
         a.download = `${filename}.exe`;
         
-        // Trigger download
         document.body.appendChild(a);
         a.click();
         
-        // Cleanup
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
         
-        // Show success
         if (statusEl) {
             statusText.textContent = `Successfully downloaded ${filename}.exe`;
             setTimeout(() => {
@@ -1877,435 +1900,379 @@ async function downloadClient(useRandomName) {
     }
 }
 
-        function applySettings(config) {
+function applySettings(config) {
+    try {
+        const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
+        if (leftClickerToggle) {
+            if (config.enabled) {
+                leftClickerToggle.classList.add('leftclicker-active');
+            } else {
+                leftClickerToggle.classList.remove('leftclicker-active');
+            }
+        }
+
+        const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
+        const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
+        if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
+        if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
+
+        const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
+        if (leftclickerHotkeyInput && config.hotkeyCode) {
+            const keyName = getKeyName(config.hotkeyCode);
+            leftclickerHotkeyInput.value = keyName;
+        }
+
+        const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
+        if (holdToClickCheck) {
+            if (config.holdToClick) {
+                holdToClickCheck.classList.add('leftclicker-checked');
+            } else {
+                holdToClickCheck.classList.remove('leftclicker-checked');
+            }
+        }
+
+        const blatantModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
+        if (blatantModeCheck) {
+            if (config.blatantMode) {
+                blatantModeCheck.classList.add('leftclicker-checked');
+            } else {
+                blatantModeCheck.classList.remove('leftclicker-checked');
+            }
+        }
+
+        const exhaustModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
+        if (exhaustModeCheck) {
+            if (config.exhaustMode) {
+                exhaustModeCheck.classList.add('leftclicker-checked');
+            } else {
+                exhaustModeCheck.classList.remove('leftclicker-checked');
+            }
+        }
+
+        const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
+        if (macroToggle) {
+            if (config.useMacro) {
+                macroToggle.classList.add('macro-active');
+            } else {
+                macroToggle.classList.remove('macro-active');
+            }
+        }
+
+        const macroIntervalCount = document.getElementById('macroIntervalCount');
+        if (macroIntervalCount) {
+            macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
+        }
+
+        lastSavedConfig = { ...config };
+    } catch (error) {
+        console.error('Apply settings error:', error);
+    }
+}
+
+async function saveSettings(updates) {
+    if (isUpdatingFromServer) return;
+    
+    const token = localStorage.getItem('token');
+    currentConfig = { ...currentConfig, ...updates };
+
+    let hasRealChanges = false;
+    for (const key in updates) {
+        if (lastSavedConfig[key] !== updates[key]) {
+            hasRealChanges = true;
+            break;
+        }
+    }
+
+    if (!hasRealChanges) {
+        return;
+    }
+
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`${API_URL}/agent/settings`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(currentConfig)
+            });
+
+            if (response.ok) {
+                lastSavedConfig = { ...currentConfig };
+            }
+        } catch (error) {
+            console.error('Save settings error:', error);
+        }
+    }, 500);
+}
+
+function toggleLeftClickerSettings() {
+    const settings = document.getElementById('module-leftclicker-settings');
+    const btn = document.querySelector('.leftclicker-expand-btn');
+    if (settings && btn) {
+        const isOpen = settings.classList.contains('leftclicker-show');
+        if (isOpen) {
+            btn.classList.remove('leftclicker-expanded');
+            settings.classList.remove('leftclicker-show');
+        } else {
+            btn.classList.add('leftclicker-expanded');
+            settings.classList.add('leftclicker-show');
+        }
+    }
+}
+
+function toggleLeftClicker() {
+    if (isUpdatingFromServer) return;
+    const toggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
+    if (!toggle) return;
+    toggle.classList.toggle('leftclicker-active');
+    const isActive = toggle.classList.contains('leftclicker-active');
+    saveSettings({ enabled: isActive });
+}
+
+function updateLeftClickerCps(value) {
+    if (isUpdatingFromServer) return;
+    const valueEl = document.getElementById('leftclickerCpsValue');
+    if (valueEl) valueEl.textContent = parseFloat(value).toFixed(1);
+    saveSettings({ cps: parseFloat(value) });
+}
+
+function getKeyName(keyCode) {
+    const keyMap = {
+        112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
+        118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
+        16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
+        32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
+    };
+    return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
+}
+
+function recordLeftClickerKeybind(input) {
+    if (!input) return;
+    input.classList.add('leftclicker-recording');
+    input.value = 'Press any key...';
+    
+    const handler = (e) => {
+        e.preventDefault();
+        const keyName = getKeyName(e.keyCode);
+        input.value = keyName;
+        input.classList.remove('leftclicker-recording');
+        saveSettings({ hotkeyCode: e.keyCode });
+        document.removeEventListener('keydown', handler);
+    };
+    
+    document.addEventListener('keydown', handler);
+}
+
+function toggleLeftClickerHoldToClick() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('leftclicker-checked');
+    const isChecked = checkbox.classList.contains('leftclicker-checked');
+    saveSettings({ holdToClick: isChecked });
+}
+
+function toggleLeftClickerBlatantMode() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('leftclicker-checked');
+    const isChecked = checkbox.classList.contains('leftclicker-checked');
+    saveSettings({ blatantMode: isChecked });
+}
+
+function toggleLeftClickerExhaustMode() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('leftclicker-checked');
+    const isChecked = checkbox.classList.contains('leftclicker-checked');
+    saveSettings({ exhaustMode: isChecked });
+}
+
+function toggleMacroSettings() {
+    const settings = document.getElementById('module-macro-settings');
+    const btn = document.querySelector('.macro-expand-btn');
+    if (settings && btn) {
+        const isOpen = settings.classList.contains('macro-show');
+        if (isOpen) {
+            btn.classList.remove('macro-expanded');
+            settings.classList.remove('macro-show');
+        } else {
+            btn.classList.add('macro-expanded');
+            settings.classList.add('macro-show');
+        }
+    }
+}
+
+function toggleMacro() {
+    if (isUpdatingFromServer) return;
+    const toggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
+    if (!toggle) return;
+    toggle.classList.toggle('macro-active');
+    const isActive = toggle.classList.contains('macro-active');
+    saveSettings({ useMacro: isActive });
+}
+
+function filterCategory(event, category) {
+    if (!event) return;
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        if (tab) tab.classList.remove('active');
+    });
+    if (event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+    
+    const leftClickerCards = document.querySelectorAll('.leftclicker-card');
+    const macroCards = document.querySelectorAll('.macro-card');
+    
+    leftClickerCards.forEach(card => {
+        if (!card) return;
+        if (card.dataset.category === category) {
+            card.classList.add('leftclicker-visible');
+        } else {
+            card.classList.remove('leftclicker-visible');
+        }
+    });
+    
+    macroCards.forEach(card => {
+        if (!card) return;
+        if (card.dataset.category === category) {
+            card.classList.add('macro-visible');
+        } else {
+            card.classList.remove('macro-visible');
+        }
+    });
+}
+
+function switchSection(event, section) {
+    if (!event) return;
+    event.preventDefault();
+    
+    const navItem = event.currentTarget;
+    if (navItem && navItem.classList.contains('locked')) {
+        alert('This section requires an active license. Please activate a license in Settings.');
+        section = 'settings';
+    }
+    
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        if (nav) nav.classList.remove('active');
+    });
+    
+    const targetNav = document.querySelector(`.nav-item[data-section="${section}"]`);
+    if (targetNav) {
+        targetNav.classList.add('active');
+    }
+    
+    document.querySelectorAll('.content-section').forEach(s => {
+        if (s) s.classList.remove('active');
+    });
+    const sectionEl = document.getElementById(section + '-section');
+    if (sectionEl) {
+        sectionEl.classList.add('active');
+    }
+    const titles = {
+        'modules': { text: 'Modules', icon: 'fa-th-large' },
+        'settings': { text: 'Settings', icon: 'fa-cog' },
+        'download': { text: 'Download', icon: 'fa-download' },
+        'changelog': { text: 'Changelog', icon: 'fa-list' }
+    };
+    if (titles[section]) {
+        const pageTitle = document.getElementById('pageTitle');
+        const pageTitleIcon = document.getElementById('pageTitleIcon');
+        if (pageTitle) pageTitle.textContent = titles[section].text;
+        if (pageTitleIcon) pageTitleIcon.className = 'fas ' + titles[section].icon;
+    }
+}
+
+function switchSettingsTab(tabName) {
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.settings-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    event.currentTarget.classList.add('active');
+    
+    const tabContent = document.getElementById(`${tabName}-tab`);
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
+}
+
+function connectWebSocket(token) {
+    try {
+        ws = new WebSocket(`wss://asce-f5us.onrender.com?token=${token}`);
+        
+        ws.onopen = () => {
+            console.log('[WS] WebSocket connected');
+        };
+        
+        ws.onclose = () => {
+            console.log('[WS] WebSocket disconnected, reconnecting...');
+            setTimeout(() => connectWebSocket(token), 3000);
+        };
+        
+        ws.onmessage = (event) => {
             try {
-                // IMPORTANT: Left Clicker starts DISABLED by default
-                const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-                if (leftClickerToggle) {
-                    if (config.enabled) {
-                        leftClickerToggle.classList.add('leftclicker-active');
-                    } else {
-                        leftClickerToggle.classList.remove('leftclicker-active');
-                    }
+                const data = JSON.parse(event.data);
+                
+                if (data.type === 'agent_heartbeat') {
+                    clientConnected = true;
+                    const dot = document.getElementById('connectionDot');
+                    const text = document.getElementById('connectionText');
+                    if (dot) dot.classList.add('connected');
+                    if (text) text.textContent = 'connected';
                 }
-
-                const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
-                const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
-                if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
-                if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
-
-                // Apply hotkey from server config
-                const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
-                if (leftclickerHotkeyInput && config.hotkeyCode) {
-                    // Convert keycode to key name
-                    const keyName = getKeyName(config.hotkeyCode);
-                    leftclickerHotkeyInput.value = keyName;
+                
+                if (data.type === 'settings_updated') {
+                    isUpdatingFromServer = true;
+                    applySettings(data.settings);
+                    isUpdatingFromServer = false;
                 }
-
-                const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-                if (holdToClickCheck) {
-                    if (config.holdToClick) {
-                        holdToClickCheck.classList.add('leftclicker-checked');
-                    } else {
-                        holdToClickCheck.classList.remove('leftclicker-checked');
-                    }
-                }
-
-                const blatantModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-                if (blatantModeCheck) {
-                    if (config.blatantMode) {
-                        blatantModeCheck.classList.add('leftclicker-checked');
-                    } else {
-                        blatantModeCheck.classList.remove('leftclicker-checked');
-                    }
-                }
-
-                const exhaustModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-                if (exhaustModeCheck) {
-                    if (config.exhaustMode) {
-                        exhaustModeCheck.classList.add('leftclicker-checked');
-                    } else {
-                        exhaustModeCheck.classList.remove('leftclicker-checked');
-                    }
-                }
-
-                // IMPORTANT: Macro starts DISABLED by default
-                const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-                if (macroToggle) {
-                    if (config.useMacro) {
-                        macroToggle.classList.add('macro-active');
-                    } else {
-                        macroToggle.classList.remove('macro-active');
-                    }
-                }
-
-                const macroIntervalCount = document.getElementById('macroIntervalCount');
-                if (macroIntervalCount) {
-                    macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
-                }
-
-                // Save lastSavedConfig after applying
-                lastSavedConfig = { ...config };
             } catch (error) {
-                console.error('Apply settings error:', error);
+                console.error('[WS] Message parse error:', error);
             }
-        }
+        };
+        
+        ws.onerror = (error) => {
+            console.error('[WS] WebSocket error:', error);
+        };
+    } catch (error) {
+        console.error('[WS] WebSocket connection error:', error);
+    }
+}
 
-        async function saveSettings(updates) {
-            if (isUpdatingFromServer) return;
-            
-            const token = localStorage.getItem('token');
-            currentConfig = { ...currentConfig, ...updates };
+async function logout() {
+    if (!confirm('Are you sure you want to logout?')) {
+        return;
+    }
 
-            // Check if settings actually changed
-            let hasRealChanges = false;
-            for (const key in updates) {
-                if (lastSavedConfig[key] !== updates[key]) {
-                    hasRealChanges = true;
-                    break;
-                }
-            }
-
-            if (!hasRealChanges) {
-                return;
-            }
-
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                try {
-                    const response = await fetch(`${API_URL}/agent/settings`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(currentConfig)
-                    });
-
-                    if (response.ok) {
-                        lastSavedConfig = { ...currentConfig };
-                    }
-                } catch (error) {
-                    console.error('Save settings error:', error);
-                }
-            }, 500);
-        }
-
-        function toggleLeftClickerSettings() {
-            const settings = document.getElementById('module-leftclicker-settings');
-            const btn = document.querySelector('.leftclicker-expand-btn');
-            if (settings && btn) {
-                const isOpen = settings.classList.contains('leftclicker-show');
-                if (isOpen) {
-                    btn.classList.remove('leftclicker-expanded');
-                    settings.classList.remove('leftclicker-show');
-                } else {
-                    btn.classList.add('leftclicker-expanded');
-                    settings.classList.add('leftclicker-show');
-                }
-            }
-        }
-
-        function toggleLeftClicker() {
-            if (isUpdatingFromServer) return;
-            const toggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-            if (!toggle) return;
-            toggle.classList.toggle('leftclicker-active');
-            const isActive = toggle.classList.contains('leftclicker-active');
-            saveSettings({ enabled: isActive });
-        }
-
-        function updateLeftClickerCps(value) {
-            if (isUpdatingFromServer) return;
-            const valueEl = document.getElementById('leftclickerCpsValue');
-            if (valueEl) valueEl.textContent = parseFloat(value).toFixed(1);
-            saveSettings({ cps: parseFloat(value) });
-        }
-
-        function getKeyName(keyCode) {
-            const keyMap = {
-                112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
-                118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
-                16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
-                32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
-            };
-            return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
-        }
-
-        function recordLeftClickerKeybind(input) {
-            if (!input) return;
-            input.classList.add('leftclicker-recording');
-            input.value = 'Press any key...';
-            
-            const handler = (e) => {
-                e.preventDefault();
-                const keyName = getKeyName(e.keyCode);
-                input.value = keyName;
-                input.classList.remove('leftclicker-recording');
-                saveSettings({ hotkeyCode: e.keyCode });
-                document.removeEventListener('keydown', handler);
-            };
-            
-            document.addEventListener('keydown', handler);
-        }
-
-        function toggleLeftClickerHoldToClick() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('leftclicker-checked');
-            const isChecked = checkbox.classList.contains('leftclicker-checked');
-            saveSettings({ holdToClick: isChecked });
-        }
-
-        function toggleLeftClickerBlatantMode() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('leftclicker-checked');
-            const isChecked = checkbox.classList.contains('leftclicker-checked');
-            saveSettings({ blatantMode: isChecked });
-        }
-
-        function toggleLeftClickerExhaustMode() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('leftclicker-checked');
-            const isChecked = checkbox.classList.contains('leftclicker-checked');
-            saveSettings({ exhaustMode: isChecked });
-        }
-
-        function toggleMacroSettings() {
-            const settings = document.getElementById('module-macro-settings');
-            const btn = document.querySelector('.macro-expand-btn');
-            if (settings && btn) {
-                const isOpen = settings.classList.contains('macro-show');
-                if (isOpen) {
-                    btn.classList.remove('macro-expanded');
-                    settings.classList.remove('macro-show');
-                } else {
-                    btn.classList.add('macro-expanded');
-                    settings.classList.add('macro-show');
-                }
-            }
-        }
-
-        function toggleMacro() {
-            if (isUpdatingFromServer) return;
-            const toggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-            if (!toggle) return;
-            toggle.classList.toggle('macro-active');
-            const isActive = toggle.classList.contains('macro-active');
-            saveSettings({ useMacro: isActive });
-        }
-
-        function filterCategory(event, category) {
-            if (!event) return;
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                if (tab) tab.classList.remove('active');
-            });
-            if (event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-            
-            const leftClickerCards = document.querySelectorAll('.leftclicker-card');
-            const macroCards = document.querySelectorAll('.macro-card');
-            const overlayCards = document.querySelectorAll('.overlay-card');
-            
-            leftClickerCards.forEach(card => {
-                if (!card) return;
-                if (card.dataset.category === category) {
-                    card.classList.add('leftclicker-visible');
-                } else {
-                    card.classList.remove('leftclicker-visible');
-                }
-            });
-            
-            macroCards.forEach(card => {
-                if (!card) return;
-                if (card.dataset.category === category) {
-                    card.classList.add('macro-visible');
-                } else {
-                    card.classList.remove('macro-visible');
-                }
-            });
-            
-            overlayCards.forEach(card => {
-                if (!card) return;
-                if (card.dataset.category === category) {
-                    card.classList.add('overlay-visible');
-                } else {
-                    card.classList.remove('overlay-visible');
-                }
-            });
-        }
-
-        function filterModules() {
-            const searchInput = document.getElementById('searchInput');
-            if (!searchInput) return;
-            const search = searchInput.value.toLowerCase();
-            
-            const leftClickerCards = document.querySelectorAll('.leftclicker-card');
-            const macroCards = document.querySelectorAll('.macro-card');
-            const overlayCards = document.querySelectorAll('.overlay-card');
-            
-            leftClickerCards.forEach(card => {
-                if (!card) return;
-                const name = card.dataset.name || '';
-                card.style.display = name.includes(search) ? 'block' : 'none';
-            });
-            
-            macroCards.forEach(card => {
-                if (!card) return;
-                const name = card.dataset.name || '';
-                card.style.display = name.includes(search) ? 'block' : 'none';
-            });
-            
-            overlayCards.forEach(card => {
-                if (!card) return;
-                const name = card.dataset.name || '';
-                card.style.display = name.includes(search) ? 'block' : 'none';
-            });
-        }
-
-        function switchSection(event, section) {
-            if (!event) return;
-            event.preventDefault();
-            
-            const navItem = event.currentTarget;
-            if (navItem && navItem.classList.contains('locked')) {
-                alert('This section requires an active license. Please activate a license in Settings.');
-                section = 'settings';
-            }
-            
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                if (nav) nav.classList.remove('active');
-            });
-            
-            const targetNav = document.querySelector(`.nav-item[data-section="${section}"]`);
-            if (targetNav) {
-                targetNav.classList.add('active');
-            }
-            
-            document.querySelectorAll('.content-section').forEach(s => {
-                if (s) s.classList.remove('active');
-            });
-            const sectionEl = document.getElementById(section + '-section');
-            if (sectionEl) {
-                sectionEl.classList.add('active');
-            }
-            const titles = {
-                'modules': { text: 'Modules', icon: 'fa-th-large' },
-                'settings': { text: 'Settings', icon: 'fa-cog' },
-                'download': { text: 'Download', icon: 'fa-download' },
-                'changelog': { text: 'Changelog', icon: 'fa-list' }
-            };
-            if (titles[section]) {
-                const pageTitle = document.getElementById('pageTitle');
-                const pageTitleIcon = document.getElementById('pageTitleIcon');
-                if (pageTitle) pageTitle.textContent = titles[section].text;
-                if (pageTitleIcon) pageTitleIcon.className = 'fas ' + titles[section].icon;
-            }
-            const searchBar = document.getElementById('searchBar');
-            if (searchBar) {
-                searchBar.style.display = section === 'modules' ? 'block' : 'none';
-            }
-        }
-
-        // NEW: Settings Tab Switching Function
-        function switchSettingsTab(tabName) {
-            document.querySelectorAll('.settings-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.settings-tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            event.currentTarget.classList.add('active');
-            
-            const tabContent = document.getElementById(`${tabName}-tab`);
-            if (tabContent) {
-                tabContent.classList.add('active');
-            }
-        }
-
-        function connectWebSocket(token) {
-            try {
-                // Use wss:// for production HTTPS
-                ws = new WebSocket(`wss://asce-f5us.onrender.com?token=${token}`);
-                
-                ws.onopen = () => {
-                    console.log('[WS] WebSocket connected');
-                };
-                
-                ws.onclose = () => {
-                    console.log('[WS] WebSocket disconnected, reconnecting...');
-                    // Don't mark as disconnected immediately, client might still be connected
-                    setTimeout(() => connectWebSocket(token), 3000);
-                };
-                
-                ws.onmessage = (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        
-                        if (data.type === 'agent_heartbeat') {
-                            // C++ CLIENT IS CONNECTED!
-                            clientConnected = true;
-                            const dot = document.getElementById('connectionDot');
-                            const text = document.getElementById('connectionText');
-                            if (dot) dot.classList.add('connected');
-                            if (text) text.textContent = 'connected';
-                        }
-                        
-                        if (data.type === 'settings_updated') {
-                            isUpdatingFromServer = true;
-                            applySettings(data.settings);
-                            isUpdatingFromServer = false;
-                        }
-                    } catch (error) {
-                        console.error('[WS] Message parse error:', error);
-                    }
-                };
-                
-                ws.onerror = (error) => {
-                    console.error('[WS] WebSocket error:', error);
-                };
-            } catch (error) {
-                console.error('[WS] WebSocket connection error:', error);
-            }
-        }
-
-            async function logout() {
-                if (!confirm('Are you sure you want to logout?')) {
-            return;
-            }
-
-            const token = localStorage.getItem('token');
-            try {
-
-            await fetch(`${API_URL}/auth/logout`, {
+    const token = localStorage.getItem('token');
+    try {
+        await fetch(`${API_URL}/auth/logout`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` }
         });
+    } catch (error) {}
 
-            } catch (error) {}
-    
-                // Clear ALL session data
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            localStorage.removeItem('loginTime');
-    
-                // Redirect to login
-            window.location.href = 'auth.html';
-        }
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('loginTime');
 
-        function openMacroEditor() {
-            alert('Macro editor coming soon!');
-        }
+    window.location.href = 'auth.html';
+}
 
-        window.addEventListener('load', init);
+function openMacroEditor() {
+    alert('Macro editor coming soon!');
+}
+
+window.addEventListener('load', init);
     </script>
 </body>
 </html>
