@@ -15,9 +15,20 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
+            background: #000;
             color: #fff;
             overflow-x: hidden;
+        }
+
+        /* ==================== BREATHTAKING CANVAS BACKGROUND ==================== */
+        #canvas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: #000;
         }
 
         /* Navigation */
@@ -30,9 +41,10 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
         .logo {
@@ -42,10 +54,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .logo i {
             color: #fff;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
         }
 
         .nav-links {
@@ -55,14 +69,30 @@
         }
 
         .nav-links a {
-            color: #999;
+            color: #666;
             text-decoration: none;
             font-size: 0.9em;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.3s ease;
         }
 
         .nav-links a:hover {
             color: #fff;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .btn-primary {
@@ -76,39 +106,78 @@
             transition: all 0.3s ease;
             text-decoration: none;
             font-size: 0.9em;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
             background: #f0f0f0;
             transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         }
 
         .btn-secondary {
             padding: 10px 24px;
             background: transparent;
             color: #fff;
-            border: 1px solid #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             font-size: 0.9em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-secondary:hover::before {
+            left: 100%;
         }
 
         .btn-secondary:hover {
             background: #fff;
             color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         /* Hero Section */
         .hero {
+            position: relative;
+            z-index: 1;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0 40px;
-            position: relative;
         }
 
         .hero-content {
@@ -122,6 +191,7 @@
             font-weight: 700;
             margin-bottom: 24px;
             line-height: 1.2;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
         }
 
         .hero p {
@@ -140,8 +210,11 @@
 
         /* Features Section */
         .features {
+            position: relative;
+            z-index: 1;
             padding: 120px 40px;
-            background: #000;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
         }
 
         .features-container {
@@ -154,6 +227,7 @@
             font-size: 2.5em;
             text-align: center;
             margin-bottom: 80px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .features-grid {
@@ -164,27 +238,55 @@
 
         .feature-card {
             padding: 32px;
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
         }
 
         .feature-card:hover {
-            border-color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
         }
 
         .feature-icon {
             width: 48px;
             height: 48px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
             font-size: 1.5em;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .feature-card h3 {
@@ -201,8 +303,11 @@
 
         /* Pricing Section */
         .pricing {
+            position: relative;
+            z-index: 1;
             padding: 120px 40px;
-            background: #0a0a0a;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
         }
 
         .pricing-container {
@@ -219,20 +324,47 @@
 
         .pricing-card {
             padding: 40px;
-            background: #0d0d0d;
-            border: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .pricing-card:hover::before {
+            opacity: 1;
         }
 
         .pricing-card.featured {
             border-color: #fff;
             transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
         }
 
         .pricing-card:hover {
-            border-color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-4px);
         }
 
         .pricing-badge {
@@ -246,6 +378,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .pricing-card h3 {
@@ -274,7 +407,7 @@
 
         .pricing-features li {
             padding: 12px 0;
-            border-bottom: 1px solid #1a1a1a;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -288,12 +421,16 @@
         .pricing-features i {
             color: #0f0;
             font-size: 0.8em;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
 
         /* CTA Section */
         .cta {
+            position: relative;
+            z-index: 1;
             padding: 120px 40px;
-            background: #000;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
             text-align: center;
         }
 
@@ -301,6 +438,7 @@
             font-family: 'Space Mono', monospace;
             font-size: 2.5em;
             margin-bottom: 24px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         .cta p {
@@ -311,9 +449,12 @@
 
         /* Footer */
         footer {
+            position: relative;
+            z-index: 1;
             padding: 40px;
-            background: #000;
-            border-top: 1px solid #1a1a1a;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
 
@@ -331,6 +472,7 @@
             font-family: 'Space Mono', monospace;
             font-size: 1.2em;
             font-weight: 700;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         .footer-links {
@@ -339,14 +481,15 @@
         }
 
         .footer-links a {
-            color: #999;
+            color: #666;
             text-decoration: none;
             font-size: 0.9em;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .footer-links a:hover {
             color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .footer-social {
@@ -357,18 +500,21 @@
         .footer-social a {
             width: 36px;
             height: 36px;
-            background: #1a1a1a;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #999;
+            color: #666;
             transition: all 0.3s ease;
         }
 
         .footer-social a:hover {
             background: #fff;
             color: #000;
+            border-color: #fff;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         /* Responsive */
@@ -453,6 +599,8 @@
     </style>
 </head>
 <body>
+    <canvas id="canvas-background"></canvas>
+
     <!-- Navigation -->
     <nav>
         <div class="logo">
@@ -609,5 +757,118 @@
             </div>
         </div>
     </footer>
+
+    <script>
+// ==================== BREATHTAKING CANVAS BACKGROUND ====================
+const canvas = document.getElementById('canvas-background');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+class Particle {
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1;
+        this.alpha = Math.random() * 0.5 + 0.2;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fill();
+    }
+}
+
+const particles = [];
+const particleCount = 100;
+for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+}
+
+let mouse = { x: null, y: null, radius: 150 };
+canvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+
+canvas.addEventListener('mouseleave', () => {
+    mouse.x = null;
+    mouse.y = null;
+});
+
+function animate() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+
+    particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach(p2 => {
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 120) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - distance / 120)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        });
+
+        if (mouse.x !== null && mouse.y !== null) {
+            const dx = p1.x - mouse.x;
+            const dy = p1.y - mouse.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < mouse.radius) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - distance / mouse.radius)})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+    </script>
 </body>
 </html>
