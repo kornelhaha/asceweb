@@ -244,7 +244,6 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
-        /* Connection status in top right */
         .connection-status-topbar {
             display: flex;
             align-items: center;
@@ -369,7 +368,6 @@
             gap: 16px;
         }  
 
-        /* Module Card Styles with Glassmorphism */
         .leftclicker-card,
         .macro-card {
             background: rgba(255, 255, 255, 0.03);
@@ -731,8 +729,6 @@
             box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
         }
 
-        /* ==================== SETTINGS STYLES ==================== */
-        
         .settings-container {
             max-width: 1200px;
         }
@@ -1016,7 +1012,6 @@
     </style>
 </head>
 <body>
-    <!-- Breathtaking Canvas Background -->
     <canvas id="canvas-background"></canvas>
 
     <div class="dashboard-layout">
@@ -1086,7 +1081,6 @@
                         </div>
 
                         <div class="module-grid" id="moduleGrid">
-                            <!-- Left Clicker -->
                             <div class="leftclicker-card leftclicker-visible" data-category="combat" data-module="leftclicker" data-name="left clicker">
                                 <div class="leftclicker-header">
                                     <div class="leftclicker-title">
@@ -1135,7 +1129,6 @@
                                 </div>
                             </div>
 
-                            <!-- Macro -->
                             <div class="macro-card" data-category="utilities" data-module="macro" data-name="macro">
                                 <div class="macro-header">
                                     <div class="macro-title">
@@ -1387,886 +1380,903 @@
     </div>
 
     <script>
-        // ==================== BREATHTAKING CANVAS BACKGROUND ====================
-        const canvas = document.getElementById('canvas-background');
-        const ctx = canvas.getContext('2d');
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // ==================== BREATHTAKING CANVAS BACKGROUND (NO TRAILS) ====================
+const canvas = document.getElementById('canvas-background');
+const ctx = canvas.getContext('2d');
 
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-        // Particle system for dynamic network effect
-        class Particle {
-            constructor() {
-                this.reset();
-            }
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
 
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1;
-                this.alpha = Math.random() * 0.5 + 0.2;
-            }
+class Particle {
+    constructor() {
+        this.reset();
+    }
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1;
+        this.alpha = Math.random() * 0.5 + 0.2;
+    }
 
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
 
-            draw() {
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+        ctx.fill();
+    }
+}
+
+const particles = [];
+const particleCount = 100;
+for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+}
+
+let mouse = { x: null, y: null, radius: 150 };
+canvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+});
+
+canvas.addEventListener('mouseleave', () => {
+    mouse.x = null;
+    mouse.y = null;
+});
+
+function animate() {
+    // FIXED: Clear with solid black instead of transparent black - removes trails
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+    });
+
+    particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach(p2 => {
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 120) {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
-                ctx.fill();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - distance / 120)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        });
+
+        if (mouse.x !== null && mouse.y !== null) {
+            const dx = p1.x - mouse.x;
+            const dy = p1.y - mouse.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < mouse.radius) {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(mouse.x, mouse.y);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - distance / mouse.radius)})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
         }
+    });
 
-        // Create particles
-        const particles = [];
-        const particleCount = 100;
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
+    requestAnimationFrame(animate);
+}
 
-        // Mouse interaction
-        let mouse = { x: null, y: null, radius: 150 };
-        canvas.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
+animate();
 
-        canvas.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
+// ==================== DASHBOARD LOGIC ====================
+let lastSavedConfig = {};
+let saveTimeout = null;
+let clientConnected = false;
 
-        // Animation loop
-        function animate() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+const API_URL = 'https://asce-0hoi.onrender.com/api';
+let currentConfig = {};
+let currentUser = {};
+let ws = null;
+let isUpdatingFromServer = false;
+let hasActiveLicense = false;
 
-            // Update and draw particles
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
+function isSessionValid() {
+    const token = localStorage.getItem('token');
+    const loginTime = localStorage.getItem('loginTime');
 
-            // Draw connections between particles
-            particles.forEach((p1, i) => {
-                particles.slice(i + 1).forEach(p2 => {
-                    const dx = p1.x - p2.x;
-                    const dy = p1.y - p2.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (!token || !loginTime) {
+        return false;
+    }
 
-                    if (distance < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 * (1 - distance / 120)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
-                });
+    const now = Date.now();
+    const elapsed = now - parseInt(loginTime);
+    const oneHour = 60 * 60 * 1000;
 
-                // Mouse interaction - attract particles
-                if (mouse.x !== null && mouse.y !== null) {
-                    const dx = p1.x - mouse.x;
-                    const dy = p1.y - mouse.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (elapsed > oneHour) {
+        return false;
+    }
 
-                    if (distance < mouse.radius) {
-                        ctx.beginPath();
-                        ctx.moveTo(p1.x, p1.y);
-                        ctx.lineTo(mouse.x, mouse.y);
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - distance / mouse.radius)})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
+    return true;
+}
 
-                        // Add glow effect
-                        const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
-                        gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-                        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                        ctx.fillStyle = gradient;
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    }
-                }
-            });
-
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        // ==================== DASHBOARD LOGIC ====================
-        let lastSavedConfig = {};
-        let saveTimeout = null;
-        let clientConnected = false;
-
-        const API_URL = 'https://asce-0hoi.onrender.com/api';
-        let currentConfig = {};
-        let currentUser = {};
-        let ws = null;
-        let isUpdatingFromServer = false;
-        let hasActiveLicense = false;
-
-        function isSessionValid() {
-            const token = localStorage.getItem('token');
-            const loginTime = localStorage.getItem('loginTime');
+async function init() {
+    console.log('[INIT] Starting initialization...');
     
-            if (!token || !loginTime) {
-                return false;
-            }
+    // FIXED: Check session validity
+    if (!isSessionValid()) {
+        console.log('[INIT] Session invalid, redirecting to login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('loginTime');
+        window.location.href = 'auth.html';
+        return;
+    }
 
-            const now = Date.now();
-            const elapsed = now - parseInt(loginTime);
-            const oneHour = 60 * 60 * 1000;
+    const token = localStorage.getItem('token');
+    if (!token) {
+        console.log('[INIT] No token found, redirecting to login');
+        window.location.href = 'auth.html';
+        return;
+    }
 
-            if (elapsed > oneHour) {
-                return false;
-            }
+    try {
+        console.log('[INIT] Loading user profile...');
+        await loadUserProfile();
+        console.log('[INIT] Loading settings...');
+        await loadSettings();
+        console.log('[INIT] Connecting WebSocket...');
+        connectWebSocket(token);
+        console.log('[INIT] Initialization complete');
+    } catch (error) {
+        console.error('[INIT] Init error:', error);
+    }
+}
 
-            return true;
+async function loadUserProfile() {
+    const token = localStorage.getItem('token');
+    try {
+        console.log('[PROFILE] Fetching user profile...');
+        const response = await fetch(`${API_URL}/user/profile`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.ok) {
+            currentUser = await response.json();
+            console.log('[PROFILE] Profile loaded:', currentUser.username);
+            updateUserDisplay();
+            checkLicenseStatus();
+        } else {
+            console.error('[PROFILE] Failed to load profile:', response.status);
         }
+    } catch (error) {
+        console.error('[PROFILE] Error loading profile:', error);
+    }
+}
 
-        async function init() {
-            if (!isSessionValid()) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                localStorage.removeItem('loginTime');
-                window.location.href = 'auth.html';
-                return;
-            }
+function checkLicenseStatus() {
+    if (currentUser.license && currentUser.license.status === 'active') {
+        hasActiveLicense = true;
+        console.log('[LICENSE] Active license detected');
+    } else {
+        hasActiveLicense = false;
+        console.log('[LICENSE] No active license');
+    }
+    updateLicenseRestrictions();
+}
 
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = 'auth.html';
-                return;
-            }
-
-            try {
-                await loadUserProfile();
-                await loadSettings();
-                connectWebSocket(token);
-            } catch (error) {
-                console.error('Init error:', error);
-            }
+function updateLicenseRestrictions() {
+    const navItems = document.querySelectorAll('.nav-item[data-requires-license="true"]');
+    navItems.forEach(item => {
+        if (hasActiveLicense) {
+            item.classList.remove('locked');
+        } else {
+            item.classList.add('locked');
         }
+    });
 
-        async function loadUserProfile() {
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch(`${API_URL}/user/profile`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    currentUser = await response.json();
-                    updateUserDisplay();
-                    checkLicenseStatus();
-                }
-            } catch (error) {}
+    const modulesContent = document.getElementById('modulesContent');
+    const noLicenseMessage = document.getElementById('noLicenseMessage');
+    if (modulesContent && noLicenseMessage) {
+        if (hasActiveLicense) {
+            modulesContent.style.display = 'block';
+            noLicenseMessage.style.display = 'none';
+        } else {
+            modulesContent.style.display = 'none';
+            noLicenseMessage.style.display = 'block';
         }
+    }
 
-        function checkLicenseStatus() {
-            if (currentUser.license && currentUser.license.status === 'active') {
-                hasActiveLicense = true;
+    const downloadContent = document.getElementById('downloadContent');
+    const noLicenseMessageDownload = document.getElementById('noLicenseMessageDownload');
+    if (downloadContent && noLicenseMessageDownload) {
+        if (hasActiveLicense) {
+            downloadContent.style.display = 'block';
+            noLicenseMessageDownload.style.display = 'none';
+        } else {
+            downloadContent.style.display = 'none';
+            noLicenseMessageDownload.style.display = 'block';
+        }
+    }
+}
+
+function updateUserDisplay() {
+    console.log('[UI] Updating user display...');
+    const userNameEl = document.getElementById('userName');
+    const userAvatarEl = document.getElementById('userAvatar');
+    const userLicenseEl = document.getElementById('userLicense');
+    
+    if (userNameEl) userNameEl.textContent = currentUser.username || 'User';
+    if (userAvatarEl) userAvatarEl.textContent = (currentUser.username || 'U').charAt(0).toUpperCase();
+    
+    if (userLicenseEl) {
+        if (currentUser.license) {
+            const timeRemaining = currentUser.license.timeRemaining || 'Lifetime';
+            userLicenseEl.textContent = `${currentUser.license.type} • ${timeRemaining}`;
+            userLicenseEl.classList.add('premium');
+        } else {
+            userLicenseEl.textContent = 'No License';
+            userLicenseEl.classList.remove('premium');
+        }
+    }
+
+    const settingsUsername = document.getElementById('settingsUsername');
+    const settingsEmail = document.getElementById('settingsEmail');
+    const settingsRole = document.getElementById('settingsRole');
+    const settingsClicks = document.getElementById('settingsClicks');
+
+    if (settingsUsername) settingsUsername.textContent = currentUser.username;
+    if (settingsEmail) settingsEmail.textContent = currentUser.email;
+    if (settingsRole) settingsRole.textContent = currentUser.role;
+    if (settingsClicks) settingsClicks.textContent = (currentUser.totalClicks || 0).toLocaleString();
+
+    updateLicenseDisplay();
+}
+
+function updateLicenseDisplay() {
+    const licenseBadge = document.getElementById('licenseBadge');
+    const licenseExpiry = document.getElementById('licenseExpiry');
+    const licenseStatus = document.getElementById('licenseStatus');
+    const licenseExpiryRow = document.getElementById('licenseExpiryRow');
+    const licenseStatusRow = document.getElementById('licenseStatusRow');
+    const activationSection = document.getElementById('activationSection');
+    const licenseInfoBox = document.getElementById('licenseInfoBox');
+
+    if (currentUser.license) {
+        const license = currentUser.license;
+        if (licenseBadge) {
+            licenseBadge.textContent = license.type.charAt(0).toUpperCase() + license.type.slice(1);
+            licenseBadge.className = 'license-badge ' + license.type;
+        }
+        if (licenseExpiryRow) licenseExpiryRow.style.display = 'flex';
+        if (licenseExpiry) licenseExpiry.textContent = license.timeRemaining;
+        if (licenseStatusRow) licenseStatusRow.style.display = 'flex';
+        if (licenseStatus) licenseStatus.textContent = license.status.charAt(0).toUpperCase() + license.status.slice(1);
+        if (activationSection) activationSection.style.display = 'none';
+        if (licenseInfoBox) licenseInfoBox.className = 'info-box success';
+    } else {
+        if (licenseBadge) {
+            licenseBadge.textContent = 'No License';
+            licenseBadge.className = 'license-badge expired';
+        }
+        if (licenseExpiryRow) licenseExpiryRow.style.display = 'none';
+        if (licenseStatusRow) licenseStatusRow.style.display = 'none';
+        if (activationSection) activationSection.style.display = 'block';
+        if (licenseInfoBox) licenseInfoBox.className = 'info-box warning';
+    }
+}
+
+async function activateLicense() {
+    const token = localStorage.getItem('token');
+    const licenseKeyInput = document.getElementById('licenseKeyInput');
+    if (!licenseKeyInput || !licenseKeyInput.value.trim()) {
+        alert('Please enter a license key');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/auth/activate`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ licenseKey: licenseKeyInput.value.trim() })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            alert('License activated successfully!');
+            licenseKeyInput.value = '';
+            await loadUserProfile();
+        } else {
+            alert(data.error || 'Failed to activate license');
+        }
+    } catch (error) {
+        alert('Failed to activate license');
+    }
+}
+
+async function changeEmail() {
+    const token = localStorage.getItem('token');
+    const newEmailInput = document.getElementById('newEmailInput');
+    const emailSuccess = document.getElementById('emailSuccess');
+    const emailError = document.getElementById('emailError');
+    const emailErrorText = document.getElementById('emailErrorText');
+    if (emailSuccess) emailSuccess.classList.remove('show');
+    if (emailError) emailError.classList.remove('show');
+    if (!newEmailInput || !newEmailInput.value.trim()) {
+        if (emailErrorText) emailErrorText.textContent = 'Please enter a new email';
+        if (emailError) emailError.classList.add('show');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/user/profile`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: newEmailInput.value.trim() })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            if (emailSuccess) emailSuccess.classList.add('show');
+            newEmailInput.value = '';
+            await loadUserProfile();
+        } else {
+            if (emailErrorText) emailErrorText.textContent = data.error || 'Failed to update email';
+            if (emailError) emailError.classList.add('show');
+        }
+    } catch (error) {
+        if (emailErrorText) emailErrorText.textContent = 'Failed to update email';
+        if (emailError) emailError.classList.add('show');
+    }
+}
+
+async function changePassword() {
+    const token = localStorage.getItem('token');
+    const currentPasswordInput = document.getElementById('currentPasswordInput');
+    const newPasswordInput = document.getElementById('newPasswordInput');
+    const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+    const passwordSuccess = document.getElementById('passwordSuccess');
+    const passwordError = document.getElementById('passwordError');
+    const passwordErrorText = document.getElementById('passwordErrorText');
+    if (passwordSuccess) passwordSuccess.classList.remove('show');
+    if (passwordError) passwordError.classList.remove('show');
+    if (!currentPasswordInput || !currentPasswordInput.value) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Please enter your current password';
+        if (passwordError) passwordError.classList.add('show');
+        return;
+    }
+    if (!newPasswordInput || !newPasswordInput.value) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Please enter a new password';
+        if (passwordError) passwordError.classList.add('show');
+        return;
+    }
+    if (newPasswordInput.value !== confirmPasswordInput.value) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Passwords do not match';
+        if (passwordError) passwordError.classList.add('show');
+        return;
+    }
+    try {
+        const response = await fetch(`${API_URL}/user/profile`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentPassword: currentPasswordInput.value,
+                newPassword: newPasswordInput.value
+            })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            if (passwordSuccess) passwordSuccess.classList.add('show');
+            currentPasswordInput.value = '';
+            newPasswordInput.value = '';
+            confirmPasswordInput.value = '';
+        } else {
+            if (passwordErrorText) passwordErrorText.textContent = data.error || 'Failed to update password';
+            if (passwordError) passwordError.classList.add('show');
+        }
+    } catch (error) {
+        if (passwordErrorText) passwordErrorText.textContent = 'Failed to update password';
+        if (passwordError) passwordError.classList.add('show');
+    }
+}
+
+async function loadSettings() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/agent/settings`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            currentConfig = await response.json();
+            isUpdatingFromServer = true;
+            applySettings(currentConfig);
+            isUpdatingFromServer = false;
+        }
+    } catch (error) {
+        console.error('[SETTINGS] Error loading settings:', error);
+    }
+}
+
+function generateRandomName() {
+    const adjectives = ['swift', 'shadow', 'silent', 'ghost', 'phantom', 'stealth', 'rapid', 'quick', 'flash', 'blaze'];
+    const nouns = ['client', 'app', 'tool', 'utility', 'helper', 'agent', 'service', 'runner', 'launcher', 'handler'];
+    const random = Math.floor(Math.random() * 10000);
+    
+    const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const noun = nouns[Math.floor(Math.random() * nouns.length)];
+    
+    return `${adj}_${noun}_${random}`;
+}
+
+async function downloadClient(useRandomName) {
+    const token = localStorage.getItem('token');
+    const statusEl = document.getElementById('downloadStatus');
+    const statusText = document.getElementById('downloadStatusText');
+    
+    try {
+        let filename;
+        
+        if (useRandomName) {
+            filename = generateRandomName();
+        } else {
+            const customInput = document.getElementById('customFilename');
+            filename = customInput.value.trim() || 'asce';
+            filename = filename.replace(/\.exe$/i, '');
+        }
+        
+        if (statusEl) {
+            statusText.textContent = `Preparing ${filename}.exe for download...`;
+            statusEl.classList.add('show');
+        }
+        
+        const response = await fetch(`${API_URL}/download/client?filename=${encodeURIComponent(filename)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Download failed');
+        }
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `${filename}.exe`;
+        
+        document.body.appendChild(a);
+        a.click();
+        
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        if (statusEl) {
+            statusText.textContent = `Successfully downloaded ${filename}.exe`;
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 5000);
+        }
+        
+    } catch (error) {
+        console.error('Download error:', error);
+        if (statusEl) {
+            statusEl.className = 'error-message show';
+            statusText.textContent = 'Download failed. Please try again.';
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+                statusEl.className = 'success-message';
+            }, 5000);
+        }
+    }
+}
+
+function applySettings(config) {
+    try {
+        const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
+        if (leftClickerToggle) {
+            if (config.enabled) {
+                leftClickerToggle.classList.add('leftclicker-active');
             } else {
-                hasActiveLicense = false;
+                leftClickerToggle.classList.remove('leftclicker-active');
             }
-            updateLicenseRestrictions();
         }
 
-        function updateLicenseRestrictions() {
-            const navItems = document.querySelectorAll('.nav-item[data-requires-license="true"]');
-            navItems.forEach(item => {
-                if (hasActiveLicense) {
-                    item.classList.remove('locked');
-                } else {
-                    item.classList.add('locked');
-                }
+        const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
+        const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
+        if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
+        if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
+
+        const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
+        if (leftclickerHotkeyInput && config.hotkeyCode) {
+            const keyName = getKeyName(config.hotkeyCode);
+            leftclickerHotkeyInput.value = keyName;
+        }
+
+        const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
+        if (holdToClickCheck) {
+            if (config.holdToClick) {
+                holdToClickCheck.classList.add('leftclicker-checked');
+            } else {
+                holdToClickCheck.classList.remove('leftclicker-checked');
+            }
+        }
+
+        const blatantModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
+        if (blatantModeCheck) {
+            if (config.blatantMode) {
+                blatantModeCheck.classList.add('leftclicker-checked');
+            } else {
+                blatantModeCheck.classList.remove('leftclicker-checked');
+            }
+        }
+
+        const exhaustModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
+        if (exhaustModeCheck) {
+            if (config.exhaustMode) {
+                exhaustModeCheck.classList.add('leftclicker-checked');
+            } else {
+                exhaustModeCheck.classList.remove('leftclicker-checked');
+            }
+        }
+
+        const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
+        if (macroToggle) {
+            if (config.useMacro) {
+                macroToggle.classList.add('macro-active');
+            } else {
+                macroToggle.classList.remove('macro-active');
+            }
+        }
+
+        const macroIntervalCount = document.getElementById('macroIntervalCount');
+        if (macroIntervalCount) {
+            macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
+        }
+
+        lastSavedConfig = { ...config };
+    } catch (error) {
+        console.error('Apply settings error:', error);
+    }
+}
+
+async function saveSettings(updates) {
+    if (isUpdatingFromServer) return;
+    
+    const token = localStorage.getItem('token');
+    currentConfig = { ...currentConfig, ...updates };
+
+    let hasRealChanges = false;
+    for (const key in updates) {
+        if (lastSavedConfig[key] !== updates[key]) {
+            hasRealChanges = true;
+            break;
+        }
+    }
+
+    if (!hasRealChanges) {
+        return;
+    }
+
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`${API_URL}/agent/settings`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(currentConfig)
             });
 
-            const modulesContent = document.getElementById('modulesContent');
-            const noLicenseMessage = document.getElementById('noLicenseMessage');
-            if (modulesContent && noLicenseMessage) {
-                if (hasActiveLicense) {
-                    modulesContent.style.display = 'block';
-                    noLicenseMessage.style.display = 'none';
-                } else {
-                    modulesContent.style.display = 'none';
-                    noLicenseMessage.style.display = 'block';
-                }
+            if (response.ok) {
+                lastSavedConfig = { ...currentConfig };
             }
-
-            const downloadContent = document.getElementById('downloadContent');
-            const noLicenseMessageDownload = document.getElementById('noLicenseMessageDownload');
-            if (downloadContent && noLicenseMessageDownload) {
-                if (hasActiveLicense) {
-                    downloadContent.style.display = 'block';
-                    noLicenseMessageDownload.style.display = 'none';
-                } else {
-                    downloadContent.style.display = 'none';
-                    noLicenseMessageDownload.style.display = 'block';
-                }
-            }
+        } catch (error) {
+            console.error('Save settings error:', error);
         }
+    }, 500);
+}
 
-        function updateUserDisplay() {
-            const userNameEl = document.getElementById('userName');
-            const userAvatarEl = document.getElementById('userAvatar');
-            const userLicenseEl = document.getElementById('userLicense');
-            
-            if (userNameEl) userNameEl.textContent = currentUser.username || 'User';
-            if (userAvatarEl) userAvatarEl.textContent = (currentUser.username || 'U').charAt(0).toUpperCase();
-            
-            if (userLicenseEl) {
-                if (currentUser.license) {
-                    const timeRemaining = currentUser.license.timeRemaining || 'Lifetime';
-                    userLicenseEl.textContent = `${currentUser.license.type} • ${timeRemaining}`;
-                    userLicenseEl.classList.add('premium');
-                } else {
-                    userLicenseEl.textContent = 'No License';
-                    userLicenseEl.classList.remove('premium');
-                }
-            }
-
-            const settingsUsername = document.getElementById('settingsUsername');
-            const settingsEmail = document.getElementById('settingsEmail');
-            const settingsRole = document.getElementById('settingsRole');
-            const settingsClicks = document.getElementById('settingsClicks');
-
-            if (settingsUsername) settingsUsername.textContent = currentUser.username;
-            if (settingsEmail) settingsEmail.textContent = currentUser.email;
-            if (settingsRole) settingsRole.textContent = currentUser.role;
-            if (settingsClicks) settingsClicks.textContent = (currentUser.totalClicks || 0).toLocaleString();
-
-            updateLicenseDisplay();
+function toggleLeftClickerSettings() {
+    const settings = document.getElementById('module-leftclicker-settings');
+    const btn = document.querySelector('.leftclicker-expand-btn');
+    if (settings && btn) {
+        const isOpen = settings.classList.contains('leftclicker-show');
+        if (isOpen) {
+            btn.classList.remove('leftclicker-expanded');
+            settings.classList.remove('leftclicker-show');
+        } else {
+            btn.classList.add('leftclicker-expanded');
+            settings.classList.add('leftclicker-show');
         }
+    }
+}
 
-        function updateLicenseDisplay() {
-            const licenseBadge = document.getElementById('licenseBadge');
-            const licenseExpiry = document.getElementById('licenseExpiry');
-            const licenseStatus = document.getElementById('licenseStatus');
-            const licenseExpiryRow = document.getElementById('licenseExpiryRow');
-            const licenseStatusRow = document.getElementById('licenseStatusRow');
-            const activationSection = document.getElementById('activationSection');
-            const licenseInfoBox = document.getElementById('licenseInfoBox');
+function toggleLeftClicker() {
+    if (isUpdatingFromServer) return;
+    const toggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
+    if (!toggle) return;
+    toggle.classList.toggle('leftclicker-active');
+    const isActive = toggle.classList.contains('leftclicker-active');
+    saveSettings({ enabled: isActive });
+}
 
-            if (currentUser.license) {
-                const license = currentUser.license;
-                if (licenseBadge) {
-                    licenseBadge.textContent = license.type.charAt(0).toUpperCase() + license.type.slice(1);
-                    licenseBadge.className = 'license-badge ' + license.type;
-                }
-                if (licenseExpiryRow) licenseExpiryRow.style.display = 'flex';
-                if (licenseExpiry) licenseExpiry.textContent = license.timeRemaining;
-                if (licenseStatusRow) licenseStatusRow.style.display = 'flex';
-                if (licenseStatus) licenseStatus.textContent = license.status.charAt(0).toUpperCase() + license.status.slice(1);
-                if (activationSection) activationSection.style.display = 'none';
-                if (licenseInfoBox) licenseInfoBox.className = 'info-box success';
-            } else {
-                if (licenseBadge) {
-                    licenseBadge.textContent = 'No License';
-                    licenseBadge.className = 'license-badge expired';
-                }
-                if (licenseExpiryRow) licenseExpiryRow.style.display = 'none';
-                if (licenseStatusRow) licenseStatusRow.style.display = 'none';
-                if (activationSection) activationSection.style.display = 'block';
-                if (licenseInfoBox) licenseInfoBox.className = 'info-box warning';
-            }
+function updateLeftClickerCps(value) {
+    if (isUpdatingFromServer) return;
+    const valueEl = document.getElementById('leftclickerCpsValue');
+    if (valueEl) valueEl.textContent = parseFloat(value).toFixed(1);
+    saveSettings({ cps: parseFloat(value) });
+}
+
+function getKeyName(keyCode) {
+    const keyMap = {
+        112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
+        118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
+        16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
+        32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
+    };
+    return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
+}
+
+function recordLeftClickerKeybind(input) {
+    if (!input) return;
+    input.classList.add('leftclicker-recording');
+    input.value = 'Press any key...';
+    
+    const handler = (e) => {
+        e.preventDefault();
+        const keyName = getKeyName(e.keyCode);
+        input.value = keyName;
+        input.classList.remove('leftclicker-recording');
+        saveSettings({ hotkeyCode: e.keyCode });
+        document.removeEventListener('keydown', handler);
+    };
+    
+    document.addEventListener('keydown', handler);
+}
+
+function toggleLeftClickerHoldToClick() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('leftclicker-checked');
+    const isChecked = checkbox.classList.contains('leftclicker-checked');
+    saveSettings({ holdToClick: isChecked });
+}
+
+function toggleLeftClickerBlatantMode() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('leftclicker-checked');
+    const isChecked = checkbox.classList.contains('leftclicker-checked');
+    saveSettings({ blatantMode: isChecked });
+}
+
+function toggleLeftClickerExhaustMode() {
+    if (isUpdatingFromServer) return;
+    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
+    if (!checkbox) return;
+    checkbox.classList.toggle('leftclicker-checked');
+    const isChecked = checkbox.classList.contains('leftclicker-checked');
+    saveSettings({ exhaustMode: isChecked });
+}
+
+function toggleMacroSettings() {
+    const settings = document.getElementById('module-macro-settings');
+    const btn = document.querySelector('.macro-expand-btn');
+    if (settings && btn) {
+        const isOpen = settings.classList.contains('macro-show');
+        if (isOpen) {
+            btn.classList.remove('macro-expanded');
+            settings.classList.remove('macro-show');
+        } else {
+            btn.classList.add('macro-expanded');
+            settings.classList.add('macro-show');
         }
+    }
+}
 
-        async function activateLicense() {
-            const token = localStorage.getItem('token');
-            const licenseKeyInput = document.getElementById('licenseKeyInput');
-            if (!licenseKeyInput || !licenseKeyInput.value.trim()) {
-                alert('Please enter a license key');
-                return;
-            }
+function toggleMacro() {
+    if (isUpdatingFromServer) return;
+    const toggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
+    if (!toggle) return;
+    toggle.classList.toggle('macro-active');
+    const isActive = toggle.classList.contains('macro-active');
+    saveSettings({ useMacro: isActive });
+}
+
+function filterCategory(event, category) {
+    if (!event) return;
+    document.querySelectorAll('.category-tab').forEach(tab => {
+        if (tab) tab.classList.remove('active');
+    });
+    if (event.currentTarget) {
+        event.currentTarget.classList.add('active');
+    }
+    
+    const leftClickerCards = document.querySelectorAll('.leftclicker-card');
+    const macroCards = document.querySelectorAll('.macro-card');
+    
+    leftClickerCards.forEach(card => {
+        if (!card) return;
+        if (card.dataset.category === category) {
+            card.classList.add('leftclicker-visible');
+        } else {
+            card.classList.remove('leftclicker-visible');
+        }
+    });
+    
+    macroCards.forEach(card => {
+        if (!card) return;
+        if (card.dataset.category === category) {
+            card.classList.add('macro-visible');
+        } else {
+            card.classList.remove('macro-visible');
+        }
+    });
+}
+
+function switchSection(event, section) {
+    if (!event) return;
+    event.preventDefault();
+    
+    const navItem = event.currentTarget;
+    if (navItem && navItem.classList.contains('locked')) {
+        alert('This section requires an active license. Please activate a license in Settings.');
+        section = 'settings';
+    }
+    
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        if (nav) nav.classList.remove('active');
+    });
+    
+    const targetNav = document.querySelector(`.nav-item[data-section="${section}"]`);
+    if (targetNav) {
+        targetNav.classList.add('active');
+    }
+    
+    document.querySelectorAll('.content-section').forEach(s => {
+        if (s) s.classList.remove('active');
+    });
+    const sectionEl = document.getElementById(section + '-section');
+    if (sectionEl) {
+        sectionEl.classList.add('active');
+    }
+    const titles = {
+        'modules': { text: 'Modules', icon: 'fa-th-large' },
+        'settings': { text: 'Settings', icon: 'fa-cog' },
+        'download': { text: 'Download', icon: 'fa-download' },
+        'changelog': { text: 'Changelog', icon: 'fa-list' }
+    };
+    if (titles[section]) {
+        const pageTitle = document.getElementById('pageTitle');
+        const pageTitleIcon = document.getElementById('pageTitleIcon');
+        if (pageTitle) pageTitle.textContent = titles[section].text;
+        if (pageTitleIcon) pageTitleIcon.className = 'fas ' + titles[section].icon;
+    }
+}
+
+function switchSettingsTab(tabName) {
+    document.querySelectorAll('.settings-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.settings-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    event.currentTarget.classList.add('active');
+    
+    const tabContent = document.getElementById(`${tabName}-tab`);
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
+}
+
+function connectWebSocket(token) {
+    try {
+        ws = new WebSocket(`wss://asce-0hoi.onrender.com?token=${token}`);
+        
+        ws.onopen = () => {
+            console.log('[WS] WebSocket connected');
+        };
+        
+        ws.onclose = () => {
+            console.log('[WS] WebSocket disconnected, reconnecting...');
+            setTimeout(() => connectWebSocket(token), 3000);
+        };
+        
+        ws.onmessage = (event) => {
             try {
-                const response = await fetch(`${API_URL}/auth/activate`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ licenseKey: licenseKeyInput.value.trim() })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    alert('License activated successfully!');
-                    licenseKeyInput.value = '';
-                    await loadUserProfile();
-                } else {
-                    alert(data.error || 'Failed to activate license');
+                const data = JSON.parse(event.data);
+                
+                if (data.type === 'agent_heartbeat') {
+                    clientConnected = true;
+                    const dot = document.getElementById('connectionDot');
+                    const text = document.getElementById('connectionText');
+                    if (dot) dot.classList.add('connected');
+                    if (text) text.textContent = 'connected';
                 }
-            } catch (error) {
-                alert('Failed to activate license');
-            }
-        }
-
-        async function changeEmail() {
-            const token = localStorage.getItem('token');
-            const newEmailInput = document.getElementById('newEmailInput');
-            const emailSuccess = document.getElementById('emailSuccess');
-            const emailError = document.getElementById('emailError');
-            const emailErrorText = document.getElementById('emailErrorText');
-            if (emailSuccess) emailSuccess.classList.remove('show');
-            if (emailError) emailError.classList.remove('show');
-            if (!newEmailInput || !newEmailInput.value.trim()) {
-                if (emailErrorText) emailErrorText.textContent = 'Please enter a new email';
-                if (emailError) emailError.classList.add('show');
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/user/profile`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email: newEmailInput.value.trim() })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    if (emailSuccess) emailSuccess.classList.add('show');
-                    newEmailInput.value = '';
-                    await loadUserProfile();
-                } else {
-                    if (emailErrorText) emailErrorText.textContent = data.error || 'Failed to update email';
-                    if (emailError) emailError.classList.add('show');
-                }
-            } catch (error) {
-                if (emailErrorText) emailErrorText.textContent = 'Failed to update email';
-                if (emailError) emailError.classList.add('show');
-            }
-        }
-
-        async function changePassword() {
-            const token = localStorage.getItem('token');
-            const currentPasswordInput = document.getElementById('currentPasswordInput');
-            const newPasswordInput = document.getElementById('newPasswordInput');
-            const confirmPasswordInput = document.getElementById('confirmPasswordInput');
-            const passwordSuccess = document.getElementById('passwordSuccess');
-            const passwordError = document.getElementById('passwordError');
-            const passwordErrorText = document.getElementById('passwordErrorText');
-            if (passwordSuccess) passwordSuccess.classList.remove('show');
-            if (passwordError) passwordError.classList.remove('show');
-            if (!currentPasswordInput || !currentPasswordInput.value) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Please enter your current password';
-                if (passwordError) passwordError.classList.add('show');
-                return;
-            }
-            if (!newPasswordInput || !newPasswordInput.value) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Please enter a new password';
-                if (passwordError) passwordError.classList.add('show');
-                return;
-            }
-            if (newPasswordInput.value !== confirmPasswordInput.value) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Passwords do not match';
-                if (passwordError) passwordError.classList.add('show');
-                return;
-            }
-            try {
-                const response = await fetch(`${API_URL}/user/profile`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        currentPassword: currentPasswordInput.value,
-                        newPassword: newPasswordInput.value
-                    })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    if (passwordSuccess) passwordSuccess.classList.add('show');
-                    currentPasswordInput.value = '';
-                    newPasswordInput.value = '';
-                    confirmPasswordInput.value = '';
-                } else {
-                    if (passwordErrorText) passwordErrorText.textContent = data.error || 'Failed to update password';
-                    if (passwordError) passwordError.classList.add('show');
-                }
-            } catch (error) {
-                if (passwordErrorText) passwordErrorText.textContent = 'Failed to update password';
-                if (passwordError) passwordError.classList.add('show');
-            }
-        }
-
-        async function loadSettings() {
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch(`${API_URL}/agent/settings`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                if (response.ok) {
-                    currentConfig = await response.json();
+                
+                if (data.type === 'settings_updated') {
                     isUpdatingFromServer = true;
-                    applySettings(currentConfig);
+                    applySettings(data.settings);
                     isUpdatingFromServer = false;
                 }
-            } catch (error) {}
-        }
-
-        function generateRandomName() {
-            const adjectives = ['swift', 'shadow', 'silent', 'ghost', 'phantom', 'stealth', 'rapid', 'quick', 'flash', 'blaze'];
-            const nouns = ['client', 'app', 'tool', 'utility', 'helper', 'agent', 'service', 'runner', 'launcher', 'handler'];
-            const random = Math.floor(Math.random() * 10000);
-            
-            const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
-            const noun = nouns[Math.floor(Math.random() * nouns.length)];
-            
-            return `${adj}_${noun}_${random}`;
-        }
-
-        async function downloadClient(useRandomName) {
-            const token = localStorage.getItem('token');
-            const statusEl = document.getElementById('downloadStatus');
-            const statusText = document.getElementById('downloadStatusText');
-            
-            try {
-                let filename;
-                
-                if (useRandomName) {
-                    filename = generateRandomName();
-                } else {
-                    const customInput = document.getElementById('customFilename');
-                    filename = customInput.value.trim() || 'asce';
-                    filename = filename.replace(/\.exe$/i, '');
-                }
-                
-                if (statusEl) {
-                    statusText.textContent = `Preparing ${filename}.exe for download...`;
-                    statusEl.classList.add('show');
-                }
-                
-                const response = await fetch(`${API_URL}/download/client?filename=${encodeURIComponent(filename)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Download failed');
-                }
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = `${filename}.exe`;
-                
-                document.body.appendChild(a);
-                a.click();
-                
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                
-                if (statusEl) {
-                    statusText.textContent = `Successfully downloaded ${filename}.exe`;
-                    setTimeout(() => {
-                        statusEl.classList.remove('show');
-                    }, 5000);
-                }
-                
             } catch (error) {
-                console.error('Download error:', error);
-                if (statusEl) {
-                    statusEl.className = 'error-message show';
-                    statusText.textContent = 'Download failed. Please try again.';
-                    setTimeout(() => {
-                        statusEl.classList.remove('show');
-                        statusEl.className = 'success-message';
-                    }, 5000);
-                }
+                console.error('[WS] Message parse error:', error);
             }
-        }
+        };
+        
+        ws.onerror = (error) => {
+            console.error('[WS] WebSocket error:', error);
+        };
+    } catch (error) {
+        console.error('[WS] WebSocket connection error:', error);
+    }
+}
 
-        function applySettings(config) {
-            try {
-                const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-                if (leftClickerToggle) {
-                    if (config.enabled) {
-                        leftClickerToggle.classList.add('leftclicker-active');
-                    } else {
-                        leftClickerToggle.classList.remove('leftclicker-active');
-                    }
-                }
+async function logout() {
+    if (!confirm('Are you sure you want to logout?')) {
+        return;
+    }
 
-                const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
-                const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
-                if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
-                if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
+    const token = localStorage.getItem('token');
+    try {
+        await fetch(`${API_URL}/auth/logout`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+    } catch (error) {}
 
-                const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
-                if (leftclickerHotkeyInput && config.hotkeyCode) {
-                    const keyName = getKeyName(config.hotkeyCode);
-                    leftclickerHotkeyInput.value = keyName;
-                }
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('loginTime');
 
-                const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-                if (holdToClickCheck) {
-                    if (config.holdToClick) {
-                        holdToClickCheck.classList.add('leftclicker-checked');
-                    } else {
-                        holdToClickCheck.classList.remove('leftclicker-checked');
-                    }
-                }
+    window.location.href = 'auth.html';
+}
 
-                const blatantModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-                if (blatantModeCheck) {
-                    if (config.blatantMode) {
-                        blatantModeCheck.classList.add('leftclicker-checked');
-                    } else {
-                        blatantModeCheck.classList.remove('leftclicker-checked');
-                    }
-                }
+function openMacroEditor() {
+    alert('Macro editor coming soon!');
+}
 
-                const exhaustModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-                if (exhaustModeCheck) {
-                    if (config.exhaustMode) {
-                        exhaustModeCheck.classList.add('leftclicker-checked');
-                    } else {
-                        exhaustModeCheck.classList.remove('leftclicker-checked');
-                    }
-                }
+// FIXED: Ensure init runs on page load
+window.addEventListener('load', init);
 
-                const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-                if (macroToggle) {
-                    if (config.useMacro) {
-                        macroToggle.classList.add('macro-active');
-                    } else {
-                        macroToggle.classList.remove('macro-active');
-                    }
-                }
-
-                const macroIntervalCount = document.getElementById('macroIntervalCount');
-                if (macroIntervalCount) {
-                    macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
-                }
-
-                lastSavedConfig = { ...config };
-            } catch (error) {
-                console.error('Apply settings error:', error);
-            }
-        }
-
-        async function saveSettings(updates) {
-            if (isUpdatingFromServer) return;
-            
-            const token = localStorage.getItem('token');
-            currentConfig = { ...currentConfig, ...updates };
-
-            let hasRealChanges = false;
-            for (const key in updates) {
-                if (lastSavedConfig[key] !== updates[key]) {
-                    hasRealChanges = true;
-                    break;
-                }
-            }
-
-            if (!hasRealChanges) {
-                return;
-            }
-
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(async () => {
-                try {
-                    const response = await fetch(`${API_URL}/agent/settings`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(currentConfig)
-                    });
-
-                    if (response.ok) {
-                        lastSavedConfig = { ...currentConfig };
-                    }
-                } catch (error) {
-                    console.error('Save settings error:', error);
-                }
-            }, 500);
-        }
-
-        function toggleLeftClickerSettings() {
-            const settings = document.getElementById('module-leftclicker-settings');
-            const btn = document.querySelector('.leftclicker-expand-btn');
-            if (settings && btn) {
-                const isOpen = settings.classList.contains('leftclicker-show');
-                if (isOpen) {
-                    btn.classList.remove('leftclicker-expanded');
-                    settings.classList.remove('leftclicker-show');
-                } else {
-                    btn.classList.add('leftclicker-expanded');
-                    settings.classList.add('leftclicker-show');
-                }
-            }
-        }
-
-        function toggleLeftClicker() {
-            if (isUpdatingFromServer) return;
-            const toggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-            if (!toggle) return;
-            toggle.classList.toggle('leftclicker-active');
-            const isActive = toggle.classList.contains('leftclicker-active');
-            saveSettings({ enabled: isActive });
-        }
-
-        function updateLeftClickerCps(value) {
-            if (isUpdatingFromServer) return;
-            const valueEl = document.getElementById('leftclickerCpsValue');
-            if (valueEl) valueEl.textContent = parseFloat(value).toFixed(1);
-            saveSettings({ cps: parseFloat(value) });
-        }
-
-        function getKeyName(keyCode) {
-            const keyMap = {
-                112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
-                118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
-                16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
-                32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
-            };
-            return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
-        }
-
-        function recordLeftClickerKeybind(input) {
-            if (!input) return;
-            input.classList.add('leftclicker-recording');
-            input.value = 'Press any key...';
-            
-            const handler = (e) => {
-                e.preventDefault();
-                const keyName = getKeyName(e.keyCode);
-                input.value = keyName;
-                input.classList.remove('leftclicker-recording');
-                saveSettings({ hotkeyCode: e.keyCode });
-                document.removeEventListener('keydown', handler);
-            };
-            
-            document.addEventListener('keydown', handler);
-        }
-
-        function toggleLeftClickerHoldToClick() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('leftclicker-checked');
-            const isChecked = checkbox.classList.contains('leftclicker-checked');
-            saveSettings({ holdToClick: isChecked });
-        }
-
-        function toggleLeftClickerBlatantMode() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('leftclicker-checked');
-            const isChecked = checkbox.classList.contains('leftclicker-checked');
-            saveSettings({ blatantMode: isChecked });
-        }
-
-        function toggleLeftClickerExhaustMode() {
-            if (isUpdatingFromServer) return;
-            const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-            if (!checkbox) return;
-            checkbox.classList.toggle('leftclicker-checked');
-            const isChecked = checkbox.classList.contains('leftclicker-checked');
-            saveSettings({ exhaustMode: isChecked });
-        }
-
-        function toggleMacroSettings() {
-            const settings = document.getElementById('module-macro-settings');
-            const btn = document.querySelector('.macro-expand-btn');
-            if (settings && btn) {
-                const isOpen = settings.classList.contains('macro-show');
-                if (isOpen) {
-                    btn.classList.remove('macro-expanded');
-                    settings.classList.remove('macro-show');
-                } else {
-                    btn.classList.add('macro-expanded');
-                    settings.classList.add('macro-show');
-                }
-            }
-        }
-
-        function toggleMacro() {
-            if (isUpdatingFromServer) return;
-            const toggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-            if (!toggle) return;
-            toggle.classList.toggle('macro-active');
-            const isActive = toggle.classList.contains('macro-active');
-            saveSettings({ useMacro: isActive });
-        }
-
-        function filterCategory(event, category) {
-            if (!event) return;
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                if (tab) tab.classList.remove('active');
-            });
-            if (event.currentTarget) {
-                event.currentTarget.classList.add('active');
-            }
-            
-            const leftClickerCards = document.querySelectorAll('.leftclicker-card');
-            const macroCards = document.querySelectorAll('.macro-card');
-            
-            leftClickerCards.forEach(card => {
-                if (!card) return;
-                if (card.dataset.category === category) {
-                    card.classList.add('leftclicker-visible');
-                } else {
-                    card.classList.remove('leftclicker-visible');
-                }
-            });
-            
-            macroCards.forEach(card => {
-                if (!card) return;
-                if (card.dataset.category === category) {
-                    card.classList.add('macro-visible');
-                } else {
-                    card.classList.remove('macro-visible');
-                }
-            });
-        }
-
-        function switchSection(event, section) {
-            if (!event) return;
-            event.preventDefault();
-            
-            const navItem = event.currentTarget;
-            if (navItem && navItem.classList.contains('locked')) {
-                alert('This section requires an active license. Please activate a license in Settings.');
-                section = 'settings';
-            }
-            
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                if (nav) nav.classList.remove('active');
-            });
-            
-            const targetNav = document.querySelector(`.nav-item[data-section="${section}"]`);
-            if (targetNav) {
-                targetNav.classList.add('active');
-            }
-            
-            document.querySelectorAll('.content-section').forEach(s => {
-                if (s) s.classList.remove('active');
-            });
-            const sectionEl = document.getElementById(section + '-section');
-            if (sectionEl) {
-                sectionEl.classList.add('active');
-            }
-            const titles = {
-                'modules': { text: 'Modules', icon: 'fa-th-large' },
-                'settings': { text: 'Settings', icon: 'fa-cog' },
-                'download': { text: 'Download', icon: 'fa-download' },
-                'changelog': { text: 'Changelog', icon: 'fa-list' }
-            };
-            if (titles[section]) {
-                const pageTitle = document.getElementById('pageTitle');
-                const pageTitleIcon = document.getElementById('pageTitleIcon');
-                if (pageTitle) pageTitle.textContent = titles[section].text;
-                if (pageTitleIcon) pageTitleIcon.className = 'fas ' + titles[section].icon;
-            }
-        }
-
-        function switchSettingsTab(tabName) {
-            document.querySelectorAll('.settings-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.settings-tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            event.currentTarget.classList.add('active');
-            
-            const tabContent = document.getElementById(`${tabName}-tab`);
-            if (tabContent) {
-                tabContent.classList.add('active');
-            }
-        }
-
-        function connectWebSocket(token) {
-            try {
-                ws = new WebSocket(`wss://asce-0hoi.onrender.com?token=${token}`);
-                
-                ws.onopen = () => {
-                    console.log('[WS] WebSocket connected');
-                };
-                
-                ws.onclose = () => {
-                    console.log('[WS] WebSocket disconnected, reconnecting...');
-                    setTimeout(() => connectWebSocket(token), 3000);
-                };
-                
-                ws.onmessage = (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        
-                        if (data.type === 'agent_heartbeat') {
-                            clientConnected = true;
-                            const dot = document.getElementById('connectionDot');
-                            const text = document.getElementById('connectionText');
-                            if (dot) dot.classList.add('connected');
-                            if (text) text.textContent = 'connected';
-                        }
-                        
-                        if (data.type === 'settings_updated') {
-                            isUpdatingFromServer = true;
-                            applySettings(data.settings);
-                            isUpdatingFromServer = false;
-                        }
-                    } catch (error) {
-                        console.error('[WS] Message parse error:', error);
-                    }
-                };
-                
-                ws.onerror = (error) => {
-                    console.error('[WS] WebSocket error:', error);
-                };
-            } catch (error) {
-                console.error('[WS] WebSocket connection error:', error);
-            }
-        }
-
-        async function logout() {
-            if (!confirm('Are you sure you want to logout?')) {
-                return;
-            }
-
-            const token = localStorage.getItem('token');
-            try {
-                await fetch(`${API_URL}/auth/logout`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-            } catch (error) {}
-    
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            localStorage.removeItem('loginTime');
-    
-            window.location.href = 'auth.html';
-        }
-
-        function openMacroEditor() {
-            alert('Macro editor coming soon!');
-        }
-
-        window.addEventListener('load', init);
     </script>
 </body>
 </html>
