@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>asce.</title>
+    <title>asce. - Enhanced Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -933,6 +933,7 @@
                     <div id="modulesContent">
                         <div class="category-tabs">
                             <div class="category-tab active" data-category="combat">COMBAT</div>
+                            <div class="category-tab" data-category="utility" onclick="filterCategory('utility')">UTILITIES</div>
                         </div>
 
                         <div class="module-grid">
@@ -1038,7 +1039,7 @@
                             </div>
 
                             <!-- BLOCKHIT MODULE -->
-                            <div class="module-card visible" data-category="combat">
+                            <div class="module-card visible" data-category="utility">
                                 <div class="module-header">
                                     <div class="module-title">
                                         <div class="module-icon"><i class="fas fa-shield-alt"></i></div>
@@ -1419,21 +1420,24 @@ let ws = null;
 let isUpdatingFromServer = false;
 let hasActiveLicense = false;
 
+// Track what we've sent to prevent echo
+let lastSentConfig = {};
+
 // ==================== SETTINGS SAVE LOGIC ====================
 let pendingUpdates = {};
 let saveTimeout = null;
-const SAVE_DEBOUNCE_MS = 500; // Wait 500ms before sending to server
+const SAVE_DEBOUNCE_MS = 300;
 
 function saveSettings(updates) {
     if (isUpdatingFromServer) {
-        console.log('[SAVE] Ignoring save - update came from server');
+        console.log('[SAVE] Blocked - server is updating');
         return;
     }
     
-    // Merge updates into pending batch
+    // Merge into pending
     Object.assign(pendingUpdates, updates);
     
-    // Update local config immediately for UI responsiveness
+    // Update UI immediately
     Object.assign(currentConfig, updates);
     
     // Clear existing timeout
@@ -1441,16 +1445,19 @@ function saveSettings(updates) {
         clearTimeout(saveTimeout);
     }
     
-    // Set new timeout to batch updates
+    // Debounce
     saveTimeout = setTimeout(async () => {
         if (Object.keys(pendingUpdates).length === 0) return;
         
-        const token = localStorage.getItem('token');
         const toSend = { ...pendingUpdates };
-        pendingUpdates = {}; // Clear pending
+        pendingUpdates = {};
         
         console.log('[SAVE] Sending to server:', toSend);
         
+        // Track what we sent
+        Object.assign(lastSentConfig, toSend);
+        
+        const token = localStorage.getItem('token');
         try {
             const response = await fetch(`${API_URL}/agent/settings`, {
                 method: 'POST',
@@ -1462,13 +1469,21 @@ function saveSettings(updates) {
             });
             
             if (response.ok) {
-                console.log('[SAVE] Settings saved successfully');
+                console.log('[SAVE] ✓ Saved successfully');
             } else {
-                console.error('[SAVE] Failed to save settings');
+                console.error('[SAVE] ✗ Failed to save');
             }
         } catch (error) {
-            console.error('[SAVE] Save error:', error);
+            console.error('[SAVE] ✗ Error:', error);
         }
+        
+        // Clear tracking after 2 seconds
+        setTimeout(() => {
+            Object.keys(toSend).forEach(key => {
+                delete lastSentConfig[key];
+            });
+        }, 2000);
+        
     }, SAVE_DEBOUNCE_MS);
 }
 
@@ -1478,7 +1493,7 @@ function isSessionValid() {
     if (!token || !loginTime) return false;
     
     const elapsed = Date.now() - parseInt(loginTime);
-    return elapsed <= 60 * 60 * 1000; // 1 hour
+    return elapsed <= 60 * 60 * 1000;
 }
 
 async function init() {
@@ -1610,15 +1625,15 @@ async function loadSettings() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
+            isUpdatingFromServer = true;
             const serverConfig = await response.json();
             currentConfig = { ...serverConfig };
-            isUpdatingFromServer = true;
             applySettings(currentConfig);
             isUpdatingFromServer = false;
-            console.log('[LOAD] Config loaded:', currentConfig);
+            console.log('[LOAD] ✓ Settings loaded:', currentConfig);
         }
     } catch (error) {
-        console.error('Settings load error:', error);
+        console.error('[LOAD] ✗ Error:', error);
     }
 }
 
@@ -1630,182 +1645,222 @@ function calculateCpsRange(baseCps) {
 }
 
 function applySettings(config) {
-    isUpdatingFromServer = true;
-    try {
-        console.log('[APPLY] Applying settings:', config);
-        
-        // Left Clicker Toggle
-        const leftClickerToggle = document.querySelector('.module-toggle[data-module="leftclicker"]');
-        if (leftClickerToggle) {
-            if (config.enabled) leftClickerToggle.classList.add('active');
-            else leftClickerToggle.classList.remove('active');
+    console.log('[APPLY] Applying settings:', config);
+    
+    // Left Clicker Toggle
+    const leftClickerToggle = document.querySelector('.module-toggle[data-module="leftclicker"]');
+    if (leftClickerToggle && config.enabled !== undefined) {
+        if (config.enabled) {
+            leftClickerToggle.classList.add('active');
+        } else {
+            leftClickerToggle.classList.remove('active');
         }
-
-        // CPS
-        if (document.getElementById('cpsValue') && document.getElementById('cpsSlider')) {
-            const cps = config.cps !== undefined ? config.cps : 10;
-            document.getElementById('cpsValue').textContent = cps.toFixed(1);
-            document.getElementById('cpsSlider').value = cps;
-            const cpsRange = document.getElementById('cpsRange');
-            if (cpsRange) cpsRange.textContent = calculateCpsRange(cps);
-        }
-
-        // Hotkey
-        const hotkeyInput = document.getElementById('hotkeyInput');
-        if (hotkeyInput && config.hotkeyCode !== undefined) {
-            hotkeyInput.value = getKeyName(config.hotkeyCode);
-        }
-
-        // Checkboxes
-        const holdToClick = document.querySelector('.checkbox[data-setting="holdToClick"]');
-        if (holdToClick) {
-            if (config.holdToClick) holdToClick.classList.add('checked');
-            else holdToClick.classList.remove('checked');
-        }
-
-        const blatantMode = document.querySelector('.checkbox[data-setting="blatantMode"]');
-        if (blatantMode) {
-            if (config.blatantMode) blatantMode.classList.add('checked');
-            else blatantMode.classList.remove('checked');
-        }
-
-        // Exhaust
-        const exhaustToggle = document.querySelector('.mini-toggle[data-setting="exhaustMode"]');
-        if (exhaustToggle) {
-            if (config.exhaustMode) exhaustToggle.classList.add('active');
-            else exhaustToggle.classList.remove('active');
-        }
-
-        if (document.getElementById('exhaustDropValue')) {
-            const drop = config.exhaustDropCps !== undefined ? config.exhaustDropCps : 3;
-            document.getElementById('exhaustDropValue').textContent = drop.toFixed(1);
-            document.getElementById('exhaustDropSlider').value = drop;
-        }
-
-        if (document.getElementById('exhaustChanceValue')) {
-            const chance = config.exhaustChance !== undefined ? config.exhaustChance : 50;
-            document.getElementById('exhaustChanceValue').textContent = chance + '%';
-            document.getElementById('exhaustChanceSlider').value = chance;
-        }
-
-        // Spike
-        const spikeToggle = document.querySelector('.mini-toggle[data-setting="spikeMode"]');
-        if (spikeToggle) {
-            if (config.spikeMode) spikeToggle.classList.add('active');
-            else spikeToggle.classList.remove('active');
-        }
-
-        if (document.getElementById('spikeIncreaseValue')) {
-            const increase = config.spikeIncreaseCps !== undefined ? config.spikeIncreaseCps : 5;
-            document.getElementById('spikeIncreaseValue').textContent = increase.toFixed(1);
-            document.getElementById('spikeIncreaseSlider').value = increase;
-        }
-
-        if (document.getElementById('spikeChanceValue')) {
-            const chance = config.spikeChance !== undefined ? config.spikeChance : 30;
-            document.getElementById('spikeChanceValue').textContent = chance + '%';
-            document.getElementById('spikeChanceSlider').value = chance;
-        }
-
-        // Blockhit
-        const blockhitToggle = document.querySelector('.module-toggle[data-module="blockhit"]');
-        if (blockhitToggle) {
-            if (config.blockhitEnabled) blockhitToggle.classList.add('active');
-            else blockhitToggle.classList.remove('active');
-        }
-
-        if (document.getElementById('blockChanceValue')) {
-            const chance = config.blockChance !== undefined ? config.blockChance : 50;
-            document.getElementById('blockChanceValue').textContent = chance + '%';
-            document.getElementById('blockChanceSlider').value = chance;
-        }
-
-        if (document.getElementById('holdMinValue')) {
-            const holdMin = config.holdLengthMin !== undefined ? config.holdLengthMin : 50;
-            document.getElementById('holdMinValue').textContent = holdMin;
-            document.getElementById('holdMinSlider').value = holdMin;
-        }
-
-        if (document.getElementById('holdMaxValue')) {
-            const holdMax = config.holdLengthMax !== undefined ? config.holdLengthMax : 150;
-            document.getElementById('holdMaxValue').textContent = holdMax;
-            document.getElementById('holdMaxSlider').value = holdMax;
-        }
-
-        if (document.getElementById('delayMinValue')) {
-            const delayMin = config.delayMin !== undefined ? config.delayMin : 100;
-            document.getElementById('delayMinValue').textContent = delayMin;
-            document.getElementById('delayMinSlider').value = delayMin;
-        }
-
-        if (document.getElementById('delayMaxValue')) {
-            const delayMax = config.delayMax !== undefined ? config.delayMax : 300;
-            document.getElementById('delayMaxValue').textContent = delayMax;
-            document.getElementById('delayMaxSlider').value = delayMax;
-        }
-
-        const onlyWhileClicking = document.querySelector('.checkbox[data-setting="onlyWhileClicking"]');
-        if (onlyWhileClicking) {
-            if (config.onlyWhileClicking !== false) onlyWhileClicking.classList.add('checked');
-            else onlyWhileClicking.classList.remove('checked');
-        }
-
-    } catch (error) {
-        console.error('[APPLY] Apply settings error:', error);
-    } finally {
-        isUpdatingFromServer = false;
     }
+
+    // CPS
+    if (config.cps !== undefined) {
+        const cps = parseFloat(config.cps);
+        const cpsValue = document.getElementById('cpsValue');
+        const cpsSlider = document.getElementById('cpsSlider');
+        const cpsRange = document.getElementById('cpsRange');
+        
+        if (cpsValue) cpsValue.textContent = cps.toFixed(1);
+        if (cpsSlider) cpsSlider.value = cps;
+        if (cpsRange) cpsRange.textContent = calculateCpsRange(cps);
+    }
+
+    // Hotkey
+    if (config.hotkeyCode !== undefined) {
+        const hotkeyInput = document.getElementById('hotkeyInput');
+        if (hotkeyInput) hotkeyInput.value = getKeyName(config.hotkeyCode);
+    }
+
+    // Checkboxes
+    const holdToClick = document.querySelector('.checkbox[data-setting="holdToClick"]');
+    if (holdToClick && config.holdToClick !== undefined) {
+        if (config.holdToClick) {
+            holdToClick.classList.add('checked');
+        } else {
+            holdToClick.classList.remove('checked');
+        }
+    }
+
+    const blatantMode = document.querySelector('.checkbox[data-setting="blatantMode"]');
+    if (blatantMode && config.blatantMode !== undefined) {
+        if (config.blatantMode) {
+            blatantMode.classList.add('checked');
+        } else {
+            blatantMode.classList.remove('checked');
+        }
+    }
+
+    // Exhaust
+    const exhaustToggle = document.querySelector('.mini-toggle[data-setting="exhaustMode"]');
+    if (exhaustToggle && config.exhaustMode !== undefined) {
+        if (config.exhaustMode) {
+            exhaustToggle.classList.add('active');
+        } else {
+            exhaustToggle.classList.remove('active');
+        }
+    }
+
+    if (config.exhaustDropCps !== undefined) {
+        const drop = parseFloat(config.exhaustDropCps);
+        const dropValue = document.getElementById('exhaustDropValue');
+        const dropSlider = document.getElementById('exhaustDropSlider');
+        if (dropValue) dropValue.textContent = drop.toFixed(1);
+        if (dropSlider) dropSlider.value = drop;
+    }
+
+    if (config.exhaustChance !== undefined) {
+        const chance = parseInt(config.exhaustChance);
+        const chanceValue = document.getElementById('exhaustChanceValue');
+        const chanceSlider = document.getElementById('exhaustChanceSlider');
+        if (chanceValue) chanceValue.textContent = chance + '%';
+        if (chanceSlider) chanceSlider.value = chance;
+    }
+
+    // Spike
+    const spikeToggle = document.querySelector('.mini-toggle[data-setting="spikeMode"]');
+    if (spikeToggle && config.spikeMode !== undefined) {
+        if (config.spikeMode) {
+            spikeToggle.classList.add('active');
+        } else {
+            spikeToggle.classList.remove('active');
+        }
+    }
+
+    if (config.spikeIncreaseCps !== undefined) {
+        const increase = parseFloat(config.spikeIncreaseCps);
+        const increaseValue = document.getElementById('spikeIncreaseValue');
+        const increaseSlider = document.getElementById('spikeIncreaseSlider');
+        if (increaseValue) increaseValue.textContent = increase.toFixed(1);
+        if (increaseSlider) increaseSlider.value = increase;
+    }
+
+    if (config.spikeChance !== undefined) {
+        const chance = parseInt(config.spikeChance);
+        const chanceValue = document.getElementById('spikeChanceValue');
+        const chanceSlider = document.getElementById('spikeChanceSlider');
+        if (chanceValue) chanceValue.textContent = chance + '%';
+        if (chanceSlider) chanceSlider.value = chance;
+    }
+
+    // Blockhit
+    const blockhitToggle = document.querySelector('.module-toggle[data-module="blockhit"]');
+    if (blockhitToggle && config.blockhitEnabled !== undefined) {
+        if (config.blockhitEnabled) {
+            blockhitToggle.classList.add('active');
+        } else {
+            blockhitToggle.classList.remove('active');
+        }
+    }
+
+    if (config.blockChance !== undefined) {
+        const chance = parseInt(config.blockChance);
+        const chanceValue = document.getElementById('blockChanceValue');
+        const chanceSlider = document.getElementById('blockChanceSlider');
+        if (chanceValue) chanceValue.textContent = chance + '%';
+        if (chanceSlider) chanceSlider.value = chance;
+    }
+
+    if (config.holdLengthMin !== undefined) {
+        const holdMin = parseInt(config.holdLengthMin);
+        const minValue = document.getElementById('holdMinValue');
+        const minSlider = document.getElementById('holdMinSlider');
+        if (minValue) minValue.textContent = holdMin;
+        if (minSlider) minSlider.value = holdMin;
+    }
+
+    if (config.holdLengthMax !== undefined) {
+        const holdMax = parseInt(config.holdLengthMax);
+        const maxValue = document.getElementById('holdMaxValue');
+        const maxSlider = document.getElementById('holdMaxSlider');
+        if (maxValue) maxValue.textContent = holdMax;
+        if (maxSlider) maxSlider.value = holdMax;
+    }
+
+    if (config.delayMin !== undefined) {
+        const delayMin = parseInt(config.delayMin);
+        const minValue = document.getElementById('delayMinValue');
+        const minSlider = document.getElementById('delayMinSlider');
+        if (minValue) minValue.textContent = delayMin;
+        if (minSlider) minSlider.value = delayMin;
+    }
+
+    if (config.delayMax !== undefined) {
+        const delayMax = parseInt(config.delayMax);
+        const maxValue = document.getElementById('delayMaxValue');
+        const maxSlider = document.getElementById('delayMaxSlider');
+        if (maxValue) maxValue.textContent = delayMax;
+        if (maxSlider) maxSlider.value = delayMax;
+    }
+
+    const onlyWhileClicking = document.querySelector('.checkbox[data-setting="onlyWhileClicking"]');
+    if (onlyWhileClicking && config.onlyWhileClicking !== undefined) {
+        if (config.onlyWhileClicking) {
+            onlyWhileClicking.classList.add('checked');
+        } else {
+            onlyWhileClicking.classList.remove('checked');
+        }
+    }
+}
+
+// ==================== CATEGORY FILTER ====================
+function filterCategory(category) {
+    document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    
+    document.querySelectorAll('.module-card').forEach(card => {
+        if (card.dataset.category === category) {
+            card.classList.add('visible');
+        } else {
+            card.classList.remove('visible');
+        }
+    });
 }
 
 // ==================== UI HANDLERS ====================
 function updateCps(value) {
     if (isUpdatingFromServer) return;
-    
     const cpsValue = parseFloat(value);
     document.getElementById('cpsValue').textContent = cpsValue.toFixed(1);
     document.getElementById('cpsRange').textContent = calculateCpsRange(cpsValue);
-    
     saveSettings({ cps: cpsValue });
 }
 
 function updateExhaustDrop(value) {
     if (isUpdatingFromServer) return;
-    
     document.getElementById('exhaustDropValue').textContent = parseFloat(value).toFixed(1);
     saveSettings({ exhaustDropCps: parseFloat(value) });
 }
 
 function updateExhaustChance(value) {
     if (isUpdatingFromServer) return;
-    
     document.getElementById('exhaustChanceValue').textContent = parseInt(value) + '%';
     saveSettings({ exhaustChance: parseInt(value) });
 }
 
 function updateSpikeIncrease(value) {
     if (isUpdatingFromServer) return;
-    
     document.getElementById('spikeIncreaseValue').textContent = parseFloat(value).toFixed(1);
     saveSettings({ spikeIncreaseCps: parseFloat(value) });
 }
 
 function updateSpikeChance(value) {
     if (isUpdatingFromServer) return;
-    
     document.getElementById('spikeChanceValue').textContent = parseInt(value) + '%';
     saveSettings({ spikeChance: parseInt(value) });
 }
 
 function updateBlockChance(value) {
     if (isUpdatingFromServer) return;
-    
     document.getElementById('blockChanceValue').textContent = parseInt(value) + '%';
     saveSettings({ blockChance: parseInt(value) });
 }
 
 function updateHoldMin(value) {
     if (isUpdatingFromServer) return;
-    
     const holdValue = parseInt(value);
     document.getElementById('holdMinValue').textContent = holdValue;
     
@@ -1813,14 +1868,14 @@ function updateHoldMin(value) {
     if (holdValue > parseInt(maxSlider.value)) {
         maxSlider.value = holdValue;
         document.getElementById('holdMaxValue').textContent = holdValue;
+        saveSettings({ holdLengthMin: holdValue, holdLengthMax: holdValue });
+    } else {
+        saveSettings({ holdLengthMin: holdValue });
     }
-    
-    saveSettings({ holdLengthMin: holdValue });
 }
 
 function updateHoldMax(value) {
     if (isUpdatingFromServer) return;
-    
     const holdValue = parseInt(value);
     document.getElementById('holdMaxValue').textContent = holdValue;
     
@@ -1828,14 +1883,14 @@ function updateHoldMax(value) {
     if (holdValue < parseInt(minSlider.value)) {
         minSlider.value = holdValue;
         document.getElementById('holdMinValue').textContent = holdValue;
+        saveSettings({ holdLengthMin: holdValue, holdLengthMax: holdValue });
+    } else {
+        saveSettings({ holdLengthMax: holdValue });
     }
-    
-    saveSettings({ holdLengthMax: holdValue });
 }
 
 function updateDelayMin(value) {
     if (isUpdatingFromServer) return;
-    
     const delayValue = parseInt(value);
     document.getElementById('delayMinValue').textContent = delayValue;
     
@@ -1843,14 +1898,14 @@ function updateDelayMin(value) {
     if (delayValue > parseInt(maxSlider.value)) {
         maxSlider.value = delayValue;
         document.getElementById('delayMaxValue').textContent = delayValue;
+        saveSettings({ delayMin: delayValue, delayMax: delayValue });
+    } else {
+        saveSettings({ delayMin: delayValue });
     }
-    
-    saveSettings({ delayMin: delayValue });
 }
 
 function updateDelayMax(value) {
     if (isUpdatingFromServer) return;
-    
     const delayValue = parseInt(value);
     document.getElementById('delayMaxValue').textContent = delayValue;
     
@@ -1858,9 +1913,10 @@ function updateDelayMax(value) {
     if (delayValue < parseInt(minSlider.value)) {
         minSlider.value = delayValue;
         document.getElementById('delayMinValue').textContent = delayValue;
+        saveSettings({ delayMin: delayValue, delayMax: delayValue });
+    } else {
+        saveSettings({ delayMax: delayValue });
     }
-    
-    saveSettings({ delayMax: delayValue });
 }
 
 function toggleModule(moduleName) {
@@ -2158,9 +2214,9 @@ function connectWebSocket(token) {
     try {
         ws = new WebSocket(`wss://asce-f5us.onrender.com?token=${token}`);
         
-        ws.onopen = () => console.log('[WS] WebSocket connected');
+        ws.onopen = () => console.log('[WS] Connected');
         ws.onclose = () => {
-            console.log('[WS] WebSocket disconnected, reconnecting...');
+            console.log('[WS] Disconnected, reconnecting...');
             setTimeout(() => connectWebSocket(token), 3000);
         };
         
@@ -2176,18 +2232,37 @@ function connectWebSocket(token) {
                 }
                 
                 if (data.type === 'settings_updated') {
-                    console.log('[WS] Received settings update from C++ client');
+                    console.log('[WS] Received update from C++ client:', data.settings);
+                    
+                    // Check if this is an echo of what we just sent
+                    let isEcho = true;
+                    for (let key in data.settings) {
+                        if (lastSentConfig[key] === undefined || 
+                            Math.abs(lastSentConfig[key] - data.settings[key]) > 0.01) {
+                            isEcho = false;
+                            break;
+                        }
+                    }
+                    
+                    if (isEcho) {
+                        console.log('[WS] Ignoring echo');
+                        return;
+                    }
+                    
+                    // Apply the update
                     isUpdatingFromServer = true;
                     Object.assign(currentConfig, data.settings);
                     applySettings(data.settings);
-                    isUpdatingFromServer = false;
+                    setTimeout(() => {
+                        isUpdatingFromServer = false;
+                    }, 500);
                 }
             } catch (error) {
-                console.error('[WS] Message error:', error);
+                console.error('[WS] Error:', error);
             }
         };
     } catch (error) {
-        console.error('[WS] WebSocket error:', error);
+        console.error('[WS] Failed to connect:', error);
     }
 }
 
@@ -2211,4 +2286,3 @@ window.addEventListener('load', init);
 </script>
 </body>
 </html>
-
