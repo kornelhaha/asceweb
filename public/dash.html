@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>asce.</title>
+    <title>asce. - Enhanced Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -986,7 +986,7 @@
                                     <!-- EXHAUST MODE -->
                                     <div class="setting-group" style="margin-top: 20px;">
                                         <div class="setting-group-header">
-                                            <span class="setting-group-title">Exhaust Mode</span>
+                                            <span class="setting-group-title">⚡ Exhaust Mode</span>
                                             <div class="mini-toggle" data-setting="exhaustMode" onclick="toggleMiniSetting(this, 'exhaustMode')">
                                                 <div class="mini-toggle-slider"></div>
                                             </div>
@@ -1012,7 +1012,7 @@
                                     <!-- SPIKE MODE -->
                                     <div class="setting-group">
                                         <div class="setting-group-header">
-                                            <span class="setting-group-title">Spike Mode</span>
+                                            <span class="setting-group-title">🚀 Spike Mode</span>
                                             <div class="mini-toggle" data-setting="spikeMode" onclick="toggleMiniSetting(this, 'spikeMode')">
                                                 <div class="mini-toggle-slider"></div>
                                             </div>
@@ -1559,10 +1559,12 @@ async function loadSettings() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
-            currentConfig = await response.json();
+            const serverConfig = await response.json();
+            currentConfig = { ...serverConfig };  // ← CHANGED: Explicit copy
             isUpdatingFromServer = true;
             applySettings(currentConfig);
             isUpdatingFromServer = false;
+            console.log('[LOAD] Config loaded:', currentConfig);  // ← ADDED
         }
     } catch (error) {
         console.error('Settings load error:', error);
@@ -1695,11 +1697,16 @@ function applySettings(config) {
         lastSavedConfig = { ...config };
     } catch (error) {
         console.error('Apply settings error:', error);
+    } finally {
+                isUpdatingFromServer = false; 
     }
 }
 
 async function saveSettings(updates) {
-    if (isUpdatingFromServer) return;
+    if (isUpdatingFromServer) {
+        console.log('[SAVE] Skipping - updating from server');
+        return;
+    }
     
     const token = localStorage.getItem('token');
     currentConfig = { ...currentConfig, ...updates };
@@ -1707,22 +1714,23 @@ async function saveSettings(updates) {
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async () => {
         try {
+            console.log('[SAVE] Sending:', updates);
             const response = await fetch(`${API_URL}/agent/settings`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(currentConfig)
+                body: JSON.stringify(updates)  // ← CHANGED: Only send updates
             });
 
             if (response.ok) {
-                lastSavedConfig = { ...currentConfig };
+                console.log('[SAVE] Success');
             }
         } catch (error) {
             console.error('Save settings error:', error);
         }
-    }, 500);
+    }, 300);  // ← CHANGED: Faster debounce
 }
 
 // ==================== UI HANDLERS ====================
@@ -2154,6 +2162,7 @@ async function logout() {
         });
     } catch (error) {}
     
+    currentConfig = {};  // ← ADDED: Clear config
     localStorage.clear();
     window.location.href = 'auth.html';
 }
@@ -2162,4 +2171,3 @@ window.addEventListener('load', init);
     </script>
 </body>
 </html>
-
