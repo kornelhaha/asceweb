@@ -986,7 +986,7 @@
                                     <!-- EXHAUST MODE -->
                                     <div class="setting-group" style="margin-top: 20px;">
                                         <div class="setting-group-header">
-                                            <span class="setting-group-title">Exhaust Mode</span>
+                                            <span class="setting-group-title">⚡ Exhaust Mode</span>
                                             <div class="mini-toggle" data-setting="exhaustMode" onclick="toggleMiniSetting(this, 'exhaustMode')">
                                                 <div class="mini-toggle-slider"></div>
                                             </div>
@@ -1012,7 +1012,7 @@
                                     <!-- SPIKE MODE -->
                                     <div class="setting-group">
                                         <div class="setting-group-header">
-                                            <span class="setting-group-title">Spike Mode</span>
+                                            <span class="setting-group-title">🚀 Spike Mode</span>
                                             <div class="mini-toggle" data-setting="spikeMode" onclick="toggleMiniSetting(this, 'spikeMode')">
                                                 <div class="mini-toggle-slider"></div>
                                             </div>
@@ -1305,7 +1305,7 @@
         </main>
     </div>
 
-    <script>
+<script>
 // ==================== CANVAS BACKGROUND ====================
 const canvas = document.getElementById('canvas-background');
 const ctx = canvas.getContext('2d');
@@ -1418,11 +1418,59 @@ let currentUser = {};
 let ws = null;
 let isUpdatingFromServer = false;
 let hasActiveLicense = false;
-let lastSavedConfig = {};
-let saveTimeout = null;
 
-let activelyEditingSettings = new Set();
-let editTimeout = null;
+// ==================== SETTINGS SAVE LOGIC ====================
+let pendingUpdates = {};
+let saveTimeout = null;
+const SAVE_DEBOUNCE_MS = 500; // Wait 500ms before sending to server
+
+function saveSettings(updates) {
+    if (isUpdatingFromServer) {
+        console.log('[SAVE] Ignoring save - update came from server');
+        return;
+    }
+    
+    // Merge updates into pending batch
+    Object.assign(pendingUpdates, updates);
+    
+    // Update local config immediately for UI responsiveness
+    Object.assign(currentConfig, updates);
+    
+    // Clear existing timeout
+    if (saveTimeout) {
+        clearTimeout(saveTimeout);
+    }
+    
+    // Set new timeout to batch updates
+    saveTimeout = setTimeout(async () => {
+        if (Object.keys(pendingUpdates).length === 0) return;
+        
+        const token = localStorage.getItem('token');
+        const toSend = { ...pendingUpdates };
+        pendingUpdates = {}; // Clear pending
+        
+        console.log('[SAVE] Sending to server:', toSend);
+        
+        try {
+            const response = await fetch(`${API_URL}/agent/settings`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(toSend)
+            });
+            
+            if (response.ok) {
+                console.log('[SAVE] Settings saved successfully');
+            } else {
+                console.error('[SAVE] Failed to save settings');
+            }
+        } catch (error) {
+            console.error('[SAVE] Save error:', error);
+        }
+    }, SAVE_DEBOUNCE_MS);
+}
 
 function isSessionValid() {
     const token = localStorage.getItem('token');
@@ -1563,11 +1611,11 @@ async function loadSettings() {
         });
         if (response.ok) {
             const serverConfig = await response.json();
-            currentConfig = { ...serverConfig };  // ← CHANGED: Explicit copy
+            currentConfig = { ...serverConfig };
             isUpdatingFromServer = true;
             applySettings(currentConfig);
             isUpdatingFromServer = false;
-            console.log('[LOAD] Config loaded:', currentConfig);  // ← ADDED
+            console.log('[LOAD] Config loaded:', currentConfig);
         }
     } catch (error) {
         console.error('Settings load error:', error);
@@ -1593,15 +1641,13 @@ function applySettings(config) {
             else leftClickerToggle.classList.remove('active');
         }
 
-        // CPS - SKIP IF BEING EDITED
+        // CPS
         if (document.getElementById('cpsValue') && document.getElementById('cpsSlider')) {
-            if (!activelyEditingSettings.has('cps')) {  // ← CHECK LOCK
-                const cps = config.cps !== undefined ? config.cps : 10;
-                document.getElementById('cpsValue').textContent = cps.toFixed(1);
-                document.getElementById('cpsSlider').value = cps;
-                const cpsRange = document.getElementById('cpsRange');
-                if (cpsRange) cpsRange.textContent = calculateCpsRange(cps);
-            }
+            const cps = config.cps !== undefined ? config.cps : 10;
+            document.getElementById('cpsValue').textContent = cps.toFixed(1);
+            document.getElementById('cpsSlider').value = cps;
+            const cpsRange = document.getElementById('cpsRange');
+            if (cpsRange) cpsRange.textContent = calculateCpsRange(cps);
         }
 
         // Hotkey
@@ -1630,13 +1676,13 @@ function applySettings(config) {
             else exhaustToggle.classList.remove('active');
         }
 
-        if (document.getElementById('exhaustDropValue') && !activelyEditingSettings.has('exhaustDropCps')) {
+        if (document.getElementById('exhaustDropValue')) {
             const drop = config.exhaustDropCps !== undefined ? config.exhaustDropCps : 3;
             document.getElementById('exhaustDropValue').textContent = drop.toFixed(1);
             document.getElementById('exhaustDropSlider').value = drop;
         }
 
-        if (document.getElementById('exhaustChanceValue') && !activelyEditingSettings.has('exhaustChance')) {
+        if (document.getElementById('exhaustChanceValue')) {
             const chance = config.exhaustChance !== undefined ? config.exhaustChance : 50;
             document.getElementById('exhaustChanceValue').textContent = chance + '%';
             document.getElementById('exhaustChanceSlider').value = chance;
@@ -1649,13 +1695,13 @@ function applySettings(config) {
             else spikeToggle.classList.remove('active');
         }
 
-        if (document.getElementById('spikeIncreaseValue') && !activelyEditingSettings.has('spikeIncreaseCps')) {
+        if (document.getElementById('spikeIncreaseValue')) {
             const increase = config.spikeIncreaseCps !== undefined ? config.spikeIncreaseCps : 5;
             document.getElementById('spikeIncreaseValue').textContent = increase.toFixed(1);
             document.getElementById('spikeIncreaseSlider').value = increase;
         }
 
-        if (document.getElementById('spikeChanceValue') && !activelyEditingSettings.has('spikeChance')) {
+        if (document.getElementById('spikeChanceValue')) {
             const chance = config.spikeChance !== undefined ? config.spikeChance : 30;
             document.getElementById('spikeChanceValue').textContent = chance + '%';
             document.getElementById('spikeChanceSlider').value = chance;
@@ -1668,31 +1714,31 @@ function applySettings(config) {
             else blockhitToggle.classList.remove('active');
         }
 
-        if (document.getElementById('blockChanceValue') && !activelyEditingSettings.has('blockChance')) {
+        if (document.getElementById('blockChanceValue')) {
             const chance = config.blockChance !== undefined ? config.blockChance : 50;
             document.getElementById('blockChanceValue').textContent = chance + '%';
             document.getElementById('blockChanceSlider').value = chance;
         }
 
-        if (document.getElementById('holdMinValue') && !activelyEditingSettings.has('holdLengthMin')) {
+        if (document.getElementById('holdMinValue')) {
             const holdMin = config.holdLengthMin !== undefined ? config.holdLengthMin : 50;
             document.getElementById('holdMinValue').textContent = holdMin;
             document.getElementById('holdMinSlider').value = holdMin;
         }
 
-        if (document.getElementById('holdMaxValue') && !activelyEditingSettings.has('holdLengthMax')) {
+        if (document.getElementById('holdMaxValue')) {
             const holdMax = config.holdLengthMax !== undefined ? config.holdLengthMax : 150;
             document.getElementById('holdMaxValue').textContent = holdMax;
             document.getElementById('holdMaxSlider').value = holdMax;
         }
 
-        if (document.getElementById('delayMinValue') && !activelyEditingSettings.has('delayMin')) {
+        if (document.getElementById('delayMinValue')) {
             const delayMin = config.delayMin !== undefined ? config.delayMin : 100;
             document.getElementById('delayMinValue').textContent = delayMin;
             document.getElementById('delayMinSlider').value = delayMin;
         }
 
-        if (document.getElementById('delayMaxValue') && !activelyEditingSettings.has('delayMax')) {
+        if (document.getElementById('delayMaxValue')) {
             const delayMax = config.delayMax !== undefined ? config.delayMax : 300;
             document.getElementById('delayMaxValue').textContent = delayMax;
             document.getElementById('delayMaxSlider').value = delayMax;
@@ -1715,97 +1761,50 @@ function applySettings(config) {
 function updateCps(value) {
     if (isUpdatingFromServer) return;
     
-    // Mark as actively editing
-    activelyEditingSettings.add('cps');
-    clearTimeout(editTimeout);
-    
     const cpsValue = parseFloat(value);
     document.getElementById('cpsValue').textContent = cpsValue.toFixed(1);
     document.getElementById('cpsRange').textContent = calculateCpsRange(cpsValue);
     
     saveSettings({ cps: cpsValue });
-    
-    // Clear editing lock after save completes
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('cps');
-    }, 1000);
 }
 
 function updateExhaustDrop(value) {
     if (isUpdatingFromServer) return;
     
-    activelyEditingSettings.add('exhaustDropCps');
-    clearTimeout(editTimeout);
-    
     document.getElementById('exhaustDropValue').textContent = parseFloat(value).toFixed(1);
     saveSettings({ exhaustDropCps: parseFloat(value) });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('exhaustDropCps');
-    }, 1000);
 }
 
 function updateExhaustChance(value) {
     if (isUpdatingFromServer) return;
     
-    activelyEditingSettings.add('exhaustChance');
-    clearTimeout(editTimeout);
-    
     document.getElementById('exhaustChanceValue').textContent = parseInt(value) + '%';
     saveSettings({ exhaustChance: parseInt(value) });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('exhaustChance');
-    }, 1000);
 }
 
 function updateSpikeIncrease(value) {
     if (isUpdatingFromServer) return;
     
-    activelyEditingSettings.add('spikeIncreaseCps');
-    clearTimeout(editTimeout);
-    
     document.getElementById('spikeIncreaseValue').textContent = parseFloat(value).toFixed(1);
     saveSettings({ spikeIncreaseCps: parseFloat(value) });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('spikeIncreaseCps');
-    }, 1000);
 }
 
 function updateSpikeChance(value) {
     if (isUpdatingFromServer) return;
     
-    activelyEditingSettings.add('spikeChance');
-    clearTimeout(editTimeout);
-    
     document.getElementById('spikeChanceValue').textContent = parseInt(value) + '%';
     saveSettings({ spikeChance: parseInt(value) });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('spikeChance');
-    }, 1000);
 }
 
 function updateBlockChance(value) {
     if (isUpdatingFromServer) return;
     
-    activelyEditingSettings.add('blockChance');
-    clearTimeout(editTimeout);
-    
     document.getElementById('blockChanceValue').textContent = parseInt(value) + '%';
     saveSettings({ blockChance: parseInt(value) });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('blockChance');
-    }, 1000);
 }
 
 function updateHoldMin(value) {
     if (isUpdatingFromServer) return;
-    
-    activelyEditingSettings.add('holdLengthMin');
-    clearTimeout(editTimeout);
     
     const holdValue = parseInt(value);
     document.getElementById('holdMinValue').textContent = holdValue;
@@ -1817,17 +1816,10 @@ function updateHoldMin(value) {
     }
     
     saveSettings({ holdLengthMin: holdValue });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('holdLengthMin');
-    }, 1000);
 }
 
 function updateHoldMax(value) {
     if (isUpdatingFromServer) return;
-    
-    activelyEditingSettings.add('holdLengthMax');
-    clearTimeout(editTimeout);
     
     const holdValue = parseInt(value);
     document.getElementById('holdMaxValue').textContent = holdValue;
@@ -1839,17 +1831,10 @@ function updateHoldMax(value) {
     }
     
     saveSettings({ holdLengthMax: holdValue });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('holdLengthMax');
-    }, 1000);
 }
 
 function updateDelayMin(value) {
     if (isUpdatingFromServer) return;
-    
-    activelyEditingSettings.add('delayMin');
-    clearTimeout(editTimeout);
     
     const delayValue = parseInt(value);
     document.getElementById('delayMinValue').textContent = delayValue;
@@ -1861,17 +1846,10 @@ function updateDelayMin(value) {
     }
     
     saveSettings({ delayMin: delayValue });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('delayMin');
-    }, 1000);
 }
 
 function updateDelayMax(value) {
     if (isUpdatingFromServer) return;
-    
-    activelyEditingSettings.add('delayMax');
-    clearTimeout(editTimeout);
     
     const delayValue = parseInt(value);
     document.getElementById('delayMaxValue').textContent = delayValue;
@@ -1883,10 +1861,6 @@ function updateDelayMax(value) {
     }
     
     saveSettings({ delayMax: delayValue });
-    
-    editTimeout = setTimeout(() => {
-        activelyEditingSettings.delete('delayMax');
-    }, 1000);
 }
 
 function toggleModule(moduleName) {
@@ -2184,8 +2158,11 @@ function connectWebSocket(token) {
     try {
         ws = new WebSocket(`wss://asce-f5us.onrender.com?token=${token}`);
         
-        ws.onopen = () => console.log('WebSocket connected');
-        ws.onclose = () => setTimeout(() => connectWebSocket(token), 3000);
+        ws.onopen = () => console.log('[WS] WebSocket connected');
+        ws.onclose = () => {
+            console.log('[WS] WebSocket disconnected, reconnecting...');
+            setTimeout(() => connectWebSocket(token), 3000);
+        };
         
         ws.onmessage = (event) => {
             try {
@@ -2199,16 +2176,18 @@ function connectWebSocket(token) {
                 }
                 
                 if (data.type === 'settings_updated') {
+                    console.log('[WS] Received settings update from C++ client');
                     isUpdatingFromServer = true;
+                    Object.assign(currentConfig, data.settings);
                     applySettings(data.settings);
                     isUpdatingFromServer = false;
                 }
             } catch (error) {
-                console.error('WebSocket message error:', error);
+                console.error('[WS] Message error:', error);
             }
         };
     } catch (error) {
-        console.error('WebSocket error:', error);
+        console.error('[WS] WebSocket error:', error);
     }
 }
 
@@ -2223,13 +2202,12 @@ async function logout() {
         });
     } catch (error) {}
     
-    currentConfig = {};  // ← ADDED: Clear config
+    currentConfig = {};
     localStorage.clear();
     window.location.href = 'auth.html';
 }
 
 window.addEventListener('load', init);
-    </script>
+</script>
 </body>
 </html>
-
