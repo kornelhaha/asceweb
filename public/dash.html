@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* ==================== BREATHTAKING CANVAS BACKGROUND ==================== */
         #canvas-background {
             position: fixed;
             top: 0;
@@ -63,15 +62,7 @@
             font-size: 1.8em;
             font-weight: 700;
             color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-
-        .logo i {
-            color: #fff;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
         }
 
         .sidebar-nav {
@@ -253,12 +244,6 @@
             border-radius: 8px;
             font-size: 0.85em;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .connection-status-topbar:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .status-dot {
@@ -278,11 +263,9 @@
         @keyframes pulse {
             0%, 100% {
                 box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
-                transform: scale(1);
             }
             50% {
                 box-shadow: 0 0 25px rgba(0, 255, 0, 1);
-                transform: scale(1.2);
             }
         }
 
@@ -314,13 +297,11 @@
             display: flex;
             gap: 8px;
             margin-bottom: 32px;
-            flex-wrap: wrap;
         }
 
         .category-tab {
             padding: 10px 20px;
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             color: #666;
@@ -330,82 +311,36 @@
             font-size: 0.85em;
             font-weight: 600;
             text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-tab::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .category-tab:hover::before {
-            left: 100%;
         }
 
         .category-tab:hover {
             border-color: #fff;
             color: #fff;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .category-tab.active {
             background: #fff;
-            border-color: #fff;
             color: #000;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
         }
 
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 16px;
-        }  
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
 
-        .leftclicker-card,
-        .macro-card {
+        .module-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
-            padding: 20px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 24px;
+            transition: all 0.4s ease;
             display: none;
-            position: relative;
-            overflow: hidden;
         }
 
-        .leftclicker-card::before,
-        .macro-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-        }
-
-        .leftclicker-card:hover::before,
-        .macro-card:hover::before {
-            opacity: 1;
-        }
-
-        .leftclicker-card.leftclicker-visible {
-            display: block;
-            animation: cardSlideIn 0.5s ease;
-        }
-
-        .macro-card.macro-visible {
+        .module-card.visible {
             display: block;
             animation: cardSlideIn 0.5s ease;
         }
@@ -421,34 +356,30 @@
             }
         }
 
-        .leftclicker-card:hover,
-        .macro-card:hover {
+        .module-card:hover {
             border-color: rgba(255, 255, 255, 0.3);
             box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
             transform: translateY(-4px);
         }
 
-        .leftclicker-header,
-        .macro-header {
+        .module-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
-        .leftclicker-title,
-        .macro-title {
+        .module-title {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 600;
-            font-size: 1.05em;
+            font-size: 1.1em;
         }
 
-        .leftclicker-icon,
-        .macro-icon {
-            width: 32px;
-            height: 32px;
+        .module-icon {
+            width: 36px;
+            height: 36px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             display: flex;
@@ -458,54 +389,44 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .leftclicker-toggle,
-        .macro-toggle {
+        .module-toggle {
             position: relative;
-            width: 48px;
-            height: 26px;
+            width: 52px;
+            height: 28px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 13px;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .leftclicker-toggle.leftclicker-active,
-        .macro-toggle.macro-active {
+        .module-toggle.active {
             background: #fff;
             border-color: #fff;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-        .leftclicker-toggle-slider,
-        .macro-toggle-slider {
+        .module-toggle-slider {
             position: absolute;
-            top: 2px;
-            left: 2px;
+            top: 3px;
+            left: 3px;
             width: 20px;
             height: 20px;
             background: #666;
             border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .leftclicker-toggle.leftclicker-active .leftclicker-toggle-slider,
-        .macro-toggle.macro-active .macro-toggle-slider {
-            transform: translateX(22px);
+        .module-toggle.active .module-toggle-slider {
+            transform: translateX(24px);
             background: #000;
         }
 
-        .leftclicker-settings,
-        .macro-settings {
+        .module-settings {
             display: none;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .leftclicker-settings.leftclicker-show,
-        .macro-settings.macro-show {
+        .module-settings.show {
             display: block;
             animation: slideDown 0.3s ease;
         }
@@ -517,38 +438,96 @@
             }
             to {
                 opacity: 1;
-                max-height: 500px;
+                max-height: 2000px;
             }
         }
 
-        .leftclicker-setting-row,
-        .macro-setting-row {
+        .setting-group {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .setting-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .setting-group-title {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mini-toggle {
+            position: relative;
+            width: 40px;
+            height: 22px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mini-toggle.active {
+            background: #fff;
+            border-color: #fff;
+        }
+
+        .mini-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: #666;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .mini-toggle.active .mini-toggle-slider {
+            transform: translateX(18px);
+            background: #000;
+        }
+
+        .setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
         }
 
-        .leftclicker-setting-label,
-        .macro-setting-label {
+        .setting-label {
             font-size: 0.9em;
             color: #ccc;
         }
 
-        .leftclicker-setting-value,
-        .macro-setting-value {
+        .setting-value {
             font-family: 'Space Mono', monospace;
             font-size: 0.85em;
             color: #fff;
             font-weight: 600;
         }
 
-        .leftclicker-slider-container {
+        .cps-range-display {
+            font-size: 0.75em;
+            color: #888;
+            margin-left: 4px;
+        }
+
+        .slider-container {
             width: 100%;
             margin-top: 8px;
         }
 
-        .leftclicker-slider {
+        .slider {
             width: 100%;
             height: 6px;
             background: rgba(255, 255, 255, 0.1);
@@ -557,7 +536,7 @@
             -webkit-appearance: none;
         }
 
-        .leftclicker-slider::-webkit-slider-thumb {
+        .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 18px;
             height: 18px;
@@ -568,12 +547,12 @@
             transition: all 0.2s ease;
         }
 
-        .leftclicker-slider::-webkit-slider-thumb:hover {
+        .slider::-webkit-slider-thumb:hover {
             transform: scale(1.2);
             box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
         }
 
-        .leftclicker-slider::-moz-range-thumb {
+        .slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
             background: #fff;
@@ -583,8 +562,7 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
-        .leftclicker-expand-btn,
-        .macro-expand-btn {
+        .expand-btn {
             background: none;
             border: none;
             color: #666;
@@ -594,24 +572,19 @@
             transition: all 0.3s ease;
         }
 
-        .leftclicker-expand-btn:hover,
-        .macro-expand-btn:hover {
+        .expand-btn:hover {
             color: #fff;
-            transform: scale(1.1);
         }
 
-        .leftclicker-expand-btn i,
-        .macro-expand-btn i {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .expand-btn i {
+            transition: transform 0.3s ease;
         }
 
-        .leftclicker-expand-btn.leftclicker-expanded i,
-        .macro-expand-btn.macro-expanded i {
+        .expand-btn.expanded i {
             transform: rotate(180deg);
         }
 
-        .leftclicker-keybind-input,
-        .macro-keybind-input {
+        .keybind-input {
             padding: 8px 12px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -621,15 +594,15 @@
             font-size: 0.85em;
             cursor: pointer;
             transition: all 0.3s ease;
+            min-width: 80px;
+            text-align: center;
         }
 
-        .leftclicker-keybind-input:hover,
-        .macro-keybind-input:hover {
+        .keybind-input:hover {
             border-color: #fff;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
 
-        .leftclicker-keybind-input.leftclicker-recording {
+        .keybind-input.recording {
             border-color: #0f0;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             animation: recording-pulse 1s infinite;
@@ -640,7 +613,7 @@
             50% { opacity: 0.5; }
         }
 
-        .leftclicker-checkbox {
+        .checkbox {
             width: 20px;
             height: 20px;
             background: rgba(255, 255, 255, 0.05);
@@ -653,35 +626,20 @@
             transition: all 0.3s ease;
         }
 
-        .leftclicker-checkbox i {
+        .checkbox i {
             display: none;
+            font-size: 0.75em;
         }
 
-        .leftclicker-checkbox.leftclicker-checked {
+        .checkbox.checked {
             background: #fff;
             border-color: #fff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
-        .leftclicker-checkbox.leftclicker-checked i {
+        .checkbox.checked i {
             color: #000;
             display: block;
-        }
-
-        .macro-keybind-input {
-            width: 100%;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: #666;
-        }
-
-        .empty-state i {
-            font-size: 3em;
-            margin-bottom: 16px;
-            opacity: 0.3;
         }
 
         .license-required-message {
@@ -707,7 +665,7 @@
             margin-bottom: 24px;
         }
 
-        .license-required-message .btn {
+        .btn {
             display: inline-block;
             padding: 12px 24px;
             background: #fff;
@@ -723,7 +681,7 @@
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
-        .license-required-message .btn:hover {
+        .btn:hover {
             background: #f0f0f0;
             transform: translateY(-2px);
             box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
@@ -738,7 +696,6 @@
             gap: 8px;
             margin-bottom: 24px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 0;
         }
 
         .settings-tab {
@@ -753,23 +710,16 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9em;
-            font-weight: 500;
             margin-bottom: -2px;
         }
 
         .settings-tab:hover {
             color: #fff;
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .settings-tab.active {
             color: #fff;
             border-bottom-color: #fff;
-            background: transparent;
-        }
-
-        .settings-tab i {
-            font-size: 1.1em;
         }
 
         .settings-tab-content {
@@ -789,7 +739,6 @@
 
         .settings-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 20px;
@@ -798,7 +747,6 @@
 
         .settings-card:hover {
             border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
         }
 
         .settings-card-title {
@@ -811,25 +759,8 @@
             color: #fff;
         }
 
-        .settings-card-title i {
-            color: #666;
-            font-size: 1em;
-        }
-
-        .danger-card {
-            border-color: rgba(255, 68, 68, 0.3);
-        }
-
-        .danger-card:hover {
-            border-color: rgba(255, 68, 68, 0.5);
-        }
-
         .form-group {
             margin-bottom: 16px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
         }
 
         .form-label {
@@ -837,7 +768,6 @@
             margin-bottom: 6px;
             font-size: 0.85em;
             color: #999;
-            font-weight: 500;
         }
 
         .form-input {
@@ -855,51 +785,10 @@
         .form-input:focus {
             outline: none;
             border-color: #fff;
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-
-        .form-input:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            background: #fff;
-            border: none;
-            border-radius: 6px;
-            color: #000;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9em;
-            font-family: 'Inter', sans-serif;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .btn:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
         }
 
         .btn-full {
             width: 100%;
-            justify-content: center;
         }
 
         .info-box {
@@ -910,35 +799,15 @@
             margin-bottom: 16px;
         }
 
-        .info-box:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-box.warning {
-            border-color: rgba(255, 136, 0, 0.3);
-            background: rgba(255, 136, 0, 0.05);
-        }
-
-        .info-box.success {
-            border-color: rgba(0, 255, 0, 0.3);
-            background: rgba(0, 255, 0, 0.05);
-        }
-
         .info-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             padding: 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .info-row:last-child {
             border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .info-row:first-child {
-            padding-top: 0;
         }
 
         .info-label {
@@ -950,7 +819,6 @@
             font-family: 'Space Mono', monospace;
             font-size: 0.85em;
             color: #fff;
-            font-weight: 500;
         }
 
         .success-message,
@@ -1003,12 +871,6 @@
             background: rgba(255, 255, 255, 0.1);
             color: #666;
         }
-
-        @media (max-width: 900px) {
-            .settings-grid {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -1017,9 +879,7 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
-                    <span>asce.</span>
-                </div>
+                <div class="logo">asce.</div>
             </div>
 
             <nav class="sidebar-nav">
@@ -1034,10 +894,6 @@
                 <div class="nav-item" data-section="download" data-requires-license="true" onclick="switchSection(event, 'download')">
                     <i class="fas fa-download"></i>
                     <span>Download</span>
-                </div>
-                <div class="nav-item" data-section="changelog" onclick="switchSection(event, 'changelog')">
-                    <i class="fas fa-list"></i>
-                    <span>Changelog</span>
                 </div>
             </nav>
 
@@ -1072,86 +928,185 @@
             </div>
 
             <div class="content-area">
+                <!-- MODULES SECTION -->
                 <div id="modules-section" class="content-section active">
                     <div id="modulesContent">
                         <div class="category-tabs">
-                            <div class="category-tab active" data-category="combat" onclick="filterCategory(event, 'combat')">COMBAT</div>
-                            <div class="category-tab" data-category="utilities" onclick="filterCategory(event, 'utilities')">UTILITIES</div>
+                            <div class="category-tab active" data-category="combat">COMBAT</div>
                         </div>
 
-                        <div class="module-grid" id="moduleGrid">
-                            <div class="leftclicker-card leftclicker-visible" data-category="combat" data-module="leftclicker" data-name="left clicker">
-                                <div class="leftclicker-header">
-                                    <div class="leftclicker-title">
-                                        <div class="leftclicker-icon"><i class="fas fa-mouse-pointer"></i></div>
+                        <div class="module-grid">
+                            <!-- LEFT CLICKER MODULE -->
+                            <div class="module-card visible" data-category="combat">
+                                <div class="module-header">
+                                    <div class="module-title">
+                                        <div class="module-icon"><i class="fas fa-mouse-pointer"></i></div>
                                         <span>Left Clicker</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <button class="leftclicker-expand-btn" onclick="toggleLeftClickerSettings()">
+                                        <button class="expand-btn" onclick="toggleModuleSettings('leftclicker')">
                                             <i class="fas fa-chevron-down"></i>
                                         </button>
-                                        <div class="leftclicker-toggle" data-setting="enabled" onclick="toggleLeftClicker()">
-                                            <div class="leftclicker-toggle-slider"></div>
+                                        <div class="module-toggle" data-module="leftclicker" onclick="toggleModule('leftclicker')">
+                                            <div class="module-toggle-slider"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="leftclicker-settings" id="module-leftclicker-settings">
-                                    <div class="leftclicker-setting-row">
-                                        <span class="leftclicker-setting-label">CPS</span>
-                                        <span class="leftclicker-setting-value" id="leftclickerCpsValue">10.0</span>
+                                <div class="module-settings" id="leftclicker-settings">
+                                    <div class="setting-row">
+                                        <span class="setting-label">CPS</span>
+                                        <span class="setting-value">
+                                            <span id="cpsValue">10.0</span>
+                                            <span class="cps-range-display" id="cpsRange">(9-11)</span>
+                                        </span>
                                     </div>
-                                    <div class="leftclicker-slider-container">
-                                        <input type="range" class="leftclicker-slider" min="1" max="25" step="0.1" value="10" oninput="updateLeftClickerCps(this.value)" id="leftclickerCpsSlider">
+                                    <div class="slider-container">
+                                        <input type="range" class="slider" min="1" max="25" step="0.1" value="10" 
+                                               oninput="updateCps(this.value)" id="cpsSlider">
                                     </div>
-                                    <div class="leftclicker-setting-row" style="margin-top: 16px;">
-                                        <span class="leftclicker-setting-label">Hotkey</span>
-                                        <input type="text" class="leftclicker-keybind-input" value="F6" readonly onclick="recordLeftClickerKeybind(this)" id="leftclickerHotkeyInput">
+                                    
+                                    <div class="setting-row" style="margin-top: 16px;">
+                                        <span class="setting-label">Hotkey</span>
+                                        <input type="text" class="keybind-input" value="F6" readonly 
+                                               onclick="recordKeybind(this)" id="hotkeyInput">
                                     </div>
-                                    <div class="leftclicker-setting-row" style="margin-top: 16px;">
-                                        <span class="leftclicker-setting-label">Hold to Click</span>
-                                        <div class="leftclicker-checkbox" data-setting="holdToClick" onclick="toggleLeftClickerHoldToClick()">
+                                    <div class="setting-row" style="margin-top: 16px;">
+                                        <span class="setting-label">Hold to Click</span>
+                                        <div class="checkbox" data-setting="holdToClick" onclick="toggleCheckbox(this, 'holdToClick')">
                                             <i class="fas fa-check"></i>
                                         </div>
                                     </div>
-                                    <div class="leftclicker-setting-row">
-                                        <span class="leftclicker-setting-label">Blatant Mode</span>
-                                        <div class="leftclicker-checkbox" data-setting="blatantMode" onclick="toggleLeftClickerBlatantMode()">
+                                    <div class="setting-row">
+                                        <span class="setting-label">Blatant Mode (exact CPS)</span>
+                                        <div class="checkbox" data-setting="blatantMode" onclick="toggleCheckbox(this, 'blatantMode')">
                                             <i class="fas fa-check"></i>
                                         </div>
                                     </div>
-                                    <div class="leftclicker-setting-row">
-                                        <span class="leftclicker-setting-label">Exhaust Mode</span>
-                                        <div class="leftclicker-checkbox" data-setting="exhaustMode" onclick="toggleLeftClickerExhaustMode()">
-                                            <i class="fas fa-check"></i>
+
+                                    <!-- EXHAUST MODE -->
+                                    <div class="setting-group" style="margin-top: 20px;">
+                                        <div class="setting-group-header">
+                                            <span class="setting-group-title">⚡ Exhaust Mode</span>
+                                            <div class="mini-toggle" data-setting="exhaustMode" onclick="toggleMiniSetting(this, 'exhaustMode')">
+                                                <div class="mini-toggle-slider"></div>
+                                            </div>
+                                        </div>
+                                        <div class="setting-row">
+                                            <span class="setting-label">Drop CPS</span>
+                                            <span class="setting-value" id="exhaustDropValue">3.0</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="1" max="10" step="0.1" value="3" 
+                                                   oninput="updateExhaustDrop(this.value)" id="exhaustDropSlider">
+                                        </div>
+                                        <div class="setting-row" style="margin-top: 12px;">
+                                            <span class="setting-label">Trigger Chance</span>
+                                            <span class="setting-value" id="exhaustChanceValue">50%</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="0" max="100" step="1" value="50" 
+                                                   oninput="updateExhaustChance(this.value)" id="exhaustChanceSlider">
+                                        </div>
+                                    </div>
+
+                                    <!-- SPIKE MODE -->
+                                    <div class="setting-group">
+                                        <div class="setting-group-header">
+                                            <span class="setting-group-title">🚀 Spike Mode</span>
+                                            <div class="mini-toggle" data-setting="spikeMode" onclick="toggleMiniSetting(this, 'spikeMode')">
+                                                <div class="mini-toggle-slider"></div>
+                                            </div>
+                                        </div>
+                                        <div class="setting-row">
+                                            <span class="setting-label">Increase CPS</span>
+                                            <span class="setting-value" id="spikeIncreaseValue">5.0</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="1" max="15" step="0.1" value="5" 
+                                                   oninput="updateSpikeIncrease(this.value)" id="spikeIncreaseSlider">
+                                        </div>
+                                        <div class="setting-row" style="margin-top: 12px;">
+                                            <span class="setting-label">Trigger Chance</span>
+                                            <span class="setting-value" id="spikeChanceValue">30%</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="0" max="100" step="1" value="30" 
+                                                   oninput="updateSpikeChance(this.value)" id="spikeChanceSlider">
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="macro-card" data-category="utilities" data-module="macro" data-name="macro">
-                                <div class="macro-header">
-                                    <div class="macro-title">
-                                        <div class="macro-icon"><i class="fas fa-code"></i></div>
-                                        <span>Macro</span>
+                            <!-- BLOCKHIT MODULE -->
+                            <div class="module-card visible" data-category="combat">
+                                <div class="module-header">
+                                    <div class="module-title">
+                                        <div class="module-icon"><i class="fas fa-shield-alt"></i></div>
+                                        <span>Blockhit</span>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <button class="macro-expand-btn" onclick="toggleMacroSettings()">
+                                        <button class="expand-btn" onclick="toggleModuleSettings('blockhit')">
                                             <i class="fas fa-chevron-down"></i>
                                         </button>
-                                        <div class="macro-toggle" data-setting="useMacro" onclick="toggleMacro()">
-                                            <div class="macro-toggle-slider"></div>
+                                        <div class="module-toggle" data-module="blockhit" onclick="toggleModule('blockhit')">
+                                            <div class="module-toggle-slider"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="macro-settings" id="module-macro-settings">
-                                    <div class="macro-setting-row">
-                                        <span class="macro-setting-label">Loaded Intervals</span>
-                                        <span class="macro-setting-value" id="macroIntervalCount">0</span>
+                                <div class="module-settings" id="blockhit-settings">
+                                    <div class="setting-row">
+                                        <span class="setting-label">Block Chance</span>
+                                        <span class="setting-value" id="blockChanceValue">50%</span>
                                     </div>
-                                    <div style="margin-top: 16px;">
-                                        <button class="macro-keybind-input" onclick="openMacroEditor()">
-                                            <i class="fas fa-edit"></i> Edit Macro
-                                        </button>
+                                    <div class="slider-container">
+                                        <input type="range" class="slider" min="0" max="100" step="1" value="50" 
+                                               oninput="updateBlockChance(this.value)" id="blockChanceSlider">
+                                    </div>
+
+                                    <div style="margin-top: 20px;">
+                                        <div class="setting-row">
+                                            <span class="setting-label">Hold Length Min (ms)</span>
+                                            <span class="setting-value" id="holdMinValue">50</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="10" max="500" step="5" value="50" 
+                                                   oninput="updateHoldMin(this.value)" id="holdMinSlider">
+                                        </div>
+                                        <div class="setting-row" style="margin-top: 12px;">
+                                            <span class="setting-label">Hold Length Max (ms)</span>
+                                            <span class="setting-value" id="holdMaxValue">150</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="10" max="500" step="5" value="150" 
+                                                   oninput="updateHoldMax(this.value)" id="holdMaxSlider">
+                                        </div>
+                                    </div>
+
+                                    <div style="margin-top: 20px;">
+                                        <div class="setting-row">
+                                            <span class="setting-label">Delay Min (ms)</span>
+                                            <span class="setting-value" id="delayMinValue">100</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="10" max="1000" step="10" value="100" 
+                                                   oninput="updateDelayMin(this.value)" id="delayMinSlider">
+                                        </div>
+                                        <div class="setting-row" style="margin-top: 12px;">
+                                            <span class="setting-label">Delay Max (ms)</span>
+                                            <span class="setting-value" id="delayMaxValue">300</span>
+                                        </div>
+                                        <div class="slider-container">
+                                            <input type="range" class="slider" min="10" max="1000" step="10" value="300" 
+                                                   oninput="updateDelayMax(this.value)" id="delayMaxSlider">
+                                        </div>
+                                    </div>
+
+                                    <div class="setting-row" style="margin-top: 16px;">
+                                        <span class="setting-label">Only While Clicking</span>
+                                        <div class="checkbox checked" data-setting="onlyWhileClicking" 
+                                             onclick="toggleCheckbox(this, 'onlyWhileClicking')">
+                                            <i class="fas fa-check"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1168,6 +1123,7 @@
                     </div>
                 </div>
 
+                <!-- SETTINGS SECTION -->
                 <div id="settings-section" class="content-section">
                     <div class="settings-container">
                         <div class="settings-tabs">
@@ -1252,10 +1208,6 @@
                                             <span class="info-label">Expires In</span>
                                             <span class="info-value" id="licenseExpiry">-</span>
                                         </div>
-                                        <div class="info-row" id="licenseStatusRow" style="display: none;">
-                                            <span class="info-label">Status</span>
-                                            <span class="info-value" id="licenseStatus">Active</span>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -1266,7 +1218,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label">License Key</label>
-                                        <input type="text" class="form-input" id="licenseKeyInput" placeholder="XXXXX-XXXXX-XXXXX-XXXXX">
+                                        <input type="text" class="form-input" id="licenseKeyInput" placeholder="XXXXX-XXXXX-XXXXX">
                                     </div>
                                     <button class="btn btn-full" onclick="activateLicense()">
                                         <i class="fas fa-check"></i> Activate Now
@@ -1309,6 +1261,7 @@
                     </div>
                 </div>
 
+                <!-- DOWNLOAD SECTION -->
                 <div id="download-section" class="content-section">
                     <div id="downloadContent">
                         <div class="settings-container">
@@ -1318,10 +1271,6 @@
                                     Download asce. Client
                                 </div>
                                 
-                                <div class="info-box" style="margin-bottom: 20px;">
-                                    <p style="margin-bottom: 12px; color: #ccc;">Choose a custom filename or use a randomized name for added security.</p>
-                                </div>
-
                                 <div class="form-group">
                                     <label class="form-label">Filename</label>
                                     <input type="text" class="form-input" id="customFilename" placeholder="asce" value="asce">
@@ -1336,22 +1285,7 @@
                                     </button>
                                 </div>
 
-                                <div class="info-box warning">
-                                    <div style="display: flex; align-items: start; gap: 12px;">
-                                        <i class="fas fa-info-circle" style="color: #ff8800; margin-top: 2px;"></i>
-                                        <div style="font-size: 0.85em; color: #ccc;">
-                                            <p style="margin-bottom: 8px;"><strong>Important:</strong></p>
-                                            <ul style="margin-left: 20px; line-height: 1.6;">
-                                                <li>Windows Defender may flag the client as a false positive</li>
-                                                <li>Add an exclusion for the client in Windows Security</li>
-                                                <li>Keep your login credentials secure</li>
-                                                <li>One PC per account (HWID locked)</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div id="downloadStatus" class="success-message" style="margin-top: 16px;">
+                                <div id="downloadStatus" class="success-message">
                                     <i class="fas fa-check-circle"></i> <span id="downloadStatusText"></span>
                                 </div>
                             </div>
@@ -1367,19 +1301,12 @@
                         </a>
                     </div>
                 </div>
-
-                <div id="changelog-section" class="content-section">
-                    <div class="empty-state">
-                        <i class="fas fa-list"></i>
-                        <p>Changelog coming soon</p>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
 
     <script>
-// ==================== BREATHTAKING CANVAS BACKGROUND (NO TRAILS) ====================
+// ==================== CANVAS BACKGROUND ====================
 const canvas = document.getElementById('canvas-background');
 const ctx = canvas.getContext('2d');
 
@@ -1439,7 +1366,6 @@ canvas.addEventListener('mouseleave', () => {
 });
 
 function animate() {
-    // FIXED: Clear with solid black instead of transparent black - removes trails
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -1476,12 +1402,6 @@ function animate() {
                 ctx.strokeStyle = `rgba(255, 255, 255, ${0.3 * (1 - distance / mouse.radius)})`;
                 ctx.lineWidth = 1;
                 ctx.stroke();
-
-                const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius);
-                gradient.addColorStop(0, 'rgba(255, 255, 255, 0.1)');
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
         }
     });
@@ -1491,98 +1411,66 @@ function animate() {
 
 animate();
 
-// ==================== DASHBOARD LOGIC (FROM SECOND FILE - FUNCTIONAL) ====================
-let lastSavedConfig = {};
-let saveTimeout = null;
-let clientConnected = false;
-
+// ==================== DASHBOARD LOGIC ====================
 const API_URL = 'https://asce-f5us.onrender.com/api';
 let currentConfig = {};
 let currentUser = {};
 let ws = null;
 let isUpdatingFromServer = false;
 let hasActiveLicense = false;
+let lastSavedConfig = {};
+let saveTimeout = null;
 
 function isSessionValid() {
     const token = localStorage.getItem('token');
     const loginTime = localStorage.getItem('loginTime');
-
-    if (!token || !loginTime) {
-        return false;
-    }
-
-    const now = Date.now();
-    const elapsed = now - parseInt(loginTime);
-    const oneHour = 60 * 60 * 1000;
-
-    if (elapsed > oneHour) {
-        return false;
-    }
-
-    return true;
+    if (!token || !loginTime) return false;
+    
+    const elapsed = Date.now() - parseInt(loginTime);
+    return elapsed <= 60 * 60 * 1000; // 1 hour
 }
 
 async function init() {
-    console.log('[INIT] Starting initialization...');
-    
     if (!isSessionValid()) {
-        console.log('[INIT] Session invalid, redirecting to login');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        localStorage.removeItem('loginTime');
+        localStorage.clear();
         window.location.href = 'auth.html';
         return;
     }
 
     const token = localStorage.getItem('token');
     if (!token) {
-        console.log('[INIT] No token found, redirecting to login');
         window.location.href = 'auth.html';
         return;
     }
 
     try {
-        console.log('[INIT] Loading user profile...');
         await loadUserProfile();
-        console.log('[INIT] Loading settings...');
         await loadSettings();
-        console.log('[INIT] Connecting WebSocket...');
         connectWebSocket(token);
-        console.log('[INIT] Initialization complete');
     } catch (error) {
-        console.error('[INIT] Init error:', error);
+        console.error('Init error:', error);
     }
 }
 
 async function loadUserProfile() {
     const token = localStorage.getItem('token');
     try {
-        console.log('[PROFILE] Fetching user profile...');
         const response = await fetch(`${API_URL}/user/profile`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         
         if (response.ok) {
             currentUser = await response.json();
-            console.log('[PROFILE] Profile loaded:', currentUser.username);
             updateUserDisplay();
             checkLicenseStatus();
-        } else {
-            console.error('[PROFILE] Failed to load profile:', response.status);
         }
     } catch (error) {
-        console.error('[PROFILE] Error loading profile:', error);
+        console.error('Profile load error:', error);
     }
 }
 
 function checkLicenseStatus() {
-    if (currentUser.license && currentUser.license.status === 'active') {
-        hasActiveLicense = true;
-        console.log('[LICENSE] Active license detected');
-    } else {
-        hasActiveLicense = false;
-        console.log('[LICENSE] No active license');
-    }
+    hasActiveLicense = currentUser.license && currentUser.license.status === 'active';
     updateLicenseRestrictions();
 }
 
@@ -1598,31 +1486,26 @@ function updateLicenseRestrictions() {
 
     const modulesContent = document.getElementById('modulesContent');
     const noLicenseMessage = document.getElementById('noLicenseMessage');
-    if (modulesContent && noLicenseMessage) {
-        if (hasActiveLicense) {
-            modulesContent.style.display = 'block';
-            noLicenseMessage.style.display = 'none';
-        } else {
-            modulesContent.style.display = 'none';
-            noLicenseMessage.style.display = 'block';
-        }
+    if (hasActiveLicense) {
+        modulesContent.style.display = 'block';
+        noLicenseMessage.style.display = 'none';
+    } else {
+        modulesContent.style.display = 'none';
+        noLicenseMessage.style.display = 'block';
     }
 
     const downloadContent = document.getElementById('downloadContent');
     const noLicenseMessageDownload = document.getElementById('noLicenseMessageDownload');
-    if (downloadContent && noLicenseMessageDownload) {
-        if (hasActiveLicense) {
-            downloadContent.style.display = 'block';
-            noLicenseMessageDownload.style.display = 'none';
-        } else {
-            downloadContent.style.display = 'none';
-            noLicenseMessageDownload.style.display = 'block';
-        }
+    if (hasActiveLicense) {
+        downloadContent.style.display = 'block';
+        noLicenseMessageDownload.style.display = 'none';
+    } else {
+        downloadContent.style.display = 'none';
+        noLicenseMessageDownload.style.display = 'block';
     }
 }
 
 function updateUserDisplay() {
-    console.log('[UI] Updating user display...');
     const userNameEl = document.getElementById('userName');
     const userAvatarEl = document.getElementById('userAvatar');
     const userLicenseEl = document.getElementById('userLicense');
@@ -1641,15 +1524,10 @@ function updateUserDisplay() {
         }
     }
 
-    const settingsUsername = document.getElementById('settingsUsername');
-    const settingsEmail = document.getElementById('settingsEmail');
-    const settingsRole = document.getElementById('settingsRole');
-    const settingsClicks = document.getElementById('settingsClicks');
-
-    if (settingsUsername) settingsUsername.textContent = currentUser.username;
-    if (settingsEmail) settingsEmail.textContent = currentUser.email;
-    if (settingsRole) settingsRole.textContent = currentUser.role;
-    if (settingsClicks) settingsClicks.textContent = (currentUser.totalClicks || 0).toLocaleString();
+    document.getElementById('settingsUsername').textContent = currentUser.username;
+    document.getElementById('settingsEmail').textContent = currentUser.email;
+    document.getElementById('settingsRole').textContent = currentUser.role;
+    document.getElementById('settingsClicks').textContent = (currentUser.totalClicks || 0).toLocaleString();
 
     updateLicenseDisplay();
 }
@@ -1657,34 +1535,397 @@ function updateUserDisplay() {
 function updateLicenseDisplay() {
     const licenseBadge = document.getElementById('licenseBadge');
     const licenseExpiry = document.getElementById('licenseExpiry');
-    const licenseStatus = document.getElementById('licenseStatus');
     const licenseExpiryRow = document.getElementById('licenseExpiryRow');
-    const licenseStatusRow = document.getElementById('licenseStatusRow');
     const activationSection = document.getElementById('activationSection');
-    const licenseInfoBox = document.getElementById('licenseInfoBox');
 
     if (currentUser.license) {
-        const license = currentUser.license;
-        if (licenseBadge) {
-            licenseBadge.textContent = license.type.charAt(0).toUpperCase() + license.type.slice(1);
-            licenseBadge.className = 'license-badge ' + license.type;
-        }
-        if (licenseExpiryRow) licenseExpiryRow.style.display = 'flex';
-        if (licenseExpiry) licenseExpiry.textContent = license.timeRemaining;
-        if (licenseStatusRow) licenseStatusRow.style.display = 'flex';
-        if (licenseStatus) licenseStatus.textContent = license.status.charAt(0).toUpperCase() + license.status.slice(1);
-        if (activationSection) activationSection.style.display = 'none';
-        if (licenseInfoBox) licenseInfoBox.className = 'info-box success';
+        licenseBadge.textContent = currentUser.license.type.charAt(0).toUpperCase() + currentUser.license.type.slice(1);
+        licenseBadge.className = 'license-badge ' + currentUser.license.type;
+        licenseExpiryRow.style.display = 'flex';
+        licenseExpiry.textContent = currentUser.license.timeRemaining;
+        activationSection.style.display = 'none';
     } else {
-        if (licenseBadge) {
-            licenseBadge.textContent = 'No License';
-            licenseBadge.className = 'license-badge expired';
-        }
-        if (licenseExpiryRow) licenseExpiryRow.style.display = 'none';
-        if (licenseStatusRow) licenseStatusRow.style.display = 'none';
-        if (activationSection) activationSection.style.display = 'block';
-        if (licenseInfoBox) licenseInfoBox.className = 'info-box warning';
+        licenseBadge.textContent = 'No License';
+        licenseBadge.className = 'license-badge expired';
+        licenseExpiryRow.style.display = 'none';
+        activationSection.style.display = 'block';
     }
+}
+
+async function loadSettings() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/agent/settings`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            currentConfig = await response.json();
+            isUpdatingFromServer = true;
+            applySettings(currentConfig);
+            isUpdatingFromServer = false;
+        }
+    } catch (error) {
+        console.error('Settings load error:', error);
+    }
+}
+
+function calculateCpsRange(baseCps) {
+    const variance = baseCps * 0.125;
+    const minCps = Math.max(1, baseCps - variance).toFixed(1);
+    const maxCps = Math.min(25, baseCps + variance).toFixed(1);
+    return `(${minCps}-${maxCps})`;
+}
+
+function applySettings(config) {
+    try {
+        // Left Clicker Toggle
+        const leftClickerToggle = document.querySelector('.module-toggle[data-module="leftclicker"]');
+        if (leftClickerToggle) {
+            if (config.enabled) leftClickerToggle.classList.add('active');
+            else leftClickerToggle.classList.remove('active');
+        }
+
+        // CPS
+        const cpsValue = document.getElementById('cpsValue');
+        const cpsRange = document.getElementById('cpsRange');
+        const cpsSlider = document.getElementById('cpsSlider');
+        if (cpsValue && cpsSlider) {
+            const cps = config.cps || 10;
+            cpsValue.textContent = cps.toFixed(1);
+            cpsSlider.value = cps;
+            if (cpsRange) cpsRange.textContent = calculateCpsRange(cps);
+        }
+
+        // Hotkey
+        const hotkeyInput = document.getElementById('hotkeyInput');
+        if (hotkeyInput && config.hotkeyCode) {
+            hotkeyInput.value = getKeyName(config.hotkeyCode);
+        }
+
+        // Checkboxes
+        const holdToClick = document.querySelector('.checkbox[data-setting="holdToClick"]');
+        if (holdToClick) {
+            if (config.holdToClick) holdToClick.classList.add('checked');
+            else holdToClick.classList.remove('checked');
+        }
+
+        const blatantMode = document.querySelector('.checkbox[data-setting="blatantMode"]');
+        if (blatantMode) {
+            if (config.blatantMode) blatantMode.classList.add('checked');
+            else blatantMode.classList.remove('checked');
+        }
+
+        // Exhaust
+        const exhaustToggle = document.querySelector('.mini-toggle[data-setting="exhaustMode"]');
+        if (exhaustToggle) {
+            if (config.exhaustMode) exhaustToggle.classList.add('active');
+            else exhaustToggle.classList.remove('active');
+        }
+
+        if (document.getElementById('exhaustDropValue')) {
+            const drop = config.exhaustDropCps || 3;
+            document.getElementById('exhaustDropValue').textContent = drop.toFixed(1);
+            document.getElementById('exhaustDropSlider').value = drop;
+        }
+
+        if (document.getElementById('exhaustChanceValue')) {
+            const chance = config.exhaustChance || 50;
+            document.getElementById('exhaustChanceValue').textContent = chance + '%';
+            document.getElementById('exhaustChanceSlider').value = chance;
+        }
+
+        // Spike
+        const spikeToggle = document.querySelector('.mini-toggle[data-setting="spikeMode"]');
+        if (spikeToggle) {
+            if (config.spikeMode) spikeToggle.classList.add('active');
+            else spikeToggle.classList.remove('active');
+        }
+
+        if (document.getElementById('spikeIncreaseValue')) {
+            const increase = config.spikeIncreaseCps || 5;
+            document.getElementById('spikeIncreaseValue').textContent = increase.toFixed(1);
+            document.getElementById('spikeIncreaseSlider').value = increase;
+        }
+
+        if (document.getElementById('spikeChanceValue')) {
+            const chance = config.spikeChance || 30;
+            document.getElementById('spikeChanceValue').textContent = chance + '%';
+            document.getElementById('spikeChanceSlider').value = chance;
+        }
+
+        // Blockhit
+        const blockhitToggle = document.querySelector('.module-toggle[data-module="blockhit"]');
+        if (blockhitToggle) {
+            if (config.blockhitEnabled) blockhitToggle.classList.add('active');
+            else blockhitToggle.classList.remove('active');
+        }
+
+        if (document.getElementById('blockChanceValue')) {
+            const chance = config.blockChance || 50;
+            document.getElementById('blockChanceValue').textContent = chance + '%';
+            document.getElementById('blockChanceSlider').value = chance;
+        }
+
+        if (document.getElementById('holdMinValue')) {
+            document.getElementById('holdMinValue').textContent = config.holdLengthMin || 50;
+            document.getElementById('holdMinSlider').value = config.holdLengthMin || 50;
+        }
+
+        if (document.getElementById('holdMaxValue')) {
+            document.getElementById('holdMaxValue').textContent = config.holdLengthMax || 150;
+            document.getElementById('holdMaxSlider').value = config.holdLengthMax || 150;
+        }
+
+        if (document.getElementById('delayMinValue')) {
+            document.getElementById('delayMinValue').textContent = config.delayMin || 100;
+            document.getElementById('delayMinSlider').value = config.delayMin || 100;
+        }
+
+        if (document.getElementById('delayMaxValue')) {
+            document.getElementById('delayMaxValue').textContent = config.delayMax || 300;
+            document.getElementById('delayMaxSlider').value = config.delayMax || 300;
+        }
+
+        const onlyWhileClicking = document.querySelector('.checkbox[data-setting="onlyWhileClicking"]');
+        if (onlyWhileClicking) {
+            if (config.onlyWhileClicking !== false) onlyWhileClicking.classList.add('checked');
+            else onlyWhileClicking.classList.remove('checked');
+        }
+
+        lastSavedConfig = { ...config };
+    } catch (error) {
+        console.error('Apply settings error:', error);
+    }
+}
+
+async function saveSettings(updates) {
+    if (isUpdatingFromServer) return;
+    
+    const token = localStorage.getItem('token');
+    currentConfig = { ...currentConfig, ...updates };
+
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(async () => {
+        try {
+            const response = await fetch(`${API_URL}/agent/settings`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(currentConfig)
+            });
+
+            if (response.ok) {
+                lastSavedConfig = { ...currentConfig };
+            }
+        } catch (error) {
+            console.error('Save settings error:', error);
+        }
+    }, 500);
+}
+
+// ==================== UI HANDLERS ====================
+function updateCps(value) {
+    if (isUpdatingFromServer) return;
+    const cpsValue = parseFloat(value);
+    document.getElementById('cpsValue').textContent = cpsValue.toFixed(1);
+    document.getElementById('cpsRange').textContent = calculateCpsRange(cpsValue);
+    saveSettings({ cps: cpsValue });
+}
+
+function updateExhaustDrop(value) {
+    if (isUpdatingFromServer) return;
+    document.getElementById('exhaustDropValue').textContent = parseFloat(value).toFixed(1);
+    saveSettings({ exhaustDropCps: parseFloat(value) });
+}
+
+function updateExhaustChance(value) {
+    if (isUpdatingFromServer) return;
+    document.getElementById('exhaustChanceValue').textContent = parseInt(value) + '%';
+    saveSettings({ exhaustChance: parseInt(value) });
+}
+
+function updateSpikeIncrease(value) {
+    if (isUpdatingFromServer) return;
+    document.getElementById('spikeIncreaseValue').textContent = parseFloat(value).toFixed(1);
+    saveSettings({ spikeIncreaseCps: parseFloat(value) });
+}
+
+function updateSpikeChance(value) {
+    if (isUpdatingFromServer) return;
+    document.getElementById('spikeChanceValue').textContent = parseInt(value) + '%';
+    saveSettings({ spikeChance: parseInt(value) });
+}
+
+function updateBlockChance(value) {
+    if (isUpdatingFromServer) return;
+    document.getElementById('blockChanceValue').textContent = parseInt(value) + '%';
+    saveSettings({ blockChance: parseInt(value) });
+}
+
+function updateHoldMin(value) {
+    if (isUpdatingFromServer) return;
+    const holdValue = parseInt(value);
+    document.getElementById('holdMinValue').textContent = holdValue;
+    
+    const maxSlider = document.getElementById('holdMaxSlider');
+    if (holdValue > parseInt(maxSlider.value)) {
+        maxSlider.value = holdValue;
+        document.getElementById('holdMaxValue').textContent = holdValue;
+    }
+    
+    saveSettings({ holdLengthMin: holdValue });
+}
+
+function updateHoldMax(value) {
+    if (isUpdatingFromServer) return;
+    const holdValue = parseInt(value);
+    document.getElementById('holdMaxValue').textContent = holdValue;
+    
+    const minSlider = document.getElementById('holdMinSlider');
+    if (holdValue < parseInt(minSlider.value)) {
+        minSlider.value = holdValue;
+        document.getElementById('holdMinValue').textContent = holdValue;
+    }
+    
+    saveSettings({ holdLengthMax: holdValue });
+}
+
+function updateDelayMin(value) {
+    if (isUpdatingFromServer) return;
+    const delayValue = parseInt(value);
+    document.getElementById('delayMinValue').textContent = delayValue;
+    
+    const maxSlider = document.getElementById('delayMaxSlider');
+    if (delayValue > parseInt(maxSlider.value)) {
+        maxSlider.value = delayValue;
+        document.getElementById('delayMaxValue').textContent = delayValue;
+    }
+    
+    saveSettings({ delayMin: delayValue });
+}
+
+function updateDelayMax(value) {
+    if (isUpdatingFromServer) return;
+    const delayValue = parseInt(value);
+    document.getElementById('delayMaxValue').textContent = delayValue;
+    
+    const minSlider = document.getElementById('delayMinSlider');
+    if (delayValue < parseInt(minSlider.value)) {
+        minSlider.value = delayValue;
+        document.getElementById('delayMinValue').textContent = delayValue;
+    }
+    
+    saveSettings({ delayMax: delayValue });
+}
+
+function toggleModule(moduleName) {
+    if (isUpdatingFromServer) return;
+    const toggle = document.querySelector(`.module-toggle[data-module="${moduleName}"]`);
+    if (!toggle) return;
+    
+    toggle.classList.toggle('active');
+    const isActive = toggle.classList.contains('active');
+    
+    if (moduleName === 'leftclicker') {
+        saveSettings({ enabled: isActive });
+    } else if (moduleName === 'blockhit') {
+        saveSettings({ blockhitEnabled: isActive });
+    }
+}
+
+function toggleModuleSettings(moduleName) {
+    const settings = document.getElementById(`${moduleName}-settings`);
+    const btn = document.querySelector(`[onclick="toggleModuleSettings('${moduleName}')"]`);
+    
+    if (settings && btn) {
+        const isOpen = settings.classList.contains('show');
+        if (isOpen) {
+            btn.classList.remove('expanded');
+            settings.classList.remove('show');
+        } else {
+            btn.classList.add('expanded');
+            settings.classList.add('show');
+        }
+    }
+}
+
+function toggleMiniSetting(element, settingName) {
+    if (isUpdatingFromServer) return;
+    element.classList.toggle('active');
+    saveSettings({ [settingName]: element.classList.contains('active') });
+}
+
+function toggleCheckbox(element, settingName) {
+    if (isUpdatingFromServer) return;
+    element.classList.toggle('checked');
+    saveSettings({ [settingName]: element.classList.contains('checked') });
+}
+
+function recordKeybind(input) {
+    if (!input) return;
+    input.classList.add('recording');
+    input.value = 'Press any key...';
+    
+    const handler = (e) => {
+        e.preventDefault();
+        input.value = getKeyName(e.keyCode);
+        input.classList.remove('recording');
+        saveSettings({ hotkeyCode: e.keyCode });
+        document.removeEventListener('keydown', handler);
+    };
+    
+    document.addEventListener('keydown', handler);
+}
+
+function getKeyName(keyCode) {
+    const keyMap = {
+        112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
+        118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
+        16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
+        32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
+    };
+    return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
+}
+
+function switchSection(event, section) {
+    if (!event) return;
+    event.preventDefault();
+    
+    const navItem = event.currentTarget;
+    if (navItem && navItem.classList.contains('locked')) {
+        alert('This section requires an active license.');
+        section = 'settings';
+    }
+    
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    const targetNav = document.querySelector(`.nav-item[data-section="${section}"]`);
+    if (targetNav) targetNav.classList.add('active');
+    
+    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    const sectionEl = document.getElementById(section + '-section');
+    if (sectionEl) sectionEl.classList.add('active');
+    
+    const titles = {
+        'modules': { text: 'Modules', icon: 'fa-th-large' },
+        'settings': { text: 'Settings', icon: 'fa-cog' },
+        'download': { text: 'Download', icon: 'fa-download' }
+    };
+    
+    if (titles[section]) {
+        document.getElementById('pageTitle').textContent = titles[section].text;
+        document.getElementById('pageTitleIcon').className = 'fas ' + titles[section].icon;
+    }
+}
+
+function switchSettingsTab(tabName) {
+    document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.settings-tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.currentTarget.classList.add('active');
+    const tabContent = document.getElementById(`${tabName}-tab`);
+    if (tabContent) tabContent.classList.add('active');
 }
 
 async function activateLicense() {
@@ -1722,13 +1963,16 @@ async function changeEmail() {
     const emailSuccess = document.getElementById('emailSuccess');
     const emailError = document.getElementById('emailError');
     const emailErrorText = document.getElementById('emailErrorText');
-    if (emailSuccess) emailSuccess.classList.remove('show');
-    if (emailError) emailError.classList.remove('show');
-    if (!newEmailInput || !newEmailInput.value.trim()) {
-        if (emailErrorText) emailErrorText.textContent = 'Please enter a new email';
-        if (emailError) emailError.classList.add('show');
+    
+    emailSuccess.classList.remove('show');
+    emailError.classList.remove('show');
+    
+    if (!newEmailInput.value.trim()) {
+        emailErrorText.textContent = 'Please enter a new email';
+        emailError.classList.add('show');
         return;
     }
+    
     try {
         const response = await fetch(`${API_URL}/user/profile`, {
             method: 'PATCH',
@@ -1740,16 +1984,16 @@ async function changeEmail() {
         });
         const data = await response.json();
         if (response.ok) {
-            if (emailSuccess) emailSuccess.classList.add('show');
+            emailSuccess.classList.add('show');
             newEmailInput.value = '';
             await loadUserProfile();
         } else {
-            if (emailErrorText) emailErrorText.textContent = data.error || 'Failed to update email';
-            if (emailError) emailError.classList.add('show');
+            emailErrorText.textContent = data.error || 'Failed to update email';
+            emailError.classList.add('show');
         }
     } catch (error) {
-        if (emailErrorText) emailErrorText.textContent = 'Failed to update email';
-        if (emailError) emailError.classList.add('show');
+        emailErrorText.textContent = 'Failed to update email';
+        emailError.classList.add('show');
     }
 }
 
@@ -1761,23 +2005,28 @@ async function changePassword() {
     const passwordSuccess = document.getElementById('passwordSuccess');
     const passwordError = document.getElementById('passwordError');
     const passwordErrorText = document.getElementById('passwordErrorText');
-    if (passwordSuccess) passwordSuccess.classList.remove('show');
-    if (passwordError) passwordError.classList.remove('show');
-    if (!currentPasswordInput || !currentPasswordInput.value) {
-        if (passwordErrorText) passwordErrorText.textContent = 'Please enter your current password';
-        if (passwordError) passwordError.classList.add('show');
+    
+    passwordSuccess.classList.remove('show');
+    passwordError.classList.remove('show');
+    
+    if (!currentPasswordInput.value) {
+        passwordErrorText.textContent = 'Please enter your current password';
+        passwordError.classList.add('show');
         return;
     }
-    if (!newPasswordInput || !newPasswordInput.value) {
-        if (passwordErrorText) passwordErrorText.textContent = 'Please enter a new password';
-        if (passwordError) passwordError.classList.add('show');
+    
+    if (!newPasswordInput.value) {
+        passwordErrorText.textContent = 'Please enter a new password';
+        passwordError.classList.add('show');
         return;
     }
+    
     if (newPasswordInput.value !== confirmPasswordInput.value) {
-        if (passwordErrorText) passwordErrorText.textContent = 'Passwords do not match';
-        if (passwordError) passwordError.classList.add('show');
+        passwordErrorText.textContent = 'Passwords do not match';
+        passwordError.classList.add('show');
         return;
     }
+    
     try {
         const response = await fetch(`${API_URL}/user/profile`, {
             method: 'PATCH',
@@ -1792,45 +2041,26 @@ async function changePassword() {
         });
         const data = await response.json();
         if (response.ok) {
-            if (passwordSuccess) passwordSuccess.classList.add('show');
+            passwordSuccess.classList.add('show');
             currentPasswordInput.value = '';
             newPasswordInput.value = '';
             confirmPasswordInput.value = '';
         } else {
-            if (passwordErrorText) passwordErrorText.textContent = data.error || 'Failed to update password';
-            if (passwordError) passwordError.classList.add('show');
+            passwordErrorText.textContent = data.error || 'Failed to update password';
+            passwordError.classList.add('show');
         }
     } catch (error) {
-        if (passwordErrorText) passwordErrorText.textContent = 'Failed to update password';
-        if (passwordError) passwordError.classList.add('show');
-    }
-}
-
-async function loadSettings() {
-    const token = localStorage.getItem('token');
-    try {
-        const response = await fetch(`${API_URL}/agent/settings`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-            currentConfig = await response.json();
-            isUpdatingFromServer = true;
-            applySettings(currentConfig);
-            isUpdatingFromServer = false;
-        }
-    } catch (error) {
-        console.error('[SETTINGS] Error loading settings:', error);
+        passwordErrorText.textContent = 'Failed to update password';
+        passwordError.classList.add('show');
     }
 }
 
 function generateRandomName() {
-    const adjectives = ['swift', 'shadow', 'silent', 'ghost', 'phantom', 'stealth', 'rapid', 'quick', 'flash', 'blaze'];
-    const nouns = ['client', 'app', 'tool', 'utility', 'helper', 'agent', 'service', 'runner', 'launcher', 'handler'];
-    const random = Math.floor(Math.random() * 10000);
-    
+    const adjectives = ['swift', 'shadow', 'silent', 'ghost', 'phantom', 'stealth'];
+    const nouns = ['client', 'app', 'tool', 'utility', 'helper', 'agent'];
     const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
     const noun = nouns[Math.floor(Math.random() * nouns.length)];
-    
+    const random = Math.floor(Math.random() * 10000);
     return `${adj}_${noun}_${random}`;
 }
 
@@ -1841,7 +2071,6 @@ async function downloadClient(useRandomName) {
     
     try {
         let filename;
-        
         if (useRandomName) {
             filename = generateRandomName();
         } else {
@@ -1850,357 +2079,35 @@ async function downloadClient(useRandomName) {
             filename = filename.replace(/\.exe$/i, '');
         }
         
-        if (statusEl) {
-            statusText.textContent = `Preparing ${filename}.exe for download...`;
-            statusEl.classList.add('show');
-        }
+        statusText.textContent = `Preparing ${filename}.exe...`;
+        statusEl.classList.add('show');
         
         const response = await fetch(`${API_URL}/download/client?filename=${encodeURIComponent(filename)}`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         
-        if (!response.ok) {
-            throw new Error('Download failed');
-        }
+        if (!response.ok) throw new Error('Download failed');
         
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.style.display = 'none';
         a.href = url;
         a.download = `${filename}.exe`;
-        
         document.body.appendChild(a);
         a.click();
-        
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
         
-        if (statusEl) {
-            statusText.textContent = `Successfully downloaded ${filename}.exe`;
-            setTimeout(() => {
-                statusEl.classList.remove('show');
-            }, 5000);
-        }
-        
+        statusText.textContent = `Downloaded ${filename}.exe`;
+        setTimeout(() => statusEl.classList.remove('show'), 5000);
     } catch (error) {
-        console.error('Download error:', error);
-        if (statusEl) {
-            statusEl.className = 'error-message show';
-            statusText.textContent = 'Download failed. Please try again.';
-            setTimeout(() => {
-                statusEl.classList.remove('show');
-                statusEl.className = 'success-message';
-            }, 5000);
-        }
-    }
-}
-
-function applySettings(config) {
-    try {
-        const leftClickerToggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-        if (leftClickerToggle) {
-            if (config.enabled) {
-                leftClickerToggle.classList.add('leftclicker-active');
-            } else {
-                leftClickerToggle.classList.remove('leftclicker-active');
-            }
-        }
-
-        const leftclickerCpsValue = document.getElementById('leftclickerCpsValue');
-        const leftclickerCpsSlider = document.getElementById('leftclickerCpsSlider');
-        if (leftclickerCpsValue) leftclickerCpsValue.textContent = (config.cps || 10).toFixed(1);
-        if (leftclickerCpsSlider) leftclickerCpsSlider.value = config.cps || 10;
-
-        const leftclickerHotkeyInput = document.getElementById('leftclickerHotkeyInput');
-        if (leftclickerHotkeyInput && config.hotkeyCode) {
-            const keyName = getKeyName(config.hotkeyCode);
-            leftclickerHotkeyInput.value = keyName;
-        }
-
-        const holdToClickCheck = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-        if (holdToClickCheck) {
-            if (config.holdToClick) {
-                holdToClickCheck.classList.add('leftclicker-checked');
-            } else {
-                holdToClickCheck.classList.remove('leftclicker-checked');
-            }
-        }
-
-        const blatantModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-        if (blatantModeCheck) {
-            if (config.blatantMode) {
-                blatantModeCheck.classList.add('leftclicker-checked');
-            } else {
-                blatantModeCheck.classList.remove('leftclicker-checked');
-            }
-        }
-
-        const exhaustModeCheck = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-        if (exhaustModeCheck) {
-            if (config.exhaustMode) {
-                exhaustModeCheck.classList.add('leftclicker-checked');
-            } else {
-                exhaustModeCheck.classList.remove('leftclicker-checked');
-            }
-        }
-
-        const macroToggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-        if (macroToggle) {
-            if (config.useMacro) {
-                macroToggle.classList.add('macro-active');
-            } else {
-                macroToggle.classList.remove('macro-active');
-            }
-        }
-
-        const macroIntervalCount = document.getElementById('macroIntervalCount');
-        if (macroIntervalCount) {
-            macroIntervalCount.textContent = config.macroIntervals ? config.macroIntervals.length : 0;
-        }
-
-        lastSavedConfig = { ...config };
-    } catch (error) {
-        console.error('Apply settings error:', error);
-    }
-}
-
-async function saveSettings(updates) {
-    if (isUpdatingFromServer) return;
-    
-    const token = localStorage.getItem('token');
-    currentConfig = { ...currentConfig, ...updates };
-
-    let hasRealChanges = false;
-    for (const key in updates) {
-        if (lastSavedConfig[key] !== updates[key]) {
-            hasRealChanges = true;
-            break;
-        }
-    }
-
-    if (!hasRealChanges) {
-        return;
-    }
-
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(async () => {
-        try {
-            const response = await fetch(`${API_URL}/agent/settings`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(currentConfig)
-            });
-
-            if (response.ok) {
-                lastSavedConfig = { ...currentConfig };
-            }
-        } catch (error) {
-            console.error('Save settings error:', error);
-        }
-    }, 500);
-}
-
-function toggleLeftClickerSettings() {
-    const settings = document.getElementById('module-leftclicker-settings');
-    const btn = document.querySelector('.leftclicker-expand-btn');
-    if (settings && btn) {
-        const isOpen = settings.classList.contains('leftclicker-show');
-        if (isOpen) {
-            btn.classList.remove('leftclicker-expanded');
-            settings.classList.remove('leftclicker-show');
-        } else {
-            btn.classList.add('leftclicker-expanded');
-            settings.classList.add('leftclicker-show');
-        }
-    }
-}
-
-function toggleLeftClicker() {
-    if (isUpdatingFromServer) return;
-    const toggle = document.querySelector('.leftclicker-toggle[data-setting="enabled"]');
-    if (!toggle) return;
-    toggle.classList.toggle('leftclicker-active');
-    const isActive = toggle.classList.contains('leftclicker-active');
-    saveSettings({ enabled: isActive });
-}
-
-function updateLeftClickerCps(value) {
-    if (isUpdatingFromServer) return;
-    const valueEl = document.getElementById('leftclickerCpsValue');
-    if (valueEl) valueEl.textContent = parseFloat(value).toFixed(1);
-    saveSettings({ cps: parseFloat(value) });
-}
-
-function getKeyName(keyCode) {
-    const keyMap = {
-        112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
-        118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
-        16: 'SHIFT', 17: 'CTRL', 18: 'ALT', 20: 'CAPS',
-        32: 'SPACE', 13: 'ENTER', 8: 'BACKSPACE', 9: 'TAB'
-    };
-    return keyMap[keyCode] || String.fromCharCode(keyCode).toUpperCase();
-}
-
-function recordLeftClickerKeybind(input) {
-    if (!input) return;
-    input.classList.add('leftclicker-recording');
-    input.value = 'Press any key...';
-    
-    const handler = (e) => {
-        e.preventDefault();
-        const keyName = getKeyName(e.keyCode);
-        input.value = keyName;
-        input.classList.remove('leftclicker-recording');
-        saveSettings({ hotkeyCode: e.keyCode });
-        document.removeEventListener('keydown', handler);
-    };
-    
-    document.addEventListener('keydown', handler);
-}
-
-function toggleLeftClickerHoldToClick() {
-    if (isUpdatingFromServer) return;
-    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="holdToClick"]');
-    if (!checkbox) return;
-    checkbox.classList.toggle('leftclicker-checked');
-    const isChecked = checkbox.classList.contains('leftclicker-checked');
-    saveSettings({ holdToClick: isChecked });
-}
-
-function toggleLeftClickerBlatantMode() {
-    if (isUpdatingFromServer) return;
-    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="blatantMode"]');
-    if (!checkbox) return;
-    checkbox.classList.toggle('leftclicker-checked');
-    const isChecked = checkbox.classList.contains('leftclicker-checked');
-    saveSettings({ blatantMode: isChecked });
-}
-
-function toggleLeftClickerExhaustMode() {
-    if (isUpdatingFromServer) return;
-    const checkbox = document.querySelector('.leftclicker-checkbox[data-setting="exhaustMode"]');
-    if (!checkbox) return;
-    checkbox.classList.toggle('leftclicker-checked');
-    const isChecked = checkbox.classList.contains('leftclicker-checked');
-    saveSettings({ exhaustMode: isChecked });
-}
-
-function toggleMacroSettings() {
-    const settings = document.getElementById('module-macro-settings');
-    const btn = document.querySelector('.macro-expand-btn');
-    if (settings && btn) {
-        const isOpen = settings.classList.contains('macro-show');
-        if (isOpen) {
-            btn.classList.remove('macro-expanded');
-            settings.classList.remove('macro-show');
-        } else {
-            btn.classList.add('macro-expanded');
-            settings.classList.add('macro-show');
-        }
-    }
-}
-
-function toggleMacro() {
-    if (isUpdatingFromServer) return;
-    const toggle = document.querySelector('.macro-toggle[data-setting="useMacro"]');
-    if (!toggle) return;
-    toggle.classList.toggle('macro-active');
-    const isActive = toggle.classList.contains('macro-active');
-    saveSettings({ useMacro: isActive });
-}
-
-function filterCategory(event, category) {
-    if (!event) return;
-    document.querySelectorAll('.category-tab').forEach(tab => {
-        if (tab) tab.classList.remove('active');
-    });
-    if (event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    }
-    
-    const leftClickerCards = document.querySelectorAll('.leftclicker-card');
-    const macroCards = document.querySelectorAll('.macro-card');
-    
-    leftClickerCards.forEach(card => {
-        if (!card) return;
-        if (card.dataset.category === category) {
-            card.classList.add('leftclicker-visible');
-        } else {
-            card.classList.remove('leftclicker-visible');
-        }
-    });
-    
-    macroCards.forEach(card => {
-        if (!card) return;
-        if (card.dataset.category === category) {
-            card.classList.add('macro-visible');
-        } else {
-            card.classList.remove('macro-visible');
-        }
-    });
-}
-
-function switchSection(event, section) {
-    if (!event) return;
-    event.preventDefault();
-    
-    const navItem = event.currentTarget;
-    if (navItem && navItem.classList.contains('locked')) {
-        alert('This section requires an active license. Please activate a license in Settings.');
-        section = 'settings';
-    }
-    
-    document.querySelectorAll('.nav-item').forEach(nav => {
-        if (nav) nav.classList.remove('active');
-    });
-    
-    const targetNav = document.querySelector(`.nav-item[data-section="${section}"]`);
-    if (targetNav) {
-        targetNav.classList.add('active');
-    }
-    
-    document.querySelectorAll('.content-section').forEach(s => {
-        if (s) s.classList.remove('active');
-    });
-    const sectionEl = document.getElementById(section + '-section');
-    if (sectionEl) {
-        sectionEl.classList.add('active');
-    }
-    const titles = {
-        'modules': { text: 'Modules', icon: 'fa-th-large' },
-        'settings': { text: 'Settings', icon: 'fa-cog' },
-        'download': { text: 'Download', icon: 'fa-download' },
-        'changelog': { text: 'Changelog', icon: 'fa-list' }
-    };
-    if (titles[section]) {
-        const pageTitle = document.getElementById('pageTitle');
-        const pageTitleIcon = document.getElementById('pageTitleIcon');
-        if (pageTitle) pageTitle.textContent = titles[section].text;
-        if (pageTitleIcon) pageTitleIcon.className = 'fas ' + titles[section].icon;
-    }
-}
-
-function switchSettingsTab(tabName) {
-    document.querySelectorAll('.settings-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    document.querySelectorAll('.settings-tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    
-    event.currentTarget.classList.add('active');
-    
-    const tabContent = document.getElementById(`${tabName}-tab`);
-    if (tabContent) {
-        tabContent.classList.add('active');
+        statusEl.className = 'error-message show';
+        statusText.textContent = 'Download failed';
+        setTimeout(() => {
+            statusEl.classList.remove('show');
+            statusEl.className = 'success-message';
+        }, 5000);
     }
 }
 
@@ -2208,21 +2115,14 @@ function connectWebSocket(token) {
     try {
         ws = new WebSocket(`wss://asce-f5us.onrender.com?token=${token}`);
         
-        ws.onopen = () => {
-            console.log('[WS] WebSocket connected');
-        };
-        
-        ws.onclose = () => {
-            console.log('[WS] WebSocket disconnected, reconnecting...');
-            setTimeout(() => connectWebSocket(token), 3000);
-        };
+        ws.onopen = () => console.log('WebSocket connected');
+        ws.onclose = () => setTimeout(() => connectWebSocket(token), 3000);
         
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
                 
                 if (data.type === 'agent_heartbeat') {
-                    clientConnected = true;
                     const dot = document.getElementById('connectionDot');
                     const text = document.getElementById('connectionText');
                     if (dot) dot.classList.add('connected');
@@ -2235,23 +2135,17 @@ function connectWebSocket(token) {
                     isUpdatingFromServer = false;
                 }
             } catch (error) {
-                console.error('[WS] Message parse error:', error);
+                console.error('WebSocket message error:', error);
             }
         };
-        
-        ws.onerror = (error) => {
-            console.error('[WS] WebSocket error:', error);
-        };
     } catch (error) {
-        console.error('[WS] WebSocket connection error:', error);
+        console.error('WebSocket error:', error);
     }
 }
 
 async function logout() {
-    if (!confirm('Are you sure you want to logout?')) {
-        return;
-    }
-
+    if (!confirm('Are you sure you want to logout?')) return;
+    
     const token = localStorage.getItem('token');
     try {
         await fetch(`${API_URL}/auth/logout`, {
@@ -2259,16 +2153,9 @@ async function logout() {
             headers: { 'Authorization': `Bearer ${token}` }
         });
     } catch (error) {}
-
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('loginTime');
-
+    
+    localStorage.clear();
     window.location.href = 'auth.html';
-}
-
-function openMacroEditor() {
-    alert('Macro editor coming soon!');
 }
 
 window.addEventListener('load', init);
