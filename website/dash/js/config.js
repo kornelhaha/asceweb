@@ -1,1 +1,0 @@
-const API_URL = 'https://asce-f5us.onrender.com/api'; let currentConfig = {}; let currentUser = {}; let isUpdatingFromServer = false; let hasActiveLicense = false; let lastSentConfig = {}; let pendingUpdates = {}; let saveTimeout = null; const SAVE_DEBOUNCE_MS = 300;

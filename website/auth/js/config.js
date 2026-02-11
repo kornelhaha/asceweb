@@ -1,1 +1,0 @@
-const API_URL = 'https://asce-f5us.onrender.com/api'; const SESSION_CONFIG = { TIMEOUT: 60 * 60 * 1000, };
