@@ -1,0 +1,1 @@
+@media (max-width: 480px) { .auth-container { padding: var(--spacing-3xl) var(--spacing-2xl); margin: var(--spacing-xl); } .logo h1 { font-size: 2em; } .form-group { margin-bottom: var(--spacing-lg); } } @media (max-width: 360px) { .auth-container { padding: var(--spacing-2xl) var(--spacing-lg); } .logo h1 { font-size: 1.8em; } .logo p { font-size: 0.8em; } }
