@@ -15,7 +15,7 @@ async function loadUserProfile() {
             }
         });
         if (response.ok) {
-            currentUser = await response.json();
+            window.currentUser = await response.json();
             updateUserDisplay();
             checkLicenseStatus();
         }
@@ -33,11 +33,11 @@ async function loadSettings() {
             }
         });
         if (response.ok) {
-            isUpdatingFromServer = true;
+            window.isUpdatingFromServer = true;
             const serverConfig = await response.json();
-            currentConfig = { ...serverConfig };
-            applySettings(currentConfig);
-            isUpdatingFromServer = false;
+            window.currentConfig = { ...serverConfig };
+            applySettings(window.currentConfig);
+            window.isUpdatingFromServer = false;
         }
     } catch (error) {
         console.error('[LOAD] Error:', error);
@@ -45,21 +45,21 @@ async function loadSettings() {
 }
 
 function saveSettings(updates) {
-    if (isUpdatingFromServer) {
+    if (window.isUpdatingFromServer) {
         console.log('[SAVE] Blocked - server is updating');
         return;
     }
-    Object.assign(pendingUpdates, updates);
-    Object.assign(currentConfig, updates);
-    if (saveTimeout) {
-        clearTimeout(saveTimeout);
+    Object.assign(window.pendingUpdates, updates);
+    Object.assign(window.currentConfig, updates);
+    if (window.saveTimeout) {
+        clearTimeout(window.saveTimeout);
     }
-    saveTimeout = setTimeout(async () => {
-        if (Object.keys(pendingUpdates).length === 0) return;
-        const toSend = { ...pendingUpdates };
-        pendingUpdates = {};
+    window.saveTimeout = setTimeout(async () => {
+        if (Object.keys(window.pendingUpdates).length === 0) return;
+        const toSend = { ...window.pendingUpdates };
+        window.pendingUpdates = {};
         console.log('[SAVE] Sending to server:', toSend);
-        Object.assign(lastSentConfig, toSend);
+        Object.assign(window.lastSentConfig, toSend);
         const token = localStorage.getItem('token');
         try {
             const response = await fetch(`${window.API_URL}/api/agent/settings`, {
@@ -80,10 +80,10 @@ function saveSettings(updates) {
         }
         setTimeout(() => {
             Object.keys(toSend).forEach(key => {
-                delete lastSentConfig[key];
+                delete window.lastSentConfig[key];
             });
         }, 2000);
-    }, SAVE_DEBOUNCE_MS);
+    }, window.SAVE_DEBOUNCE_MS);
 }
 
 async function activateLicense() {
@@ -268,7 +268,7 @@ async function logout() {
             }
         });
     } catch (error) {}
-    currentConfig = {};
+    window.currentConfig = {};
     localStorage.clear();
     window.location.href = 'auth.html';
 }
