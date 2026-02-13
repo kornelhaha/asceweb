@@ -1,18 +1,20 @@
-window.API_URL = 'https://asce-f5us.onrender.com';
-
-window.currentUser = null;
-window.currentConfig = {};
-window.pendingUpdates = {};
-window.lastSentConfig = {};
-window.saveTimeout = null;
-window.isUpdatingFromServer = false;
-window.SAVE_DEBOUNCE_MS = 500;
-
 async function init() {
+    if (!isSessionValid()) {
+        localStorage.clear();
+        window.location.href = 'auth.html';
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'auth.html';
+        return;
+    }
+
     try {
         await loadUserProfile();
         await loadSettings();
-        connectWebSocket();
+        connectWebSocket(token);
     } catch (error) {
         console.error('Init error:', error);
     }
