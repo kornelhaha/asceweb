@@ -8,37 +8,79 @@ function isSessionValid() {
 
 async function loadUserProfile() {
     const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('[PROFILE] No token found');
+        window.location.href = 'auth.html';
+        return;
+    }
+    
+    console.log('[PROFILE] Fetching profile from:', `${window.API_URL}/api/user/profile`);
+    
     try {
         const response = await fetch(`${window.API_URL}/api/user/profile`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        if (response.ok) {
-            window.currentUser = await response.json();
-            updateUserDisplay();
-            checkLicenseStatus();
+        
+        console.log('[PROFILE] Response status:', response.status);
+        
+        if (!response.ok) {
+            console.error('[PROFILE] Failed to load profile:', response.status);
+            if (response.status === 401 || response.status === 403) {
+                localStorage.clear();
+                window.location.href = 'auth.html';
+            }
+            return;
         }
+        
+        window.currentUser = await response.json();
+        console.log('[PROFILE] Profile loaded:', window.currentUser.username);
+        updateUserDisplay();
+        checkLicenseStatus();
     } catch (error) {
-        console.error('Profile load error:', error);
+        console.error('[PROFILE] Error:', error);
     }
 }
 
 async function loadSettings() {
     const token = localStorage.getItem('token');
+    if (!token) {
+        console.error('[LOAD] No token found');
+        return;
+    }
+    
+    console.log('[LOAD] Fetching settings from:', `${window.API_URL}/api/agent/settings`);
+    console.log('[LOAD] Using token:', token.substring(0, 20) + '...');
+    
     try {
         const response = await fetch(`${window.API_URL}/api/agent/settings`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        if (response.ok) {
-            window.isUpdatingFromServer = true;
-            const serverConfig = await response.json();
-            window.currentConfig = { ...serverConfig };
-            applySettings(window.currentConfig);
-            window.isUpdatingFromServer = false;
+        
+        console.log('[LOAD] Response status:', response.status);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('[LOAD] Error response:', errorText);
+            
+            if (response.status === 401 || response.status === 403) {
+                console.error('[LOAD] Authentication failed - redirecting to login');
+                localStorage.clear();
+                window.location.href = 'auth.html';
+                return;
+            }
+            return;
         }
+        
+        window.isUpdatingFromServer = true;
+        const serverConfig = await response.json();
+        console.log('[LOAD] Settings loaded:', serverConfig);
+        window.currentConfig = { ...serverConfig };
+        applySettings(window.currentConfig);
+        window.isUpdatingFromServer = false;
     } catch (error) {
         console.error('[LOAD] Error:', error);
     }
