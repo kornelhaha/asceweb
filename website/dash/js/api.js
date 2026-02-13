@@ -2,109 +2,74 @@ function isSessionValid() {
     const token = localStorage.getItem('token');
     const loginTime = localStorage.getItem('loginTime');
     if (!token || !loginTime) return false;
+    
     const elapsed = Date.now() - parseInt(loginTime);
     return elapsed <= 60 * 60 * 1000;
 }
 
 async function loadUserProfile() {
     const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('[PROFILE] No token found');
-        window.location.href = 'auth.html';
-        return;
-    }
-    
-    console.log('[PROFILE] Fetching profile from:', `${window.API_URL}/api/user/profile`);
-    
     try {
-        const response = await fetch(`${window.API_URL}/api/user/profile`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+        const response = await fetch(`${API_URL}/user/profile`, {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
         
-        console.log('[PROFILE] Response status:', response.status);
-        
-        if (!response.ok) {
-            console.error('[PROFILE] Failed to load profile:', response.status);
-            if (response.status === 401 || response.status === 403) {
-                localStorage.clear();
-                window.location.href = 'auth.html';
-            }
-            return;
+        if (response.ok) {
+            currentUser = await response.json();
+            updateUserDisplay();
+            checkLicenseStatus();
         }
-        
-        window.currentUser = await response.json();
-        console.log('[PROFILE] Profile loaded:', window.currentUser.username);
-        updateUserDisplay();
-        checkLicenseStatus();
     } catch (error) {
-        console.error('[PROFILE] Error:', error);
+        console.error('Profile load error:', error);
     }
 }
 
 async function loadSettings() {
     const token = localStorage.getItem('token');
-    if (!token) {
-        console.error('[LOAD] No token found');
-        return;
-    }
-    
-    console.log('[LOAD] Fetching settings from:', `${window.API_URL}/api/agent/settings`);
-    console.log('[LOAD] Using token:', token.substring(0, 20) + '...');
-    
     try {
-        const response = await fetch(`${window.API_URL}/api/agent/settings`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+        const response = await fetch(`${API_URL}/agent/settings`, {
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-        
-        console.log('[LOAD] Response status:', response.status);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('[LOAD] Error response:', errorText);
-            
-            if (response.status === 401 || response.status === 403) {
-                console.error('[LOAD] Authentication failed - redirecting to login');
-                localStorage.clear();
-                window.location.href = 'auth.html';
-                return;
-            }
-            return;
+        if (response.ok) {
+            isUpdatingFromServer = true;
+            const serverConfig = await response.json();
+            currentConfig = { ...serverConfig };
+            applySettings(currentConfig);
+            isUpdatingFromServer = false;
+            console.log('[LOAD] ✓ Settings loaded:', currentConfig);
         }
-        
-        window.isUpdatingFromServer = true;
-        const serverConfig = await response.json();
-        console.log('[LOAD] Settings loaded:', serverConfig);
-        window.currentConfig = { ...serverConfig };
-        applySettings(window.currentConfig);
-        window.isUpdatingFromServer = false;
     } catch (error) {
-        console.error('[LOAD] Error:', error);
+        console.error('[LOAD] ✗ Error:', error);
     }
 }
 
 function saveSettings(updates) {
-    if (window.isUpdatingFromServer) {
+    if (isUpdatingFromServer) {
         console.log('[SAVE] Blocked - server is updating');
         return;
     }
-    Object.assign(window.pendingUpdates, updates);
-    Object.assign(window.currentConfig, updates);
-    if (window.saveTimeout) {
-        clearTimeout(window.saveTimeout);
+    
+    Object.assign(pendingUpdates, updates);
+
+    Object.assign(currentConfig, updates);
+    
+    if (saveTimeout) {
+        clearTimeout(saveTimeout);
     }
-    window.saveTimeout = setTimeout(async () => {
-        if (Object.keys(window.pendingUpdates).length === 0) return;
-        const toSend = { ...window.pendingUpdates };
-        window.pendingUpdates = {};
+    
+    saveTimeout = setTimeout(async () => {
+        if (Object.keys(pendingUpdates).length === 0) return;
+        
+        const toSend = { ...pendingUpdates };
+        pendingUpdates = {};
+        
         console.log('[SAVE] Sending to server:', toSend);
-        Object.assign(window.lastSentConfig, toSend);
+        
+        Object.assign(lastSentConfig, toSend);
+        
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch(`${window.API_URL}/api/agent/settings`, {
+            const response = await fetch(`${API_URL}/agent/settings`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -112,20 +77,23 @@ function saveSettings(updates) {
                 },
                 body: JSON.stringify(toSend)
             });
+            
             if (response.ok) {
-                console.log('[SAVE] Saved successfully');
+                console.log('[SAVE] ✓ Saved successfully');
             } else {
-                console.error('[SAVE] Failed to save');
+                console.error('[SAVE] ✗ Failed to save');
             }
         } catch (error) {
-            console.error('[SAVE] Error:', error);
+            console.error('[SAVE] ✗ Error:', error);
         }
+        
         setTimeout(() => {
             Object.keys(toSend).forEach(key => {
-                delete window.lastSentConfig[key];
+                delete lastSentConfig[key];
             });
         }, 2000);
-    }, window.SAVE_DEBOUNCE_MS);
+        
+    }, SAVE_DEBOUNCE_MS);
 }
 
 async function activateLicense() {
@@ -136,7 +104,7 @@ async function activateLicense() {
         return;
     }
     try {
-        const response = await fetch(`${window.API_URL}/api/auth/activate`, {
+        const response = await fetch(`${API_URL}/auth/activate`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -163,15 +131,18 @@ async function changeEmail() {
     const emailSuccess = document.getElementById('emailSuccess');
     const emailError = document.getElementById('emailError');
     const emailErrorText = document.getElementById('emailErrorText');
+    
     emailSuccess.classList.remove('show');
     emailError.classList.remove('show');
+    
     if (!newEmailInput.value.trim()) {
         emailErrorText.textContent = 'Please enter a new email';
         emailError.classList.add('show');
         return;
     }
+    
     try {
-        const response = await fetch(`${window.API_URL}/api/user/profile`, {
+        const response = await fetch(`${API_URL}/user/profile`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -202,25 +173,30 @@ async function changePassword() {
     const passwordSuccess = document.getElementById('passwordSuccess');
     const passwordError = document.getElementById('passwordError');
     const passwordErrorText = document.getElementById('passwordErrorText');
+    
     passwordSuccess.classList.remove('show');
     passwordError.classList.remove('show');
+    
     if (!currentPasswordInput.value) {
         passwordErrorText.textContent = 'Please enter your current password';
         passwordError.classList.add('show');
         return;
     }
+    
     if (!newPasswordInput.value) {
         passwordErrorText.textContent = 'Please enter a new password';
         passwordError.classList.add('show');
         return;
     }
+    
     if (newPasswordInput.value !== confirmPasswordInput.value) {
         passwordErrorText.textContent = 'Passwords do not match';
         passwordError.classList.add('show');
         return;
     }
+    
     try {
-        const response = await fetch(`${window.API_URL}/api/user/profile`, {
+        const response = await fetch(`${API_URL}/user/profile`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -260,6 +236,7 @@ async function downloadClient(useRandomName) {
     const token = localStorage.getItem('token');
     const statusEl = document.getElementById('downloadStatus');
     const statusText = document.getElementById('downloadStatusText');
+    
     try {
         let filename;
         if (useRandomName) {
@@ -269,15 +246,17 @@ async function downloadClient(useRandomName) {
             filename = customInput.value.trim() || 'asce';
             filename = filename.replace(/\.exe$/i, '');
         }
+        
         statusText.textContent = `Preparing ${filename}.exe...`;
         statusEl.classList.add('show');
-        const response = await fetch(`${window.API_URL}/api/download/client?filename=${encodeURIComponent(filename)}`, {
+        
+        const response = await fetch(`${API_URL}/download/client?filename=${encodeURIComponent(filename)}`, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
+        
         if (!response.ok) throw new Error('Download failed');
+        
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -287,6 +266,7 @@ async function downloadClient(useRandomName) {
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
+        
         statusText.textContent = `Downloaded ${filename}.exe`;
         setTimeout(() => statusEl.classList.remove('show'), 5000);
     } catch (error) {
@@ -301,16 +281,16 @@ async function downloadClient(useRandomName) {
 
 async function logout() {
     if (!confirm('Are you sure you want to logout?')) return;
+    
     const token = localStorage.getItem('token');
     try {
-        await fetch(`${window.API_URL}/api/auth/logout`, {
+        await fetch(`${API_URL}/auth/logout`, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
     } catch (error) {}
-    window.currentConfig = {};
+    
+    currentConfig = {};
     localStorage.clear();
     window.location.href = 'auth.html';
 }
