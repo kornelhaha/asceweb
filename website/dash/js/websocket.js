@@ -8,7 +8,6 @@ const MAX_RECONNECT_ATTEMPTS = 5;
 const RECONNECT_DELAY = 2000;
 const HEARTBEAT_INTERVAL = 30000;
 let heartbeatTimer = null;
-let isUpdatingFromServer = false;
 
 function connectWebSocket() {
     if (!localStorage.getItem('token')) return;
@@ -73,7 +72,7 @@ function handleWebSocketMessage(data) {
             
         case 'settings_updated':
             console.log('[WS] Settings updated from server:', data.settings);
-            isUpdatingFromServer = true;
+            window.isUpdatingFromServer = true;
             
             if (window.currentConfig) {
                 Object.assign(window.currentConfig, data.settings);
@@ -83,7 +82,7 @@ function handleWebSocketMessage(data) {
             }
             
             setTimeout(() => {
-                isUpdatingFromServer = false;
+                window.isUpdatingFromServer = false;
             }, 100);
             break;
             
@@ -160,7 +159,7 @@ async function syncSettings() {
         const settings = await response.json();
         console.log('[SYNC] Settings loaded from server:', settings);
         
-        isUpdatingFromServer = true;
+        window.isUpdatingFromServer = true;
         
         if (window.currentConfig !== undefined) {
             window.currentConfig = { ...settings };
@@ -171,7 +170,7 @@ async function syncSettings() {
         }
         
         setTimeout(() => {
-            isUpdatingFromServer = false;
+            window.isUpdatingFromServer = false;
         }, 100);
         
     } catch (error) {
@@ -191,5 +190,4 @@ if (typeof window !== 'undefined') {
     window.connectWebSocket = connectWebSocket;
     window.disconnectWebSocket = disconnectWebSocket;
     window.syncSettings = syncSettings;
-    window.isUpdatingFromServer = () => isUpdatingFromServer;
 }
