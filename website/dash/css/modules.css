@@ -1119,3 +1119,89 @@
     color: #000;
     display: block;
 }
+
+.slot-checkbox,
+.slot-multi {
+    position: relative;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.slot-number {
+    font-size: 0.75em;
+    color: #666;
+    font-weight: 400;
+}
+
+.slot-key {
+    font-size: 1em;
+    color: #fff;
+    font-weight: 700;
+}
+
+.slot-checkbox.selected {
+    background: #fff;
+    color: #000;
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.slot-checkbox.selected .slot-number {
+    color: #666;
+}
+
+.slot-checkbox.selected .slot-key {
+    color: #000;
+}
+
+.slot-multi .fa-check {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 0.7em;
+    display: none;
+}
+
+.slot-multi.checked {
+    background: rgba(0, 255, 0, 0.1);
+    border-color: #0f0;
+}
+
+.slot-multi.checked .fa-check {
+    display: block;
+    color: #0f0;
+}
+
+.btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9em;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+}
+
+.btn i {
+    margin-right: 6px;
+}
