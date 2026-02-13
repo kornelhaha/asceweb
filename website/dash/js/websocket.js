@@ -1,4 +1,7 @@
-const API_URL = window.API_URL || 'https://asce-f5us.onrender.com';
+if (typeof window.API_URL === 'undefined') {
+    window.API_URL = 'https://asce-f5us.onrender.com';
+}
+
 let ws = null;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
@@ -12,7 +15,7 @@ function connectWebSocket() {
     
     const token = localStorage.getItem('token');
     
-    const wsUrl = API_URL.replace('https://', 'wss://').replace('http://', 'ws://') + `?token=${token}`;
+    const wsUrl = window.API_URL.replace('https://', 'wss://').replace('http://', 'ws://') + `?token=${token}`;
     
     console.log('[WS] Connecting to:', wsUrl);
     updateConnectionStatus(false);
@@ -85,14 +88,12 @@ function handleWebSocketMessage(data) {
             break;
             
         case 'agent_heartbeat':
-
             if (data.data) {
                 updateConnectionStatus(true);
             }
             break;
             
         case 'heartbeat_ack':
-
             break;
             
         case 'license_revoked':
@@ -145,7 +146,7 @@ function updateConnectionStatus(connected) {
 
 async function syncSettings() {
     try {
-        const response = await fetch(`${API_URL}/api/agent/settings`, {
+        const response = await fetch(`${window.API_URL}/api/agent/settings`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
