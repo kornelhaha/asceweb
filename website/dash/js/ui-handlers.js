@@ -106,6 +106,34 @@ function applySettings(config) {
         }
     }
 
+    if (config.throwPotWeaponKeybinds !== undefined) {
+    try {
+        throwPotKeybinds.weapon = JSON.parse(config.throwPotWeaponKeybinds);
+        for (let i = 0; i < 9; i++) {
+            const keyDisplay = document.getElementById(`weaponKey${i + 1}`);
+            if (keyDisplay) {
+                keyDisplay.textContent = getKeyName(throwPotKeybinds.weapon[i]);
+            }
+        }
+    } catch (e) {
+        console.error('Failed to parse weapon keybinds:', e);
+    }
+}
+
+if (config.throwPotPotionKeybinds !== undefined) {
+    try {
+        throwPotKeybinds.potion = JSON.parse(config.throwPotPotionKeybinds);
+        for (let i = 0; i < 9; i++) {
+            const keyDisplay = document.getElementById(`potionKey${i + 1}`);
+            if (keyDisplay) {
+                keyDisplay.textContent = getKeyName(throwPotKeybinds.potion[i]);
+            }
+        }
+    } catch (e) {
+        console.error('Failed to parse potion keybinds:', e);
+    }
+}
+
     // Left Clicker CPS
     if (config.cps !== undefined) {
         const cps = parseFloat(config.cps);
@@ -685,4 +713,118 @@ function switchSettingsTab(tabName) {
     
     const tabContent = document.getElementById(`${tabName}-tab`);
     if (tabContent) tabContent.classList.add('active');
+}
+
+let throwPotKeybinds = {
+    weapon: [0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39], // Default 1-9
+    potion: [0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39]  // Default 1-9
+};
+
+function setWeaponKeybind() {
+    const selectedSlot = throwPotState.weaponSlot;
+    if (!selectedSlot) {
+        alert('Please select a weapon slot first');
+        return;
+    }
+    
+    const slotIndex = selectedSlot - 1;
+    const keyDisplay = document.getElementById(`weaponKey${selectedSlot}`);
+    
+    keyDisplay.textContent = 'Press key...';
+    keyDisplay.style.color = '#0f0';
+    
+    const handler = (e) => {
+        e.preventDefault();
+        const keyCode = e.keyCode;
+        const keyName = getKeyName(keyCode);
+        
+        // Update display
+        keyDisplay.textContent = keyName;
+        keyDisplay.style.color = '#fff';
+        
+        // Update state
+        throwPotKeybinds.weapon[slotIndex] = keyCode;
+        
+        // Save to server
+        saveSettings({
+            throwPotWeaponKeybinds: JSON.stringify(throwPotKeybinds.weapon)
+        });
+        
+        document.removeEventListener('keydown', handler);
+    };
+    
+    document.addEventListener('keydown', handler);
+}
+
+function setPotionKeybind() {
+    // Get all checked potion slots
+    const checkedSlots = [];
+    for (let i = 1; i <= 9; i++) {
+        if (throwPotState.potionSlots[i - 1]) {
+            checkedSlots.push(i);
+        }
+    }
+    
+    if (checkedSlots.length === 0) {
+        alert('Please enable at least one potion slot first');
+        return;
+    }
+    
+    let currentSlotIndex = 0;
+    
+    function recordNextSlot() {
+        if (currentSlotIndex >= checkedSlots.length) {
+            // All done
+            saveSettings({
+                throwPotPotionKeybinds: JSON.stringify(throwPotKeybinds.potion)
+            });
+            return;
+        }
+        
+        const slotNumber = checkedSlots[currentSlotIndex];
+        const slotIndex = slotNumber - 1;
+        const keyDisplay = document.getElementById(`potionKey${slotNumber}`);
+        
+        keyDisplay.textContent = 'Press...';
+        keyDisplay.style.color = '#0f0';
+        
+        const handler = (e) => {
+            e.preventDefault();
+            const keyCode = e.keyCode;
+            const keyName = getKeyName(keyCode);
+            
+            // Update display
+            keyDisplay.textContent = keyName;
+            keyDisplay.style.color = '#fff';
+            
+            // Update state
+            throwPotKeybinds.potion[slotIndex] = keyCode;
+            
+            document.removeEventListener('keydown', handler);
+            
+            currentSlotIndex++;
+            setTimeout(recordNextSlot, 300);
+        };
+        
+        document.addEventListener('keydown', handler);
+    }
+    
+    recordNextSlot();
+}
+
+// Update selectWeaponSlot to show current keybind
+function selectWeaponSlot(slot) {
+    if (isUpdatingFromServer) return;
+    
+    document.querySelectorAll('.slot-checkbox-throwpot-weapon').forEach(el => {
+        el.classList.remove('selected');
+    });
+    
+    const slotEl = document.querySelector(`.slot-checkbox-throwpot-weapon[data-slot="${slot}"]`);
+    if (slotEl) {
+        slotEl.classList.add('selected');
+    }
+    
+    throwPotState.weaponSlot = slot;
+    saveSettings({ throwPotWeaponSlot: slot });
 }
