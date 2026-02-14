@@ -1594,3 +1594,120 @@
     color: #888;
     font-family: 'Space Mono', monospace;
 }
+
+/* Config Manager Module Styles */
+.module-card-configmanager {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.4s ease;
+    display: none !important;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.module-card-configmanager.visible {
+    display: block !important;
+    animation: cardSlideInConfigmanager 0.5s ease;
+}
+
+@keyframes cardSlideInConfigmanager {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.module-card-configmanager:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+    transform: translateY(-4px);
+}
+
+.module-header-configmanager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.module-title-configmanager {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.module-icon-configmanager {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.module-settings-configmanager {
+    display: none !important;
+    overflow: hidden;
+}
+
+.module-settings-configmanager.show {
+    display: block !important;
+    animation: slideDownConfigmanager 0.3s ease;
+}
+
+@keyframes slideDownConfigmanager {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 3000px; }
+}
+
+.expand-btn-configmanager {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.expand-btn-configmanager:hover {
+    color: #fff;
+}
+
+.expand-btn-configmanager i {
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+.expand-btn-configmanager.expanded i {
+    transform: rotate(180deg);
+}
+
+.setting-group-configmanager-save,
+.setting-group-configmanager-saved {
+    margin-bottom: 20px;
+}
+
+.setting-group-header-configmanager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.setting-group-title-configmanager {
+    font-size: 0.95em;
+    font-weight: 600;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
