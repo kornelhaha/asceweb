@@ -606,13 +606,15 @@ function toggleModuleSettings(moduleName) {
     const settingsMap = {
         'leftclicker': '.module-settings-leftclicker',
         'blockhit': '.module-settings-blockhit',
-        'throwpot': '.module-settings-throwpot'
+        'rightclicker': '.module-settings-rightclicker',
+        'configmanager': '.module-settings-configmanager'
     };
     
     const btnMap = {
         'leftclicker': '.expand-btn-leftclicker',
         'blockhit': '.expand-btn-blockhit',
-        'throwpot': '.expand-btn-throwpot'
+        'rightclicker': '.expand-btn-rightclicker',
+        'configmanager': '.expand-btn-configmanager'
     };
     
     const settings = document.querySelector(settingsMap[moduleName]);
