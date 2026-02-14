@@ -3,6 +3,32 @@ let throwPotState = {
     potionSlots: [false, true, true, false, false, false, false, false, false]
 };
 
+const rightClickerState = {
+    enabled: false,
+    cps: 10.0,
+    blatantMode: false,
+    holdToClick: true,
+    hotkeyCode: 118, // F7
+    enableRandomization: false,
+    randomizationAmount: 1.0
+};
+
+function updateRightCps(value) {
+    if (isUpdatingFromServer) return;
+    const cps = parseFloat(value);
+    rightClickerState.cps = cps;
+    document.getElementById('rightclicker-cpsValue').textContent = cps.toFixed(1);
+    saveSettings({ rightCps: cps });
+}
+
+function updateRightRandomizationAmount(value) {
+    if (isUpdatingFromServer) return;
+    const amount = parseFloat(value);
+    rightClickerState.randomizationAmount = amount;
+    document.getElementById('rightclicker-randomizationAmountValue').textContent = amount.toFixed(1);
+    saveSettings({ rightRandomizationAmount: amount });
+}
+
 function checkLicenseStatus() {
     hasActiveLicense = currentUser.license && currentUser.license.status === 'active';
     updateLicenseRestrictions();
@@ -106,33 +132,59 @@ function applySettings(config) {
         }
     }
 
-    if (config.throwPotWeaponKeybinds !== undefined) {
-    try {
-        throwPotKeybinds.weapon = JSON.parse(config.throwPotWeaponKeybinds);
-        for (let i = 0; i < 9; i++) {
-            const keyDisplay = document.getElementById(`weaponKey${i + 1}`);
-            if (keyDisplay) {
-                keyDisplay.textContent = getKeyName(throwPotKeybinds.weapon[i]);
+        if (slider) slider.value = config.rightCps;
+        if (value) value.textContent = config.rightCps.toFixed(1);
+    }
+    
+    if (config.rightHotkeyCode !== undefined) {
+        rightClickerState.hotkeyCode = config.rightHotkeyCode;
+        const input = document.getElementById('rightclicker-hotkeyInput');
+        if (input) input.value = getKeyName(config.rightHotkeyCode);
+    }
+    
+    if (config.rightHoldToClick !== undefined) {
+        rightClickerState.holdToClick = config.rightHoldToClick;
+        const checkbox = document.querySelector('.checkbox-rightclicker-hold');
+        if (checkbox) {
+            if (config.rightHoldToClick) {
+                checkbox.classList.add('checked');
+            } else {
+                checkbox.classList.remove('checked');
             }
         }
-    } catch (e) {
-        console.error('Failed to parse weapon keybinds:', e);
     }
-}
-
-if (config.throwPotPotionKeybinds !== undefined) {
-    try {
-        throwPotKeybinds.potion = JSON.parse(config.throwPotPotionKeybinds);
-        for (let i = 0; i < 9; i++) {
-            const keyDisplay = document.getElementById(`potionKey${i + 1}`);
-            if (keyDisplay) {
-                keyDisplay.textContent = getKeyName(throwPotKeybinds.potion[i]);
+    
+    if (config.rightBlatantMode !== undefined) {
+        rightClickerState.blatantMode = config.rightBlatantMode;
+        const checkbox = document.querySelector('.checkbox-rightclicker-blatant');
+        if (checkbox) {
+            if (config.rightBlatantMode) {
+                checkbox.classList.add('checked');
+            } else {
+                checkbox.classList.remove('checked');
             }
         }
-    } catch (e) {
-        console.error('Failed to parse potion keybinds:', e);
     }
-}
+    
+    if (config.rightEnableRandomization !== undefined) {
+        rightClickerState.enableRandomization = config.rightEnableRandomization;
+        const toggle = document.querySelector('.mini-toggle-rightclicker-randomization');
+        if (toggle) {
+            if (config.rightEnableRandomization) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+        }
+    }
+    
+    if (config.rightRandomizationAmount !== undefined) {
+        rightClickerState.randomizationAmount = config.rightRandomizationAmount;
+        const slider = document.getElementById('rightclicker-randomizationAmountSlider');
+        const value = document.getElementById('rightclicker-randomizationAmountValue');
+        if (slider) slider.value = config.rightRandomizationAmount;
+        if (value) value.textContent = config.rightRandomizationAmount.toFixed(1);
+    }
 
     // Left Clicker CPS
     if (config.cps !== undefined) {
@@ -321,74 +373,6 @@ if (config.throwPotPotionKeybinds !== undefined) {
         }
     }
 
-    // Throw Pot Module Toggle
-    const throwPotToggle = document.querySelector('.module-toggle-throwpot');
-    if (throwPotToggle && config.throwPotEnabled !== undefined) {
-        if (config.throwPotEnabled) {
-            throwPotToggle.classList.add('active');
-        } else {
-            throwPotToggle.classList.remove('active');
-        }
-    }
-
-    // Throw Pot Hotkey
-    if (config.throwPotHotkey !== undefined) {
-        const hotkeyInput = document.getElementById('throwpot-hotkeyInput');
-        if (hotkeyInput) hotkeyInput.value = getKeyName(config.throwPotHotkey);
-    }
-
-    // Throw Pot Weapon Slot
-    if (config.throwPotWeaponSlot !== undefined) {
-        const slot = parseInt(config.throwPotWeaponSlot);
-        throwPotState.weaponSlot = slot;
-        document.querySelectorAll('.slot-checkbox-throwpot-weapon').forEach(el => el.classList.remove('selected'));
-        const slotEl = document.querySelector(`.slot-checkbox-throwpot-weapon[data-slot="${slot}"]`);
-        if (slotEl) slotEl.classList.add('selected');
-    }
-
-    // Throw Pot Potion Slots
-    if (config.throwPotSlots !== undefined) {
-        const slotsStr = config.throwPotSlots;
-        for (let i = 0; i < 9 && i < slotsStr.length; i++) {
-            throwPotState.potionSlots[i] = (slotsStr[i] === '1');
-            const checkbox = document.querySelector(`.checkbox-throwpot-potion-${i + 1}`);
-            if (checkbox) {
-                if (throwPotState.potionSlots[i]) {
-                    checkbox.classList.add('checked');
-                } else {
-                    checkbox.classList.remove('checked');
-                }
-            }
-        }
-    }
-
-    // Throw Pot Slot Delay
-    if (config.throwPotSlotDelay !== undefined) {
-        const delay = parseInt(config.throwPotSlotDelay);
-        const delayValue = document.getElementById('throwpot-slotSwitchDelayValue');
-        const delaySlider = document.getElementById('throwpot-slotSwitchDelaySlider');
-        if (delayValue) delayValue.textContent = delay;
-        if (delaySlider) delaySlider.value = delay;
-    }
-
-    // Throw Pot Throw Delay
-    if (config.throwPotThrowDelay !== undefined) {
-        const delay = parseInt(config.throwPotThrowDelay);
-        const delayValue = document.getElementById('throwpot-throwDelayValue');
-        const delaySlider = document.getElementById('throwpot-throwDelaySlider');
-        if (delayValue) delayValue.textContent = delay;
-        if (delaySlider) delaySlider.value = delay;
-    }
-
-    // Throw Pot Return Delay
-    if (config.throwPotReturnDelay !== undefined) {
-        const delay = parseInt(config.throwPotReturnDelay);
-        const delayValue = document.getElementById('throwpot-returnDelayValue');
-        const delaySlider = document.getElementById('throwpot-returnDelaySlider');
-        if (delayValue) delayValue.textContent = delay;
-        if (delaySlider) delaySlider.value = delay;
-    }
-}
 
 function filterCategory(category) {
     document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
@@ -573,6 +557,7 @@ function togglePotionSlot(slot) {
     saveSettings({ throwPotSlots: slotsString });
 }
 
+const originalToggleModule = toggleModule;
 function toggleModule(moduleName) {
     if (isUpdatingFromServer) return;
     
@@ -595,6 +580,24 @@ function toggleModule(moduleName) {
         saveSettings({ blockhitEnabled: isActive });
     } else if (moduleName === 'throwpot') {
         saveSettings({ throwPotEnabled: isActive });
+    }
+
+    if (module === 'rightclicker') {
+        if (isUpdatingFromServer) return;
+        const toggle = document.querySelector('.module-toggle-rightclicker');
+        const isEnabled = toggle.classList.contains('active');
+        
+        if (isEnabled) {
+            toggle.classList.remove('active');
+            rightClickerState.enabled = false;
+        } else {
+            toggle.classList.add('active');
+            rightClickerState.enabled = true;
+        }
+        
+        saveSettings({ rightEnabled: rightClickerState.enabled });
+    } else {
+        originalToggleModule(module);
     }
 }
 
@@ -628,16 +631,58 @@ function toggleModuleSettings(moduleName) {
     }
 }
 
+const originalToggleMiniSetting = toggleMiniSetting;
 function toggleMiniSetting(element, settingName) {
     if (isUpdatingFromServer) return;
     element.classList.toggle('active');
     saveSettings({ [settingName]: element.classList.contains('active') });
+
+    if (setting === 'rightEnableRandomization') {
+        if (isUpdatingFromServer) return;
+        const isActive = element.classList.contains('active');
+        
+        if (isActive) {
+            element.classList.remove('active');
+            rightClickerState.enableRandomization = false;
+        } else {
+            element.classList.add('active');
+            rightClickerState.enableRandomization = true;
+        }
+        
+        saveSettings({ rightEnableRandomization: rightClickerState.enableRandomization });
+    } else {
+        originalToggleMiniSetting(element, setting);
+    }
 }
 
+const originalToggleCheckbox = toggleCheckbox;
 function toggleCheckbox(element, settingName) {
     if (isUpdatingFromServer) return;
     element.classList.toggle('checked');
     saveSettings({ [settingName]: element.classList.contains('checked') });
+
+    if (setting === 'rightHoldToClick' || setting === 'rightBlatantMode') {
+        if (isUpdatingFromServer) return;
+        const isChecked = element.classList.contains('checked');
+        
+        if (isChecked) {
+            element.classList.remove('checked');
+        } else {
+            element.classList.add('checked');
+        }
+        
+        const newValue = !isChecked;
+        
+        if (setting === 'rightHoldToClick') {
+            rightClickerState.holdToClick = newValue;
+            saveSettings({ rightHoldToClick: newValue });
+        } else if (setting === 'rightBlatantMode') {
+            rightClickerState.blatantMode = newValue;
+            saveSettings({ rightBlatantMode: newValue });
+        }
+    } else {
+        originalToggleCheckbox(element, setting);
+    }
 }
 
 function recordKeybind(input, moduleName) {
@@ -827,4 +872,208 @@ function selectWeaponSlot(slot) {
     
     throwPotState.weaponSlot = slot;
     saveSettings({ throwPotWeaponSlot: slot });
+}
+
+async function loadConfigs() {
+    try {
+        const response = await fetch(`${API_URL}/api/configs`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (!response.ok) return;
+        
+        const configs = await response.json();
+        displayConfigs(configs);
+    } catch (error) {
+        console.error('[CONFIGS] Load error:', error);
+    }
+}
+
+function displayConfigs(configs) {
+    const configsList = document.getElementById('configsList');
+    const noConfigsMsg = document.getElementById('noConfigsMessage');
+    
+    if (!configs || configs.length === 0) {
+        configsList.style.display = 'none';
+        noConfigsMsg.style.display = 'block';
+        return;
+    }
+    
+    configsList.style.display = 'block';
+    noConfigsMsg.style.display = 'none';
+    
+    configsList.innerHTML = configs.map(config => `
+        <div class="config-item" data-id="${config._id}">
+            <div class="config-header">
+                <div class="config-name">
+                    <i class="fas fa-file"></i>
+                    <span>${config.name}</span>
+                </div>
+                <div class="config-actions">
+                    <button class="btn-small" onclick="loadConfig('${config._id}')" title="Load">
+                        <i class="fas fa-upload"></i>
+                    </button>
+                    <button class="btn-small" onclick="deleteConfig('${config._id}')" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="config-date">${new Date(config.createdAt).toLocaleDateString()}</div>
+        </div>
+    `).join('');
+}
+
+async function saveNewConfig() {
+    const nameInput = document.getElementById('newConfigName');
+    const name = nameInput.value.trim();
+    
+    if (!name) {
+        alert('Please enter a config name');
+        return;
+    }
+    
+    // Get current settings
+    const currentSettings = {
+        // Left Clicker
+        leftEnabled: clickerState.enabled,
+        leftCps: clickerState.cps,
+        leftBlatantMode: clickerState.blatantMode,
+        leftHoldToClick: clickerState.holdToClick,
+        leftHotkeyCode: clickerState.hotkeyCode,
+        leftEnableRandomization: clickerState.enableRandomization,
+        leftRandomizationAmount: clickerState.randomizationAmount,
+        
+        // Right Clicker
+        rightEnabled: rightClickerState.enabled,
+        rightCps: rightClickerState.cps,
+        rightBlatantMode: rightClickerState.blatantMode,
+        rightHoldToClick: rightClickerState.holdToClick,
+        rightHotkeyCode: rightClickerState.hotkeyCode,
+        rightEnableRandomization: rightClickerState.enableRandomization,
+        rightRandomizationAmount: rightClickerState.randomizationAmount,
+        
+        // Blockhit
+        blockhitEnabled: blockhitState.enabled,
+        blockChance: blockhitState.blockChance,
+        holdLengthMin: blockhitState.holdLengthMin,
+        holdLengthMax: blockhitState.holdLengthMax,
+        delayMin: blockhitState.delayMin,
+        delayMax: blockhitState.delayMax,
+        onlyWhileClicking: blockhitState.onlyWhileClicking
+    };
+    
+    try {
+        const response = await fetch(`${API_URL}/api/configs`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                name: name,
+                settings: currentSettings
+            })
+        });
+        
+        if (!response.ok) {
+            alert('Failed to save config');
+            return;
+        }
+        
+        // Show success message
+        const successMsg = document.getElementById('configSaveSuccess');
+        successMsg.style.display = 'block';
+        setTimeout(() => successMsg.style.display = 'none', 3000);
+        
+        // Clear input
+        nameInput.value = '';
+        
+        // Reload configs list
+        loadConfigs();
+        
+    } catch (error) {
+        console.error('[CONFIGS] Save error:', error);
+        alert('Failed to save config');
+    }
+}
+
+async function loadConfig(configId) {
+    if (!confirm('Load this config? Current settings will be overwritten.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/api/configs`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (!response.ok) return;
+        
+        const configs = await response.json();
+        const config = configs.find(c => c._id === configId);
+        
+        if (!config) return;
+        
+        // Apply all settings
+        const settings = config.settings;
+        
+        // Save to server (which will sync to C++ client)
+        await saveSettings(settings);
+        
+        // Apply to UI
+        applySettings(settings);
+        
+        alert('Config loaded successfully!');
+        
+    } catch (error) {
+        console.error('[CONFIGS] Load error:', error);
+        alert('Failed to load config');
+    }
+}
+
+async function deleteConfig(configId) {
+    if (!confirm('Delete this config? This cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/api/configs/${configId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (!response.ok) {
+            alert('Failed to delete config');
+            return;
+        }
+        
+        // Reload configs list
+        loadConfigs();
+        
+    } catch (error) {
+        console.error('[CONFIGS] Delete error:', error);
+        alert('Failed to delete config');
+    }
+}
+
+// Load configs when switching to configs tab
+function switchSettingsTab(tabName) {
+    document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.settings-tab-content').forEach(content => content.classList.remove('active'));
+    
+    event.currentTarget.classList.add('active');
+    
+    const tabContent = document.getElementById(`${tabName}-tab`);
+    if (tabContent) tabContent.classList.add('active');
+    
+    // Load configs when opening configs tab
+    if (tabName === 'configs') {
+        loadConfigs();
+    }
 }
