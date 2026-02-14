@@ -352,7 +352,7 @@
                                 </div>
                             </div>
                             
-                            <div class="module-card-loadersettings visible" data-category="settings">
+                            <div class="module-card-loadersettings" data-category="settings">
                                 <div class="module-header-loadersettings">
                                     <div class="module-title-loadersettings">
                                         <div class="module-icon-loadersettings">
@@ -367,6 +367,49 @@
                                         <div class="checkbox-loadersettings-hide" data-setting="hideLoader" 
                                              onclick="toggleCheckbox(this,'hideLoader')">
                                             <i class="fas fa-check"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="module-card-configmanager" data-category="settings">
+                                <div class="module-header-configmanager">
+                                    <div class="module-title-configmanager">
+                                        <div class="module-icon-configmanager">
+                                            <i class="fas fa-save"></i>
+                                        </div>
+                                        <span>Config Manager</span>
+                                    </div>
+                                    <button class="expand-btn-configmanager" onclick="toggleModuleSettings('configmanager')">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                                
+                                <div class="module-settings-configmanager" id="configmanager-settings">
+                                    <div class="setting-group-configmanager-save" style="margin-bottom:20px;padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.05)">
+                                        <div class="setting-group-header-configmanager">
+                                            <span class="setting-group-title-configmanager">Save Current Config</span>
+                                        </div>
+                                        <div style="margin-top:12px">
+                                            <input type="text" class="form-input" id="newConfigName" placeholder="Config Name" 
+                                                   style="width:100%;padding:8px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;color:#fff;font-family:'Space Mono',monospace;font-size:0.85em;margin-bottom:12px">
+                                            <button class="btn" style="width:100%" onclick="saveNewConfig()">
+                                                <i class="fas fa-save"></i> Save Current Settings
+                                            </button>
+                                            <div class="success-message" id="configSaveSuccess" style="margin-top:12px;display:none;padding:12px;background:rgba(0,255,0,0.1);border:1px solid rgba(0,255,0,0.3);border-radius:6px;color:#0f0;font-size:0.85em">
+                                                <i class="fas fa-check-circle"></i> Config saved!
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="setting-group-configmanager-saved" style="padding:16px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid rgba(255,255,255,0.05)">
+                                        <div class="setting-group-header-configmanager">
+                                            <span class="setting-group-title-configmanager">Saved Configs</span>
+                                        </div>
+                                        <div id="configsList" style="margin-top:12px"></div>
+                                        <div id="noConfigsMessage" style="text-align:center;padding:40px 20px;color:#666;font-size:0.9em">
+                                            <i class="fas fa-folder-open" style="font-size:2em;margin-bottom:16px;display:block;opacity:0.5"></i>
+                                            No saved configs yet
                                         </div>
                                     </div>
                                 </div>
@@ -398,10 +441,6 @@
                             <div class="settings-tab" onclick="switchSettingsTab('security')">
                                 <i class="fas fa-lock"></i>
                                 <span>Security</span>
-                            </div>
-                            <div class="settings-tab" onclick="switchSettingsTab('configs')">
-                                <i class="fas fa-save"></i>
-                                <span>Configs</span>
                             </div>
                         </div>
                         
@@ -521,39 +560,6 @@
                                     <button class="btn btn-full" onclick="changePassword()">
                                         <i class="fas fa-save"></i> Update Password
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="configs-tab" class="settings-tab-content">
-                            <div class="settings-grid">
-                                <div class="settings-card">
-                                    <div class="settings-card-title">
-                                        <i class="fas fa-save"></i>
-                                        Save Current Config
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Config Name</label>
-                                        <input type="text" class="form-input" id="newConfigName" placeholder="My Config">
-                                    </div>
-                                    <button class="btn btn-full" onclick="saveNewConfig()">
-                                        <i class="fas fa-save"></i> Save Current Settings
-                                    </button>
-                                    <div class="success-message" id="configSaveSuccess">
-                                        <i class="fas fa-check-circle"></i> Config saved!
-                                    </div>
-                                </div>
-                                
-                                <div class="settings-card">
-                                    <div class="settings-card-title">
-                                        <i class="fas fa-folder-open"></i>
-                                        Saved Configs
-                                    </div>
-                                    <div id="configsList"></div>
-                                    <div id="noConfigsMessage" style="text-align:center;padding:40px 20px;color:#666;font-size:0.9em">
-                                        <i class="fas fa-folder-open" style="font-size:2em;margin-bottom:16px;display:block;opacity:0.5"></i>
-                                        No saved configs yet
-                                    </div>
                                 </div>
                             </div>
                         </div>
