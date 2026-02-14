@@ -380,9 +380,10 @@ function filterCategory(category) {
 
     const allCards = [
         '.module-card-leftclicker',
+        '.module-card-rightclicker',
         '.module-card-blockhit',
-        '.module-card-throwpot',
-        '.module-card-loadersettings'
+        '.module-card-loadersettings',
+        '.module-card-configmanager'
     ];
 
     allCards.forEach(cardClass => {
