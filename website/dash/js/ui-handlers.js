@@ -372,6 +372,7 @@ function applySettings(config) {
             hideLoader.classList.remove('checked');
         }
     }
+}
 
 
 function filterCategory(category) {
@@ -1065,18 +1066,39 @@ async function deleteConfig(configId) {
     }
 }
 
-// Load configs when switching to configs tab
-function switchSettingsTab(tabName) {
-    document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.settings-tab-content').forEach(content => content.classList.remove('active'));
+function toggleModuleSettings(moduleName) {
+    // Define specific settings and button selectors for each module
+    const settingsMap = {
+        'leftclicker': '.module-settings-leftclicker',
+        'blockhit': '.module-settings-blockhit',
+        'rightclicker': '.module-settings-rightclicker',
+        'configmanager': '.module-settings-configmanager'
+    };
     
-    event.currentTarget.classList.add('active');
+    const btnMap = {
+        'leftclicker': '.expand-btn-leftclicker',
+        'blockhit': '.expand-btn-blockhit',
+        'rightclicker': '.expand-btn-rightclicker',
+        'configmanager': '.expand-btn-configmanager'
+    };
     
-    const tabContent = document.getElementById(`${tabName}-tab`);
-    if (tabContent) tabContent.classList.add('active');
+    const settings = document.querySelector(settingsMap[moduleName]);
+    const btn = document.querySelector(btnMap[moduleName]);
     
-    // Load configs when opening configs tab
-    if (tabName === 'configs') {
-        loadConfigs();
+    if (settings && btn) {
+        const isOpen = settings.classList.contains('show');
+        
+        if (isOpen) {
+            btn.classList.remove('expanded');
+            settings.classList.remove('show');
+        } else {
+            btn.classList.add('expanded');
+            settings.classList.add('show');
+            
+            // Load configs when opening configmanager
+            if (moduleName === 'configmanager') {
+                loadConfigs();
+            }
+        }
     }
 }
