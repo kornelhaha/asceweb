@@ -372,7 +372,6 @@ function applySettings(config) {
             hideLoader.classList.remove('checked');
         }
     }
-}
 
 
 function filterCategory(category) {
